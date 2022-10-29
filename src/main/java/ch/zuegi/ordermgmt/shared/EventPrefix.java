@@ -5,7 +5,9 @@ import lombok.Getter;
 @Getter
 public enum EventPrefix {
 
-    ORT("Order Ticket Prefix");
+    ORDER_TICKET_PREFIX("Order Ticket Prefix"),
+    PROCESSING_ORDER_POSITION_PREFIX("Processing Order Position Prefix"),
+    PROCESSING_ORDER_PREFIX("Processing Order Prefix");
 
     private String prefix;
     EventPrefix(String prefix) {
