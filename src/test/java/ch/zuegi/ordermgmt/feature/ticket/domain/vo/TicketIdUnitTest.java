@@ -5,29 +5,29 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 
-class OrderTicketIdUnitTest {
+class TicketIdUnitTest {
 
     @Test
     void erstelle_order_ticket_id() {
-        OrderTicketId orderTicketId = new OrderTicketId();
+        TicketId orderTicketId = new TicketId();
         Assertions.assertThat(orderTicketId)
                 .isNotNull()
-                .extracting(OrderTicketId::getPrefix)
-                .isEqualTo(EventPrefix.ORT.name()+"-%s");
+                .extracting(TicketId::getPrefix)
+                .isEqualTo(EventPrefix.ORDER_TICKET_PREFIX.name()+"-%s");
     }
 
     @Test
     void erstelle_zwei_identische_order_ticket_id() {
-        OrderTicketId orderTicketId = new OrderTicketId();
-        OrderTicketId anotherOrderTicketId = new OrderTicketId(orderTicketId.id);
+        TicketId orderTicketId = new TicketId();
+        TicketId anotherOrderTicketId = new TicketId(orderTicketId.id);
 
         Assertions.assertThat(orderTicketId.sameValueAs(anotherOrderTicketId)).isTrue();
     }
 
     @Test
     void erstelle_zwei_nicht_identische_order_ticket_id() {
-        OrderTicketId orderTicketId = new OrderTicketId();
-        OrderTicketId anotherOrderTicketId = new OrderTicketId();
+        TicketId orderTicketId = new TicketId();
+        TicketId anotherOrderTicketId = new TicketId();
         Assertions.assertThat(orderTicketId).isNotEqualTo(anotherOrderTicketId);
         Assertions.assertThat(orderTicketId.sameValueAs(anotherOrderTicketId)).isFalse();
 
