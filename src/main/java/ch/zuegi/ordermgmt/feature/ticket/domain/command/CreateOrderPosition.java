@@ -1,6 +1,5 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain.command;
 
-import ch.zuegi.ordermgmt.feature.ticket.domain.vo.OrderPositionId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TradeItemId;
 import ch.zuegi.ordermgmt.shared.Command;
 import lombok.Value;

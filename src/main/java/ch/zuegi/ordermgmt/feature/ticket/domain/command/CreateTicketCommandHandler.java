@@ -2,7 +2,6 @@ package ch.zuegi.ordermgmt.feature.ticket.domain.command;
 
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketEntity;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
-import ch.zuegi.ordermgmt.shared.Command;
 import ch.zuegi.ordermgmt.shared.CommandHandler;
 import lombok.extern.slf4j.Slf4j;
 
