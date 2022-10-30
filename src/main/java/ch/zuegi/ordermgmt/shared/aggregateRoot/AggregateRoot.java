@@ -5,6 +5,7 @@ import ch.zuegi.ordermgmt.shared.CommandHandler;
 import ch.zuegi.ordermgmt.shared.Entity;
 import lombok.Getter;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Getter
@@ -12,6 +13,7 @@ public abstract class AggregateRoot<E, ID extends Serializable> extends Entity<I
 
     protected final ID aggregateId;
     private final AggregateRootBehavior<ID> behavior;
+
     public AggregateRoot(ID aggregateID) {
         super(aggregateID);
         this.aggregateId = aggregateID;
@@ -28,8 +30,12 @@ public abstract class AggregateRoot<E, ID extends Serializable> extends Entity<I
         }
     }
 
-    public Entity handleCommand(Command command) {
-        CommandHandler<? extends Command, ? extends Entity<ID>, ID> commandHandler = behavior.commandHandlers.get(command.getClass());
-        return commandHandler.handle( aggregateId, command);
+    @SuppressWarnings("unchecked")
+    public <A extends Command> Entity<ID> handleCommand(@NotNull  A command) {
+
+        // FIXME wie kann ich diesen unchecked cast verhindern, ohne die Annotation auf der Methode?
+        CommandHandler<A, ? extends Entity<ID>, ID> commandHandler = (CommandHandler<A, ? extends Entity<ID>, ID>) behavior.commandHandlers.get(command.getClass());
+        return commandHandler.handle(aggregateId, command);
     }
+
 }

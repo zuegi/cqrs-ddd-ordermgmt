@@ -11,19 +11,15 @@ public class CreateOrderPositionCommandHandler implements CommandHandler<CreateO
 
 
     @Override
-    public OrderPositionEntity handle(OrderPositionId  orderPositionId, Command command) {
+    public OrderPositionEntity handle(OrderPositionId  orderPositionId, CreateOrderPosition createOrderPosition) {
 
-        log.info("{} called with {}", this.getClass().getName(), command);
-
-        CreateOrderPosition createOrderPosition = (CreateOrderPosition) command;
+        log.debug("{} called with {}", this.getClass().getName(), createOrderPosition);
 
         OrderPositionEntity orderPositionEntity = new OrderPositionEntity(orderPositionId);
-        orderPositionEntity.setOrderPositionId(orderPositionId);
         orderPositionEntity.setTradeItemId(createOrderPosition.getTradeItemId());
         orderPositionEntity.setMenge(createOrderPosition.getMenge());
 
         return orderPositionEntity;
     }
-
 
 }

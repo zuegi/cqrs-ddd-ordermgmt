@@ -11,7 +11,7 @@ public class AggregateRootBehavior<RandomUUID> {
 
     protected final Map<Class<? extends Command>, CommandHandler<? extends Command, ? extends Entity<RandomUUID>, RandomUUID>> commandHandlers;
 
-    public AggregateRootBehavior(Map<Class<? extends Command>, CommandHandler<? extends Command, ? extends Entity<RandomUUID>,RandomUUID>> commandHandlers) {
+    public AggregateRootBehavior(Map<Class<? extends Command>, CommandHandler<? extends Command, ? extends Entity<RandomUUID>, RandomUUID>> commandHandlers) {
         this.commandHandlers = commandHandlers;
     }
 

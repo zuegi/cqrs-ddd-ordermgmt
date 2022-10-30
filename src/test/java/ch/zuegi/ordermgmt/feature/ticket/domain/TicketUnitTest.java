@@ -28,9 +28,6 @@ class TicketUnitTest {
     @Test
     void create_order_ticket_with_invalid_orderticketid_throws_exception() {
         TicketId orderTicketId = null;
-        List<CreateOrder> createCustomerOrderList = new ArrayList<>();
-        CreateTicket createOrderTicket = CreateTicket.commandOf(createCustomerOrderList);
-
         Assertions.assertThatExceptionOfType(AggregateRootValidationException.class)
                 .isThrownBy(() -> Ticket.create(orderTicketId))
                 .withMessage(AggregateRootValidationMsg.AGGREGATE_ID_MUST_NOT_BE_NULL);

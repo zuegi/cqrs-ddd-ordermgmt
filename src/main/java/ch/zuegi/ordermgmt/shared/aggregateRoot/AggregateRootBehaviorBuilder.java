@@ -17,7 +17,7 @@ public class AggregateRootBehaviorBuilder<RandomUUID> {
     }
 
 
-    public <A extends Command, B extends Event> void setCommandHandler(Class<? extends Command> commandClass, CommandHandler<? extends Command, ? extends Entity<RandomUUID>, RandomUUID> handler) {
+    public <A extends Command, B extends Entity<RandomUUID>> void setCommandHandler(Class<? extends Command> commandClass, CommandHandler<? extends Command, ? extends Entity<RandomUUID>, RandomUUID> handler) {
         commandHandlers.put( commandClass,  handler);
     }
 

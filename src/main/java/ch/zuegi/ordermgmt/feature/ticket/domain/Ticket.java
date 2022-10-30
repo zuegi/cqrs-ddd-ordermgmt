@@ -14,9 +14,7 @@ public class Ticket extends AggregateRoot<Ticket, TicketId> {
     }
 
     public static Ticket create(TicketId orderTicketId) {
-        Ticket orderTicket = new Ticket(orderTicketId);
-        // FIXME Implementierung
-        return orderTicket;
+        return new Ticket(orderTicketId);
     }
 
 

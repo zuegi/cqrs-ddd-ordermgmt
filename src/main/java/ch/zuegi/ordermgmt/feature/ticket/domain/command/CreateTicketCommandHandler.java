@@ -11,8 +11,8 @@ public class CreateTicketCommandHandler implements CommandHandler<CreateTicket, 
 
 
     @Override
-    public TicketEntity handle(TicketId ticketId, Command command) {
-        log.info("{} called with {}", this.getClass().getName(), command);
+    public TicketEntity handle(TicketId ticketId, CreateTicket createTicket) {
+        log.info("{} called with {}", this.getClass().getName(), createTicket);
 
         // TODO hier die CustomerOrderList auseinander beineln
 

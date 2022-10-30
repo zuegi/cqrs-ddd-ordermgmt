@@ -19,21 +19,19 @@ public class OrderPosition extends AggregateRoot<OrderPosition, OrderPositionId>
         super(aggregateID);
     }
 
-    @Override
-    public OrderPositionId id() {
-        return this.id();
-    }
-
 
     public static OrderPosition create(OrderPositionId orderPositionId) {
         return new OrderPosition(orderPositionId);
     }
 
+    @Override
+    public OrderPositionId id() {
+        return this.aggregateId;
+    }
 
     @Override
     protected AggregateRootBehavior<OrderPositionId> initialBehavior() {
         AggregateRootBehaviorBuilder<OrderPositionId> behaviorBuilder = new AggregateRootBehaviorBuilder<>();
-        // FIXME Implementierung
         behaviorBuilder.setCommandHandler(CreateOrderPosition.class, new CreateOrderPositionCommandHandler());
         return behaviorBuilder.build();
     }
