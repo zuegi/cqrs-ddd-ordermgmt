@@ -1,22 +1,23 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain.command;
 
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketEntity;
+import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.shared.Command;
 import ch.zuegi.ordermgmt.shared.CommandHandler;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class CreateTicketCommandHandler implements CommandHandler<CreateTicket, TicketEntity> {
+public class CreateTicketCommandHandler implements CommandHandler<CreateTicket, TicketEntity, TicketId> {
 
 
     @Override
-    public TicketEntity handle(Command command) {
+    public TicketEntity handle(TicketId ticketId, Command command) {
         log.info("{} called with {}", this.getClass().getName(), command);
 
         // TODO hier die CustomerOrderList auseinander beineln
 
         // OrderTicketEntity erstellen
-        TicketEntity orderTicket = new TicketEntity();
+        TicketEntity orderTicket = new TicketEntity(ticketId);
         // was halt auf dieser Entity gespeicher werden muss
         // ProcessingOrder (VA)
         // ProcessingOrderPosition(VA Position)
@@ -25,4 +26,6 @@ public class CreateTicketCommandHandler implements CommandHandler<CreateTicket, 
 
         return orderTicket;
     }
+
+
 }

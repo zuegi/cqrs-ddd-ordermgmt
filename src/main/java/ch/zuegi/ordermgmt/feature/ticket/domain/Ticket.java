@@ -3,7 +3,9 @@ package ch.zuegi.ordermgmt.feature.ticket.domain;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicket;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommandHandler;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
-import ch.zuegi.ordermgmt.shared.aggregateRoot.*;
+import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRoot;
+import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootBehavior;
+import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootBehaviorBuilder;
 
 public class Ticket extends AggregateRoot<Ticket, TicketId> {
 
@@ -11,20 +13,12 @@ public class Ticket extends AggregateRoot<Ticket, TicketId> {
         super(aggregateID);
     }
 
-    public static Ticket create(TicketId orderTicketId, CreateTicket command) {
+    public static Ticket create(TicketId orderTicketId) {
         Ticket orderTicket = new Ticket(orderTicketId);
-        // CreateOrderTicketCommandHandler.handleCommand
-        orderTicket.handleCommand(command);
-        orderTicket.validate();
+        // FIXME Implementierung
         return orderTicket;
     }
 
-    @Override
-    protected void validate() {
-        if (aggregateId == null) {
-            throw new AggregateRootValidationException(AggregateRootValidationMsg.AGGREGATE_ID_MUST_NOT_BE_NULL);
-        }
-    }
 
     @Override
     protected AggregateRootBehavior<TicketId> initialBehavior() {
@@ -32,12 +26,6 @@ public class Ticket extends AggregateRoot<Ticket, TicketId> {
         behaviorBuilder.setCommandHandler(CreateTicket.class, new CreateTicketCommandHandler());
 
         return behaviorBuilder.build();
-    }
-
-
-    @Override
-    public boolean sameIdentityAs(Ticket other) {
-        return false;
     }
 
     @Override

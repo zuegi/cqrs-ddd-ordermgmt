@@ -19,19 +19,20 @@ class TicketUnitTest {
 
         TicketId orderTicketId = new TicketId();
         List<CreateOrder> createCustomerOrderList = new ArrayList<>();
-        CreateTicket createOrderTicket = CreateTicket.commandOf(orderTicketId, createCustomerOrderList);
+        CreateTicket createOrderTicket = CreateTicket.commandOf( createCustomerOrderList);
 
-        Ticket orderTicket = Ticket.create(orderTicketId, createOrderTicket);
+        Ticket orderTicket = Ticket.create(orderTicketId);
+        orderTicket.handleCommand(createOrderTicket);
     }
 
     @Test
     void create_order_ticket_with_invalid_orderticketid_throws_exception() {
         TicketId orderTicketId = null;
         List<CreateOrder> createCustomerOrderList = new ArrayList<>();
-        CreateTicket createOrderTicket = CreateTicket.commandOf(orderTicketId, createCustomerOrderList);
+        CreateTicket createOrderTicket = CreateTicket.commandOf(createCustomerOrderList);
 
         Assertions.assertThatExceptionOfType(AggregateRootValidationException.class)
-                .isThrownBy(() -> Ticket.create(orderTicketId, createOrderTicket))
+                .isThrownBy(() -> Ticket.create(orderTicketId))
                 .withMessage(AggregateRootValidationMsg.AGGREGATE_ID_MUST_NOT_BE_NULL);
     }
 

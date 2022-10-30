@@ -13,7 +13,7 @@ class TicketIdUnitTest {
         Assertions.assertThat(orderTicketId)
                 .isNotNull()
                 .extracting(TicketId::getPrefix)
-                .isEqualTo(EventPrefix.ORDER_TICKET_PREFIX.name()+"-%s");
+                .isEqualTo(EventPrefix.OTP.name()+"-%s");
     }
 
     @Test

@@ -3,18 +3,18 @@ package ch.zuegi.ordermgmt.feature.ticket.domain.vo;
 import ch.zuegi.ordermgmt.shared.EventPrefix;
 import ch.zuegi.ordermgmt.shared.RandomUUID;
 
-public class TicketId extends RandomUUID {
+public class TradeItemId extends RandomUUID {
 
-    public TicketId() {
+    public TradeItemId() {
         super();
     }
 
-    public TicketId(String id) {
+    public TradeItemId(String id) {
         super(id);
     }
 
     @Override
     protected String getPrefix() {
-        return EventPrefix.OTP.name()+ "-%s";
+        return EventPrefix.TIP.name()+ "-%s";
     }
 }

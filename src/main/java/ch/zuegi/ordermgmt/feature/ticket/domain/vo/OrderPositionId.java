@@ -15,6 +15,6 @@ public class OrderPositionId extends RandomUUID {
 
     @Override
     protected String getPrefix() {
-        return EventPrefix.PROCESSING_ORDER_POSITION_PREFIX.name()+ "-%s";
+        return EventPrefix.OPP.name()+ "-%s";
     }
 }

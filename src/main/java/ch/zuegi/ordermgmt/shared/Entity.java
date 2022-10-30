@@ -2,14 +2,13 @@ package ch.zuegi.ordermgmt.shared;
 
 import java.io.Serializable;
 
-public interface Entity<E, RandomUUID extends Serializable> {
-    /**
-     * Entities compare by identity, not by attributes.
-     *
-     * @param other The other entity.
-     * @return true if the identities are the same, regardles of other attributes.
-     */
-    boolean sameIdentityAs(E other);
+public abstract class Entity<ID> implements Serializable {
+    protected final ID aggregateId;
 
-    RandomUUID id();
+
+    protected Entity(ID aggregateId) {
+        this.aggregateId = aggregateId;
+    }
+
+    public abstract ID id();
 }

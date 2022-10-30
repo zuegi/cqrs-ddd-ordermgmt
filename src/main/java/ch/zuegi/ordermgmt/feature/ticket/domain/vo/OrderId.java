@@ -15,6 +15,6 @@ public class OrderId extends RandomUUID {
 
     @Override
     protected String getPrefix() {
-        return EventPrefix.PROCESSING_ORDER_PREFIX.name()+ "-%s";
+        return EventPrefix.OP.name()+ "-%s";
     }
 }

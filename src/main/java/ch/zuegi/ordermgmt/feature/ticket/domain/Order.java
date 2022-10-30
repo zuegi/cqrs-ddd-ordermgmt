@@ -15,25 +15,13 @@ public class Order extends AggregateRoot<Order, OrderId> {
     public static Order create(OrderId processingOrderId, CreateOrder createCustomerOrder) {
         Order processingOrder = new Order(processingOrderId);
         processingOrder.handleCommand(createCustomerOrder);
-        // TODO eventuell den validate Step in den DomainCommandHandler auslagern
-        processingOrder.validate();
         return processingOrder;
     }
 
 
     @Override
-    public boolean sameIdentityAs(Order other) {
-        return false;
-    }
-
-    @Override
     public OrderId id() {
         return null;
-    }
-
-    @Override
-    protected void validate() {
-
     }
 
     @Override

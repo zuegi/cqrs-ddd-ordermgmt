@@ -3,17 +3,14 @@ package ch.zuegi.ordermgmt.feature.ticket.domain.entity;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.shared.Entity;
 
-public class TicketEntity implements Entity<TicketEntity, TicketId> {
+public class TicketEntity extends Entity<TicketId> {
 
-    @Override
-    public boolean sameIdentityAs(TicketEntity other) {
-        // TODO Implementierung
-        return false;
+    public TicketEntity(TicketId aggregateId) {
+        super(aggregateId);
     }
 
     @Override
     public TicketId id() {
-        // TODO Implementierung
-        return null;
+        return this.aggregateId;
     }
 }

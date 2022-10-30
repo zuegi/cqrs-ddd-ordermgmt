@@ -5,11 +5,14 @@ import lombok.Getter;
 @Getter
 public enum EventPrefix {
 
-    ORDER_TICKET_PREFIX("Order Ticket Prefix"),
-    PROCESSING_ORDER_POSITION_PREFIX("Processing Order Position Prefix"),
-    PROCESSING_ORDER_PREFIX("Processing Order Prefix");
+    OTP("Order Ticket Prefix"),
+    OPP("Order Position Prefix"),
+    OP("Order Prefix"),
+    TIP("Trade Item Prefix");
 
-    private String prefix;
+
+    private final String prefix;
+
     EventPrefix(String prefix) {
         this.prefix = prefix;
     }

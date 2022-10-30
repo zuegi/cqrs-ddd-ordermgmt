@@ -10,14 +10,14 @@ import java.util.Map;
 
 public class AggregateRootBehaviorBuilder<RandomUUID> {
 
-    private final Map<Class<? extends Command>, CommandHandler<? extends Command, ? extends Entity>> commandHandlers = new HashMap<>();
+    private final Map<Class<? extends Command>, CommandHandler<? extends Command, ? extends Entity<RandomUUID>, RandomUUID>> commandHandlers = new HashMap<>();
 
     public AggregateRootBehavior<RandomUUID> build() {
         return new AggregateRootBehavior<>(commandHandlers);
     }
 
 
-    public <A extends Command, B extends Event> void setCommandHandler(Class<? extends Command> commandClass, CommandHandler<? extends Command, ? extends Entity> handler) {
+    public <A extends Command, B extends Event> void setCommandHandler(Class<? extends Command> commandClass, CommandHandler<? extends Command, ? extends Entity<RandomUUID>, RandomUUID> handler) {
         commandHandlers.put( commandClass,  handler);
     }
 
