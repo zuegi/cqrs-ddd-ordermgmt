@@ -11,6 +11,6 @@ public class CreateOrder implements Command {
 
     TradeDealType tradeDealType;
 
-    List<CreateOrderPosition> customerOrderPositionList;
+    List<CreateOrderPosition> createOrderPositionList;
 
 }

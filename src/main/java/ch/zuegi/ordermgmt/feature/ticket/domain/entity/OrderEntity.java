@@ -6,7 +6,7 @@ import ch.zuegi.ordermgmt.shared.Entity;
 public class OrderEntity extends Entity<OrderId> {
 
 
-    protected OrderEntity(OrderId aggregateId) {
+    public OrderEntity(OrderId aggregateId) {
         super(aggregateId);
     }
 
