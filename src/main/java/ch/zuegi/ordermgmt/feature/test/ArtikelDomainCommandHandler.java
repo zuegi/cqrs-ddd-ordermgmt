@@ -2,6 +2,8 @@ package ch.zuegi.ordermgmt.feature.test;
 
 import ch.zuegi.ordermgmt.feature.test.shared.DomainCommandHandler;
 
+import javax.validation.constraints.NotNull;
+
 public class ArtikelDomainCommandHandler implements DomainCommandHandler<Article, CreateArticle> {
 
     Article article;
@@ -12,9 +14,18 @@ public class ArtikelDomainCommandHandler implements DomainCommandHandler<Article
 
     @Override
     public void handle(CreateArticle command) {
-        ArticleEntity entity = new ArticleEntity(this.article.id());
-        entity.setTitle(command.getTitle());
+        // FIXME das kann es irgendwie auch nicht so richtig sein
+        AuthorId authorId = new AuthorId();
 
-        this.article.addEntity(entity);
+        Author author = new Author(new AuthorId());
+        author.handle(command.getAuthor());
+
+        ArticleEntity articleEntity = new ArticleEntity(this.article.id());
+        articleEntity.setTitle(command.getTitle());
+        articleEntity.setAuthor(author.getAuthorEntity());
+
+        // und dann alles zusammen
+        this.article.addEntity(articleEntity);
+        this.article.addAggregate(author);
     }
 }

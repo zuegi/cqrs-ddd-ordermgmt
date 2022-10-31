@@ -2,6 +2,8 @@ package ch.zuegi.ordermgmt.feature.test;
 
 import ch.zuegi.ordermgmt.feature.test.shared.DomainCommandHandler;
 
+import javax.validation.constraints.NotNull;
+
 public class AuthorDomainCommandHandler implements DomainCommandHandler<Author, CreateAuthor> {
 
     Author author;

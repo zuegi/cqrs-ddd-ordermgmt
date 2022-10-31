@@ -2,6 +2,7 @@ package ch.zuegi.ordermgmt.feature.test;
 
 
 import ch.zuegi.ordermgmt.feature.test.shared.AggregateRoot;
+import ch.zuegi.ordermgmt.feature.test.shared.DomainCommandHandler;
 import ch.zuegi.ordermgmt.shared.Command;
 import lombok.Getter;
 
@@ -12,7 +13,8 @@ import java.util.Map;
 public class Article extends AggregateRoot<Article, ArticleId> {
 
     ArticleEntity articleEntity;
-    protected Map<Class<? extends Command>, ArtikelDomainCommandHandler> behaviourMap;
+
+    private Author author;
 
     protected Article(ArticleId aggregateId) {
         super(aggregateId);
@@ -38,13 +40,11 @@ public class Article extends AggregateRoot<Article, ArticleId> {
         return article;
     }
 
-
-    public Map<Class<? extends Command>, ArtikelDomainCommandHandler> getBehaviourMap() {
-        return behaviourMap;
-    }
-
-
     public void addEntity(ArticleEntity entity) {
         this.articleEntity = entity;
+    }
+
+    public void addAggregate(Author author) {
+        this.author = author;
     }
 }

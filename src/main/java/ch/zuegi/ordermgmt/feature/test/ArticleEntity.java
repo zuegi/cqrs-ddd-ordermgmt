@@ -9,6 +9,7 @@ import lombok.Setter;
 @Getter
 public class ArticleEntity extends AggregateId<ArticleId> {
     String title;
+    AuthorEntity author;
 
     protected ArticleEntity(ArticleId aggregateId) {
         super(aggregateId);

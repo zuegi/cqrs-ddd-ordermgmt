@@ -10,7 +10,9 @@ class ArticleUnitTest {
     void erstelle_mit_entity() {
         // given
         ArticleId articleId = new ArticleId();
-        CreateAuthor createAuthor = CreateAuthor.commandOf("Max", "Muster");
+        String vorname = "Max";
+        String nachname = "Muster";
+        CreateAuthor createAuthor = CreateAuthor.commandOf(vorname, nachname);
         String title= "Herr der Ringe";
         CreateArticle createArticle = CreateArticle.commandOf(title,createAuthor);
 
@@ -26,6 +28,12 @@ class ArticleUnitTest {
                 .isNotNull()
                 .extracting(ArticleEntity::id, ArticleEntity::getTitle)
                 .contains(articleId, title);
+
+        Assertions.assertThat(article.getAuthor()).isInstanceOf(Author.class).isNotNull();
+        Assertions.assertThat(article.getAuthor().getAuthorEntity()).isNotNull()
+                .extracting(AuthorEntity::getVorname, AuthorEntity::getNachname)
+                .contains(vorname, nachname);
+
     }
 
     @Test
