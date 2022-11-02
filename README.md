@@ -11,10 +11,13 @@ Request -> ApplicationService -(> Validator) -> Command -> CommandHandler (->Val
 
 
 ### AggregateRoot
-Ein AggregateRoot wird immer über einen DomainCommand aufgerufen um Operationen wie Create, Read, Update, Delete auszulösen.
-Ein AggregateRoot hat DomainHandler, welche die Operationen am AggregateRoot durchführt.
-Ein AggregateRoot liefert Entities zurück, welche über den DomainService persistiert werden können.
-Ein AggregateRoot kann auch weitere AggregateRoots enthalten. Operationen in den Child AggregateRoots werden über deren Methoden ausgeführt.
+[x] Ein Aggregate ist eine Kompositionseinheit, die transaktionale Konsistenz aufweist.
+[x] Ein Aggregate enhält keine direkten Objekte, sondern die AggregateId als Referenz.
+[x] Wenn die Ausführung eines Befehls auf einer Aggregatinstanz die Ausführung zusätzlicher Geschäftsregeln auf einem oder mehreren anderen Aggregaten erfordert, verwende eventually consistency.
+[ ] Ein AggregateRoot wird immer über einen DomainCommand aufgerufen um Operationen wie Create, Read, Update, Delete auszulösen.
+[ ] Ein AggregateRoot hat DomainHandler, welche die Operationen am AggregateRoot durchführt.
+[ ] Ein AggregateRoot liefert Entities zurück, welche über den DomainService persistiert werden können.
+[ ] Ein AggregateRoot kann auch weitere AggregateRoots enthalten. Operationen in den Child AggregateRoots werden über deren Methoden ausgeführt.
 
 
 ### Reference Documentation
