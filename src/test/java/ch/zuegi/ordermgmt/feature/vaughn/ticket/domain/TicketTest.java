@@ -30,8 +30,12 @@ class TicketTest extends DomainTest {
     @Test
     void addTicketPositionToTicket() {
         Ticket ticket = ticketForTest();
-        TicketPosition ticketPosition = new TicketPosition(new TicketPositionId(), ticket.id(), new TradeItemId(), BigDecimal.TEN);
-        ticket.addTicketPosition(ticketPosition);
+        TicketPositionId ticketPositionId = new TicketPositionId();
+        TradeItemId tradeItemId = new TradeItemId();
+        TicketPosition ticketPosition = ticket.addTicketPosition(ticketPositionId, ticket.id(), tradeItemId, BigDecimal.TEN);
+        Assertions.assertThat(ticketPosition).isNotNull()
+                .extracting(TicketPosition::id, TicketPosition::getTicketId, TicketPosition::getTradeItemId, TicketPosition::getMenge)
+                .contains(ticketPositionId, ticket.id(), tradeItemId, BigDecimal.TEN);
 
         // und was nun? gibt die plannedTicketPosition den Event TicketPositionPlanned zurück?
         expectedEvents(2);
