@@ -1,7 +1,7 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain;
 
-import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicket;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateOrder;
+import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicket;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationException;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationMsg;

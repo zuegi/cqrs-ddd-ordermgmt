@@ -2,8 +2,6 @@ package ch.zuegi.ordermgmt.feature.ticket.domain;
 
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateOrderPosition;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateOrderPositionCommandHandler;
-import ch.zuegi.ordermgmt.feature.ticket.domain.entity.OrderPositionEntity;
-import ch.zuegi.ordermgmt.feature.ticket.domain.vo.OrderId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.OrderPositionId;
 import ch.zuegi.ordermgmt.shared.Entity;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRoot;

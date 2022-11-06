@@ -9,6 +9,7 @@ public class DomainEventPublisher {
     private final List<DomainEventSubscriber> domainEventSubscriberList = new ArrayList<>();
 
 
+    // static block, damit im Fehlerfall eine Exception geworfen werden kann
     static {
         try {
             instance = new DomainEventPublisher();

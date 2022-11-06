@@ -1,12 +1,10 @@
 package ch.zuegi.ordermgmt.feature.vaughn.ticket.domain;
 
 
-import ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.shared.DomainEventPublisher;
 import ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.vo.TicketPositionId;
 import ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.vo.TradeItemId;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;

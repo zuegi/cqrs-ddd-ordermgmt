@@ -1,7 +1,6 @@
 package ch.zuegi.ordermgmt.feature.test.shared;
 
 import ch.zuegi.ordermgmt.shared.Command;
-import ch.zuegi.ordermgmt.shared.Entity;
 
 import javax.validation.constraints.NotNull;
 import java.util.Map;

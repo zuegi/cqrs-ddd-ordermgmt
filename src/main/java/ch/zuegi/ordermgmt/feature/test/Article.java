@@ -2,12 +2,9 @@ package ch.zuegi.ordermgmt.feature.test;
 
 
 import ch.zuegi.ordermgmt.feature.test.shared.AggregateRoot;
-import ch.zuegi.ordermgmt.feature.test.shared.DomainCommandHandler;
-import ch.zuegi.ordermgmt.shared.Command;
 import lombok.Getter;
 
 import java.util.HashMap;
-import java.util.Map;
 
 @Getter
 public class Article extends AggregateRoot<Article, ArticleId> {

@@ -1,7 +1,6 @@
 package ch.zuegi.ordermgmt.feature.test;
 
 import ch.zuegi.ordermgmt.feature.test.shared.AggregateId;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 

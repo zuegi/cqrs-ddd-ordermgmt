@@ -2,8 +2,6 @@ package ch.zuegi.ordermgmt.feature.test;
 
 import ch.zuegi.ordermgmt.feature.test.shared.DomainCommandHandler;
 
-import javax.validation.constraints.NotNull;
-
 public class ArtikelDomainCommandHandler implements DomainCommandHandler<Article, CreateArticle> {
 
     Article article;

@@ -3,7 +3,6 @@ package ch.zuegi.ordermgmt.feature.vaughn.ticket.domain;
 import ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.shared.DomainEventPublisher;
 import ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.shared.Entity;
 import ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.vo.TicketId;
-import lombok.Value;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;

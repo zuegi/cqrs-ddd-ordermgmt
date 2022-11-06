@@ -4,7 +4,6 @@ import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateOrder;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateOrderPosition;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TradeDealType;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.OrderId;
-import ch.zuegi.ordermgmt.feature.ticket.domain.vo.OrderPositionId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TradeItemId;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationException;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationMsg;
