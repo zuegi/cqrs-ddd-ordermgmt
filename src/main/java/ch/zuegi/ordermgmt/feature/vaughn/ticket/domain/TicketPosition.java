@@ -4,9 +4,11 @@ import ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.shared.Entity;
 import ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.vo.TicketPositionId;
 import ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.vo.TradeItemId;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 
+@Getter
 public class TicketPosition extends Entity<TicketPositionId> {
 
     private TicketId ticketId;
