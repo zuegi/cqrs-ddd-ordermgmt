@@ -1,5 +1,6 @@
 package ch.zuegi.ordermgmt.feature.vaughn.ticket.domain;
 
+import ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.shared.AggregateRoot;
 import ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.shared.Entity;
 import ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.vo.TicketPositionId;
@@ -9,7 +10,7 @@ import lombok.Getter;
 import java.math.BigDecimal;
 
 @Getter
-public class TicketPosition extends Entity<TicketPositionId> {
+public class TicketPosition extends AggregateRoot<TicketPosition, TicketPositionId> {
 
     private TicketId ticketId;
     private TradeItemId tradeItemId;
@@ -25,5 +26,10 @@ public class TicketPosition extends Entity<TicketPositionId> {
     @Override
     public TicketPositionId id() {
         return this.aggregateId;
+    }
+
+    @Override
+    protected void validate() {
+
     }
 }
