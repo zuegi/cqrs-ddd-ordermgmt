@@ -35,6 +35,9 @@ public class Ticket extends AggregateRoot<Ticket, TicketId> {
         if (aggregateId == null) {
             throw new AggregateRootValidationException(AggregateRootValidationMsg.AGGREGATE_ID_MUST_NOT_BE_NULL);
         }
+        if (!aggregateId.id.startsWith(aggregateId.getPrefix())) {
+            throw new TicketIdStartWithException("TicketId must have a leading \"" +aggregateId.getPrefix() +"\"");
+        }
     }
 
     @Override

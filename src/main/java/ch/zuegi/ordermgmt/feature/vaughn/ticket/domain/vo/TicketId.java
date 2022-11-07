@@ -17,8 +17,8 @@ public class TicketId implements ValueObject<TicketId> {
         this.id = getPrefix() + id;
     }
 
-    private String getPrefix() {
-        return TICKET_PREFIX + "%s";
+    public String getPrefix() {
+        return TICKET_PREFIX;
     }
 
     @Override

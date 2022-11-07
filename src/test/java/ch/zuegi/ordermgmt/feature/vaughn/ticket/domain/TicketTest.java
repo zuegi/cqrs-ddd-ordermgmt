@@ -23,7 +23,7 @@ class TicketTest extends DomainTest {
         TicketId ticketId = new TicketId(TICKET_ID);
         // when
         Ticket ticket = new Ticket(ticketId);
-
+        Assertions.assertThat(ticket.id().id).isEqualTo("T" + TICKET_ID);
         // then
         Assertions.assertThat(ticket).isNotNull()
                 .extracting(Ticket::id)
@@ -51,6 +51,8 @@ class TicketTest extends DomainTest {
         TradeItemId tradeItemId = new TradeItemId();
         // when
         TicketPosition ticketPosition = ticket.addTicketPosition(ticketPositionId, ticket.id(), tradeItemId, BigDecimal.TEN);
+
+        Assertions.assertThat(ticketPosition.id().id).isEqualTo("P" + TICKET_ID);
 
         // then
         Assertions.assertThat(ticketPosition).isNotNull()
