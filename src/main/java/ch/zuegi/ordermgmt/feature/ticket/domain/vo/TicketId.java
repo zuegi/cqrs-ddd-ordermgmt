@@ -1,20 +1,29 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain.vo;
 
-import ch.zuegi.ordermgmt.shared.EventPrefix;
-import ch.zuegi.ordermgmt.shared.RandomUUID;
+import ch.zuegi.ordermgmt.shared.ValueObject;
 
-public class TicketId extends RandomUUID {
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-    public TicketId() {
-        super();
-    }
+public class TicketId implements ValueObject<TicketId> {
+
+    public static final String TICKET_PREFIX = "T";
+
+    @NotNull
+    @Size(min = 16, max = 50)
+    public final String id;
 
     public TicketId(String id) {
-        super(id);
+        this.id = getPrefix() + id;
+    }
+
+    public String getPrefix() {
+        return TICKET_PREFIX;
     }
 
     @Override
-    protected String getPrefix() {
-        return EventPrefix.OTP.name()+ "-%s";
+    public boolean sameValueAs(TicketId other) {
+        return other != null && this.id.equals(other.id);
     }
 }
+

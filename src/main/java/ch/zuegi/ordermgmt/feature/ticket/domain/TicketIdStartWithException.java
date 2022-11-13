@@ -1,4 +1,4 @@
-package ch.zuegi.ordermgmt.feature.vaughn.ticket.domain;
+package ch.zuegi.ordermgmt.feature.ticket.domain;
 
 public class TicketIdStartWithException extends RuntimeException {
     public TicketIdStartWithException(String s) {

@@ -1,4 +1,4 @@
-package ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.shared;
+package ch.zuegi.ordermgmt.shared;
 
 public interface DomainEventSubscriber<T> {
 

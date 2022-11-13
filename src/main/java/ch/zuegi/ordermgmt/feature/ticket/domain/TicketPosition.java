@@ -1,10 +1,9 @@
-package ch.zuegi.ordermgmt.feature.vaughn.ticket.domain;
+package ch.zuegi.ordermgmt.feature.ticket.domain;
 
-import ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.shared.AggregateRoot;
-import ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.shared.Entity;
-import ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.vo.TicketId;
-import ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.vo.TicketPositionId;
-import ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.vo.TradeItemId;
+import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
+import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;
+import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TradeItemId;
+import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRoot;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationException;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationMsg;
 import lombok.Getter;

@@ -1,7 +1,7 @@
-package ch.zuegi.ordermgmt.feature.vaughn.ticket.domain;
+package ch.zuegi.ordermgmt.feature.ticket.domain;
 
-import ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.shared.DomainEvent;
-import ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.vo.TicketId;
+import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
+import ch.zuegi.ordermgmt.shared.DomainEvent;
 import lombok.Value;
 
 import java.time.LocalDateTime;

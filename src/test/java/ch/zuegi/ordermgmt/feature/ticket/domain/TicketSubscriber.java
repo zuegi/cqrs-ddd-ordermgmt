@@ -1,6 +1,6 @@
-package ch.zuegi.ordermgmt.feature.vaughn.ticket.domain;
+package ch.zuegi.ordermgmt.feature.ticket.domain;
 
-import ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.shared.DomainEventSubscriber;
+import ch.zuegi.ordermgmt.shared.DomainEventSubscriber;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

@@ -1,8 +1,8 @@
-package ch.zuegi.ordermgmt.feature.vaughn.ticket.domain;
+package ch.zuegi.ordermgmt.feature.ticket.domain;
 
-import ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.shared.DomainEvent;
-import ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.shared.DomainEventPublisher;
-import ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.shared.DomainEventSubscriber;
+import ch.zuegi.ordermgmt.shared.DomainEvent;
+import ch.zuegi.ordermgmt.shared.DomainEventPublisher;
+import ch.zuegi.ordermgmt.shared.DomainEventSubscriber;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.util.ArrayList;

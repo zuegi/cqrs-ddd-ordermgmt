@@ -1,8 +1,6 @@
-package ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.vo;
+package ch.zuegi.ordermgmt.feature.ticket.domain.vo;
 
-import ch.zuegi.ordermgmt.feature.vaughn.ticket.domain.shared.ValueObject;
-import ch.zuegi.ordermgmt.shared.EventPrefix;
-import ch.zuegi.ordermgmt.shared.RandomUUID;
+import ch.zuegi.ordermgmt.shared.ValueObject;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
