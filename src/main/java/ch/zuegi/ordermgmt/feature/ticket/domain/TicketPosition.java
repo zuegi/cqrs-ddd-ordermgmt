@@ -1,7 +1,7 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain;
 
-import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
-import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;
+import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketNumber;
+import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionNumber;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TradeItemId;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRoot;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationException;
@@ -11,21 +11,21 @@ import lombok.Getter;
 import java.math.BigDecimal;
 
 @Getter
-public class TicketPosition extends AggregateRoot<TicketPosition, TicketPositionId> {
+public class TicketPosition extends AggregateRoot<TicketPosition, TicketPositionNumber> {
 
-    private TicketId ticketId;
+    private TicketNumber ticketNumber;
     private TradeItemId tradeItemId;
     private BigDecimal menge;
 
-    public TicketPosition(TicketPositionId aggregateId,TicketId ticketId, TradeItemId tradeItemId, BigDecimal menge) {
+    public TicketPosition(TicketPositionNumber aggregateId, TicketNumber ticketNumber, TradeItemId tradeItemId, BigDecimal menge) {
         super(aggregateId);
-        this.ticketId = ticketId;
+        this.ticketNumber = ticketNumber;
         this.tradeItemId = tradeItemId;
         this.menge = menge;
     }
 
     @Override
-    public TicketPositionId id() {
+    public TicketPositionNumber id() {
         return this.aggregateId;
     }
 

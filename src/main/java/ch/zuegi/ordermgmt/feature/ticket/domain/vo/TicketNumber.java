@@ -1,11 +1,15 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain.vo;
 
 import ch.zuegi.ordermgmt.shared.ValueObject;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class TicketId implements ValueObject<TicketId> {
+@EqualsAndHashCode
+@ToString
+public class TicketNumber implements ValueObject<TicketNumber> {
 
     public static final String TICKET_PREFIX = "T";
 
@@ -13,8 +17,12 @@ public class TicketId implements ValueObject<TicketId> {
     @Size(min = 16, max = 50)
     public final String id;
 
-    public TicketId(String id) {
-        this.id = getPrefix() + id;
+    public TicketNumber(String id) {
+        if (id.startsWith(TICKET_PREFIX, 0)) {
+            this.id = id;
+        } else {
+            this.id = getPrefix() + id;
+        }
     }
 
     public String getPrefix() {
@@ -22,7 +30,7 @@ public class TicketId implements ValueObject<TicketId> {
     }
 
     @Override
-    public boolean sameValueAs(TicketId other) {
+    public boolean sameValueAs(TicketNumber other) {
         return other != null && this.id.equals(other.id);
     }
 }

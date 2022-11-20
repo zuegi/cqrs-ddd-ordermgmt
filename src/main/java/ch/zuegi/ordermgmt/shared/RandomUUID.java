@@ -24,4 +24,5 @@ public abstract class RandomUUID implements ValueObject<RandomUUID> {
     }
 
     protected abstract String getPrefix();
+
 }

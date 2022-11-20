@@ -1,59 +1,95 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain;
 
-import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
-import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;
+import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketEntity;
+import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
+import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketPositionEntity;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreated;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketLifecycleUpdated;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionAdded;
+import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketNumber;
+import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionNumber;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TradeItemId;
 import ch.zuegi.ordermgmt.shared.DomainEventPublisher;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRoot;
-import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationException;
-import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationMsg;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Set;
 
-public class Ticket extends AggregateRoot<Ticket, TicketId> {
 
-    Set<TicketPosition> ticketPositionSet;
+public class Ticket extends AggregateRoot<Ticket, TicketNumber> {
 
-    public Ticket(TicketId aggregateId) {
+    private final TicketEntity ticketEntity;
+
+    public Ticket(TicketNumber aggregateId) {
         super(aggregateId);
 
-        this.validate();
-        this.ticketPositionSet = new HashSet<>();
+        LocalDateTime now = LocalDateTime.now();
+        ticketEntity = new TicketEntity();
+        ticketEntity.setTicketNumber(aggregateId);
+        ticketEntity.setLocalDateTime(now);
+        ticketEntity.setLifeCycleState(TicketLifeCycleState.TICKET_CREATED);
 
-        TicketCreated ticketCreated = TicketCreated.eventOf(aggregateId, LocalDateTime.now());
+        TicketCreated ticketCreated = TicketCreated.eventOf(aggregateId, now, TicketLifeCycleState.TICKET_CREATED);
+        this.validate();
         DomainEventPublisher
                 .instance()
                 .publish(ticketCreated);
+
     }
+
+
 
     @Override
     protected void validate() {
-        if (aggregateId == null) {
-            throw new AggregateRootValidationException(AggregateRootValidationMsg.AGGREGATE_ID_MUST_NOT_BE_NULL);
-        }
         if (!aggregateId.id.startsWith(aggregateId.getPrefix())) {
             throw new TicketIdStartWithException("TicketId must have a leading \"" +aggregateId.getPrefix() +"\"");
         }
+
+        // TODO Exception
+        assert this.ticketEntity != null;
     }
 
     @Override
-    public TicketId id() {
+    public TicketNumber id() {
         return this.aggregateId;
     }
 
 
-    public TicketPosition addTicketPosition(TicketPositionId ticketPositionId, TicketId ticketId, TradeItemId tradeItemId, BigDecimal menge) {
-        TicketPosition ticketPosition = new TicketPosition(ticketPositionId, ticketId, tradeItemId, menge);
-        this.ticketPositionSet.add(ticketPosition);
+    public void addTicketPosition(TicketPositionNumber ticketPositionNumber, TradeItemId tradeItemId, BigDecimal menge) {
+
+        TicketPositionEntity ticketPositionEntity = new TicketPositionEntity();
+        ticketPositionEntity.setTicketEntity(this.ticketEntity);
+        ticketPositionEntity.setTradeItemId(tradeItemId); // FIXME TradeItem als Objekt einfügen oder doch als Ref?
+        ticketPositionEntity.setTicketPositionNumber(ticketPositionNumber);
+        ticketPositionEntity.setMenge(menge);
+
+        if (CollectionUtils.isEmpty(ticketEntity.getTicketPositionEntitySet())) {
+            ticketEntity.setTicketPositionEntitySet(new HashSet<>());
+        }
+        this.ticketEntity.getTicketPositionEntitySet().add(ticketPositionEntity);
+
         //add TicketPositionAdded in DomainPublisher
-        TicketPositionAdded ticketPositionAdded = TicketPositionAdded.eventOf(ticketPosition.id(), ticketPosition.getTicketId(), ticketPosition.getTradeItemId(), ticketPosition.getMenge());
+        TicketPositionAdded ticketPositionAdded = TicketPositionAdded.eventOf(ticketPositionEntity.getTicketPositionNumber(), ticketPositionEntity.getTicketEntity().getTicketNumber() ,ticketPositionEntity.getTradeItemId(), ticketPositionEntity.getMenge());
         DomainEventPublisher
                 .instance()
                 .publish(ticketPositionAdded);
 
-        return ticketPosition;
+    }
+
+    public void updateStatus(TicketLifeCycleState ticketLifeCycleState) {
+        this.ticketEntity.setLifeCycleState(ticketLifeCycleState);
+        this.validate();
+
+        TicketLifecycleUpdated ticketUpdated = TicketLifecycleUpdated.eventOf(aggregateId, LocalDateTime.now(), this.ticketEntity.getLifeCycleState());
+        DomainEventPublisher
+                .instance()
+                .publish(ticketUpdated);
+    }
+
+    public TicketEntity getTicketEntity() {
+        return this.ticketEntity;
     }
 }
+
