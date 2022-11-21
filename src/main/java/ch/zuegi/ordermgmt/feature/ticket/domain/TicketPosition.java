@@ -13,15 +13,9 @@ import java.math.BigDecimal;
 @Getter
 public class TicketPosition extends AggregateRoot<TicketPosition, TicketPositionNumber> {
 
-    private TicketNumber ticketNumber;
-    private TradeItemId tradeItemId;
-    private BigDecimal menge;
 
-    public TicketPosition(TicketPositionNumber aggregateId, TicketNumber ticketNumber, TradeItemId tradeItemId, BigDecimal menge) {
+    public TicketPosition(TicketPositionNumber aggregateId) {
         super(aggregateId);
-        this.ticketNumber = ticketNumber;
-        this.tradeItemId = tradeItemId;
-        this.menge = menge;
     }
 
     @Override
@@ -29,13 +23,9 @@ public class TicketPosition extends AggregateRoot<TicketPosition, TicketPosition
         return this.aggregateId;
     }
 
+
     @Override
-    protected void validate() {
-        if (aggregateId == null) {
-            throw new AggregateRootValidationException(AggregateRootValidationMsg.AGGREGATE_ID_MUST_NOT_BE_NULL);
-        }
-        if (!aggregateId.id.startsWith(aggregateId.getPrefix())) {
-            throw new TicketPositionIdStartWithException("TicketId must have a leading \"" +aggregateId.getPrefix() +"\"");
-        }
+    protected AggregateRootBehavior<TicketPositionNumber> initialBehavior() {
+        return null;
     }
 }

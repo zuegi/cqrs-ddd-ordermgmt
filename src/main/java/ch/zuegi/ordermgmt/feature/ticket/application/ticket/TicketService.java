@@ -1,6 +1,7 @@
 package ch.zuegi.ordermgmt.feature.ticket.application.ticket;
 
 import ch.zuegi.ordermgmt.feature.ticket.domain.Ticket;
+import ch.zuegi.ordermgmt.feature.ticket.domain.command.SaveTicketCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketEntity;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketNumber;
 import ch.zuegi.ordermgmt.feature.ticket.infrastructure.persistence.TicketRepository;
@@ -18,8 +19,9 @@ public class TicketService {
 
     TicketRepository ticketRepository;
 
-    public void createTicket(Ticket ticket) {
-        ticketRepository.save(ticket.getTicketEntity());
+    public void createTicket(TicketNumber ticketNumber, SaveTicketCommand saveTicketCommand) {
+        Ticket ticket = new Ticket(ticketNumber);
+        ticket.handle(saveTicketCommand);
     }
 
     public TicketEntity findByTicketNumber(TicketNumber ticketNumber) {

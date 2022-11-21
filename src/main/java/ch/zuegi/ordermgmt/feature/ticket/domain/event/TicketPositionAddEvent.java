@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Value(staticConstructor = "eventOf")
-public class TicketPositionAdded implements DomainEvent {
+public class TicketPositionAddEvent implements DomainEvent {
 
     TicketPositionNumber ticketPositionId;
     TicketNumber ticketNumber;
