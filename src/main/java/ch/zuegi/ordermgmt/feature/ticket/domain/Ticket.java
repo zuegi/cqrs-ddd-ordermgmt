@@ -40,6 +40,13 @@ public class Ticket extends AggregateRoot<Ticket, TicketNumber> {
     }
 
 
+    public Ticket(TicketEntity ticketEntity) {
+        super(ticketEntity.getTicketNumber());
+        this.ticketEntity = ticketEntity;
+//        this.validateEntity();
+    }
+
+
 
     @Override
     protected void validate() {
