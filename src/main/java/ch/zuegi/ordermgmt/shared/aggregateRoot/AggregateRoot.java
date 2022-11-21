@@ -1,9 +1,9 @@
 package ch.zuegi.ordermgmt.shared.aggregateRoot;
 
-import ch.zuegi.ordermgmt.feature.ticket.domain.command.SaveTicketCommand;
-import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketNumber;
-import ch.zuegi.ordermgmt.shared.*;
-import io.vavr.control.Either;
+import ch.zuegi.ordermgmt.shared.Command;
+import ch.zuegi.ordermgmt.shared.CommandHandler;
+import ch.zuegi.ordermgmt.shared.DomainEvent;
+import ch.zuegi.ordermgmt.shared.Entity;
 import lombok.Getter;
 
 import java.io.Serializable;

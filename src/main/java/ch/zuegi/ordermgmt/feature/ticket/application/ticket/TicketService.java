@@ -24,6 +24,7 @@ public class TicketService {
         ticket.handle(saveTicketCommand);
     }
 
+    // TODO QueryHandler und Queries implementieren
     public TicketEntity findByTicketNumber(TicketNumber ticketNumber) {
         return ticketRepository.findByTicketNumber(ticketNumber);
     }
