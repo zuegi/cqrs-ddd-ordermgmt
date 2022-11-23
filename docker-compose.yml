@@ -1,0 +1,15 @@
+version: '3.7'
+
+services:
+  # mysql server database
+  journal:
+    image: mysql
+    container_name: ordermgmt-mysql
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ordermgmtadmin
+      MYSQL_DATABASE: orderdb
+      MYSQL_USER: orderadmin
+      MYSQL_PASSWORD: orderadmin

@@ -1,7 +1,7 @@
-package ch.zuegi.ordermgmt.feature.ticket.domain;
+package ch.zuegi.ordermgmt.feature.ticket.domain.event;
 
-import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
-import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;
+import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketNumber;
+import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionNumber;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TradeItemId;
 import ch.zuegi.ordermgmt.shared.DomainEvent;
 import lombok.Value;
@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 @Value(staticConstructor = "eventOf")
 public class TicketPositionAdded implements DomainEvent {
 
-    TicketPositionId ticketPositionId;
-    TicketId ticketId;
+    TicketPositionNumber ticketPositionId;
+    TicketNumber ticketNumber;
     TradeItemId tradeItemId;
     BigDecimal menge;
 

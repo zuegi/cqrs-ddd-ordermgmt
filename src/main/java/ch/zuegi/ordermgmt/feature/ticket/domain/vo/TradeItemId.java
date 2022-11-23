@@ -2,7 +2,9 @@ package ch.zuegi.ordermgmt.feature.ticket.domain.vo;
 
 import ch.zuegi.ordermgmt.shared.EventPrefix;
 import ch.zuegi.ordermgmt.shared.RandomUUID;
+import lombok.ToString;
 
+@ToString
 public class TradeItemId extends RandomUUID {
 
     public TradeItemId() {
