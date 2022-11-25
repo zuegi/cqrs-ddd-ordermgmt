@@ -1,7 +1,7 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain.event;
 
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
-import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketNumber;
+import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.shared.DomainEvent;
 import lombok.Value;
 
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Value(staticConstructor = "eventOf")
 public class TicketLifecycleUpdated implements DomainEvent {
-    TicketNumber ticketNumber;
+    TicketId ticketNumber;
     LocalDateTime localDateTime;
     TicketLifeCycleState lifeCycleState;
 

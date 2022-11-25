@@ -5,7 +5,16 @@
 
 Request -> ApplicationService -(> Validator) -> Command -> CommandHandler (->Validator)  -> DomainService -> DommainCommand -> DomainCommandHandler (-> Validator) -> Aggregate (-> Validator)
 
+
+## TODO
+[] Repository erstellen, was mit AggregateRoot umgehen kann
+    * [] Ticket und TicketPosition werden immer als AggregateRoot behandelt
+    * [] AggregateRoots können mit einem Dto/AggregateCommand oder einfach einem Daten Objekt umgehen
+    * [] Repository erzeugt die nächste Identity -> nextIdentity()?
+
 ### Reference Documentation
+Meine persönlichen Referenzen
+[Beispiel cqrs und ddd von Michael Schnell](https://github.com/fuinorg/ddd-cqrs-4-java-example/tree/master/spring-boot)
 
 For further reference, please consider the following sections:
 

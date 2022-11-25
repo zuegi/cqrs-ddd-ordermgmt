@@ -1,7 +1,7 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain.entity;
 
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.converter.TicketNumberConverter;
-import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketNumber;
+import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,7 +26,7 @@ public class TicketEntity {
 
     @Column(name = "ticket_number", length = 50, unique = true, columnDefinition = "varchar(50)")
     @Convert(converter = TicketNumberConverter.class)
-    TicketNumber ticketNumber;
+    TicketId ticketNumber;
 
     LocalDateTime localDateTime;
     TicketLifeCycleState lifeCycleState;

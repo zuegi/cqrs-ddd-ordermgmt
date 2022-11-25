@@ -2,7 +2,7 @@ package ch.zuegi.ordermgmt.feature.ticket.domain.entity;
 
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.converter.TicketPositionNumberConverter;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.converter.TradeItemIdConverter;
-import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionNumber;
+import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TradeItemId;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +25,7 @@ public class TicketPositionEntity {
 
     @Column(name ="ticket_position_number", length = 50, unique = true, columnDefinition = "varchar(50)")
     @Convert(converter = TicketPositionNumberConverter.class)
-    private TicketPositionNumber ticketPositionNumber;
+    private TicketPositionId ticketPositionNumber;
 
     @ManyToOne
     @JoinColumn(name = "ticket_id")

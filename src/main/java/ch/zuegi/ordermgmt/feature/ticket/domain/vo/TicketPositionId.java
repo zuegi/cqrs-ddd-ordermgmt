@@ -5,20 +5,22 @@ import ch.zuegi.ordermgmt.shared.RandomUUID;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 @EqualsAndHashCode
 @ToString
-public class TradeItemId extends RandomUUID {
+public class TicketPositionId extends RandomUUID {
 
-    public TradeItemId() {
-        super();
+    public TicketPositionId() {
     }
 
-    public TradeItemId(String id) {
+    public TicketPositionId(String id) {
         super(id);
     }
 
     @Override
     protected String getPrefix() {
-        return EventPrefix.TIP.name();
+        return EventPrefix.OPP.name();
     }
 }

@@ -4,11 +4,10 @@ import ch.zuegi.ordermgmt.feature.ticket.application.AbstractIntegrationTest;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketEntity;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketPositionEntity;
-import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketNumber;
-import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionNumber;
+import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
+import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TradeItemId;
 import org.assertj.core.api.Assertions;
-import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -27,9 +26,9 @@ class TicketRepositoryIntegrationTest extends AbstractIntegrationTest {
         // given
         TradeItemId tradeItemId = new TradeItemId();
         String id = "1234";
-        TicketNumber ticketNumber = new TicketNumber(id);
+        TicketId ticketNumber = new TicketId(id);
         LocalDateTime now = LocalDateTime.now();
-        TicketPositionNumber ticketPositionNumber = new TicketPositionNumber(id);
+        TicketPositionId ticketPositionNumber = new TicketPositionId(id);
 
         TicketPositionEntity ticketPosition = new TicketPositionEntity();
         ticketPosition.setTicketPositionNumber(ticketPositionNumber);

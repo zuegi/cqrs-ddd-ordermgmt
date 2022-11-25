@@ -7,18 +7,18 @@ import lombok.ToString;
 
 @EqualsAndHashCode
 @ToString
-public class TradeItemId extends RandomUUID {
+public class TicketId extends RandomUUID {
 
-    public TradeItemId() {
+    public TicketId() {
         super();
     }
 
-    public TradeItemId(String id) {
+    public TicketId(String id) {
         super(id);
     }
-
     @Override
     protected String getPrefix() {
-        return EventPrefix.TIP.name();
+        return EventPrefix.OTP.name();
     }
 }
+
