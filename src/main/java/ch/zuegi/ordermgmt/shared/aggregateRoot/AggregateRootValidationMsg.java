@@ -9,4 +9,5 @@ public interface AggregateRootValidationMsg {
     String CURRENT_AGGREGATE_LIFECYCLE_STATE_IS_FINAL = "Current Aggregate Lifecycle State is final";
     String AGGREGATE_LIFECYCLE_STATE_NOT_ALLOWED = "Aggregate Lifecycle State not allowed";
     String WRONG_COMMAND_TYPE = "Wrong Command Type";
+    String TICKET_COMMAND_TICKET_POSITION_SET_MUST_NOT_BE_EMPTY = "CreateTicketPosition command must not be empty in CreateTicket command";
 }

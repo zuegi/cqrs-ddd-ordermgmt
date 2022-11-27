@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class TicketPositionCreated implements DomainEvent {
 
     TicketPositionId ticketPositionId;
-    TicketId ticketNumber;
+    TicketId ticketId;
     TradeItemId tradeItemId;
     BigDecimal menge;
 

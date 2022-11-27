@@ -30,4 +30,13 @@ public class TicketEventBuilder {
                .build();
 
     }
+
+    public static TicketPositionCreated build(TicketPosition ticketPosition, TicketPositionCreated.TicketPositionCreatedBuilder builder) {
+        return builder
+                .ticketPositionId(ticketPosition.id())
+                .ticketId(ticketPosition.getTicketId())
+                .tradeItemId(ticketPosition.getTradeItemId())
+                .menge(ticketPosition.getMenge())
+                .build();
+    }
 }

@@ -6,6 +6,7 @@ import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketPositionComm
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreated;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketLifecycleUpdated;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionCreated;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TradeItemId;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationException;
@@ -20,17 +21,9 @@ import java.util.Set;
 
 class TicketTest extends DomainTest {
 
-
-    @Test
-    void createTicketValid() {
-        // given
-        TicketId ticketId = new TicketId();
-        // when
-        Ticket.create(ticketId, createCommandForTest());
-        // then
-        expectedEvents(TicketCreated.class, 1);
-
-    }
+    // Zuerst immer die Fehlversuche erstellen
+    // dann die validen Tests
+    // Immer nur ein Assertion pro Test
 
     @Test
     void createTicketWithTicketIdIsNullInvalid() {
@@ -60,7 +53,23 @@ class TicketTest extends DomainTest {
                 .build();
 
         TicketId ticketId = new TicketId();
-        Ticket ticket = Ticket.create(ticketId, ticketCommand);
+        Assertions.assertThatExceptionOfType(AggregateRootValidationException.class)
+                .isThrownBy(() -> Ticket.create(ticketId,  ticketCommand))
+                .withMessage(AggregateRootValidationMsg.TICKET_COMMAND_TICKET_POSITION_SET_MUST_NOT_BE_EMPTY);
+
+    }
+
+    @Test
+    void createTicketValid() {
+        // given
+        TicketId ticketId = new TicketId();
+        // when
+        Ticket.create(ticketId, createCommandForTest());
+        // then
+        expectedEvents(2);
+        expectedEvents(TicketCreated.class, 1);
+        expectedEvents(TicketPositionCreated.class, 1);
+
     }
 
     @Test
