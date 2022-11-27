@@ -5,6 +5,7 @@ import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreated;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketEventBuilder;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketLifecycleUpdated;
+import ch.zuegi.ordermgmt.feature.ticket.domain.validator.CreateTicketCommandValidator;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;
 import ch.zuegi.ordermgmt.shared.DomainEventPublisher;
@@ -14,6 +15,7 @@ import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationMsg;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,21 +31,33 @@ public class Ticket extends AggregateRoot<Ticket, TicketId> {
         super(ticketId);
     }
 
-    public static Ticket create(TicketId ticketId, CreateTicketCommand command) {
-        if (command == null) {
-            throw new AggregateRootValidationException(AggregateRootValidationMsg.AGGREGATE_COMMAND_MUST_NOT_BE_NULL);
-        }
+    @Override
+    protected AggregateRootValidators initialValidators() {
+        return AggregateRootValidators.builder()
+                .validators(
+                        Map.of(CreateTicketCommand.class, new CreateTicketCommandValidator())
+                )
+                .build();
+    }
 
+
+    public static Ticket create(TicketId ticketId, CreateTicketCommand command) {
         Ticket ticket = new Ticket(ticketId);
+        ticket.validate(command);
         ticket.localDateTime = command.getLocalDateTime();
         ticket.ticketLifeCycleState = command.getTicketLifeCycleState();
 
+        // TODO kann ich hier einen schöneren Ansatz fahren
+        // extract CreateTicketPosition
+        // erstelle TicketPosition
+        // füge TicketPosition hinzu
+
+        // oder den fokus gar nicht auf dem Ticket, sondern vielmehr auf der TicketPosition?
         ticket.ticketPositionSet = command.getCreateTicketPositionCommands()
                 .stream()
-                .map(createTicketPositionCommand -> TicketPosition.createTicketPosition(new TicketPositionId(), ticket.id(), createTicketPositionCommand))
+                .map(createTicketPositionCommand -> TicketPosition.create(new TicketPositionId(), ticket.id(), createTicketPositionCommand))
                 .collect(Collectors.toUnmodifiableSet());
 
-        ticket.validate();
 
         TicketCreated ticketCreated = TicketEventBuilder.build(ticket, TicketCreated.builder());
 
@@ -54,12 +68,8 @@ public class Ticket extends AggregateRoot<Ticket, TicketId> {
         return ticket;
     }
 
-    @Override
-    protected void validate() {
-        // TODO Validations
 
 
-    }
 
     @Override
     public TicketId id() {
@@ -82,6 +92,5 @@ public class Ticket extends AggregateRoot<Ticket, TicketId> {
             throw new AggregateRootValidationException(AggregateRootValidationMsg.AGGREGATE_LIFECYCLE_STATE_NOT_ALLOWED);
         }
     }
-
 
 }

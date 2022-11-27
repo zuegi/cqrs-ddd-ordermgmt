@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 class TicketTest extends DomainTest {
@@ -47,6 +48,19 @@ class TicketTest extends DomainTest {
         Assertions.assertThatExceptionOfType(AggregateRootValidationException.class)
                 .isThrownBy(() -> Ticket.create(ticketId,  null))
                 .withMessage(AggregateRootValidationMsg.AGGREGATE_COMMAND_MUST_NOT_BE_NULL);
+    }
+
+    @Test
+    void create_ticket_with_void_set_of_ticketPosition_invalid() {
+        // given ticketCommand with void Set of TicketPosition
+        CreateTicketCommand ticketCommand = CreateTicketCommand.builder()
+                .localDateTime(LocalDateTime.now())
+                .ticketLifeCycleState(TicketLifeCycleState.TICKET_CREATED)
+                .createTicketPositionCommands(new HashSet<>())
+                .build();
+
+        TicketId ticketId = new TicketId();
+        Ticket ticket = Ticket.create(ticketId, ticketCommand);
     }
 
     @Test

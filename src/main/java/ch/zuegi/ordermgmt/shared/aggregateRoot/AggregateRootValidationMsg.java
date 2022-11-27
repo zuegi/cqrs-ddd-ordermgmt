@@ -8,4 +8,5 @@ public interface AggregateRootValidationMsg {
     String AGGREGATE_COMMAND_MUST_NOT_BE_NULL = "Aggregate Command must not be null";
     String CURRENT_AGGREGATE_LIFECYCLE_STATE_IS_FINAL = "Current Aggregate Lifecycle State is final";
     String AGGREGATE_LIFECYCLE_STATE_NOT_ALLOWED = "Aggregate Lifecycle State not allowed";
+    String WRONG_COMMAND_TYPE = "Wrong Command Type";
 }
