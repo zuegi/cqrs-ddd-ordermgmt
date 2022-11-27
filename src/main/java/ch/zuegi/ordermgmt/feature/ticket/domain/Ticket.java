@@ -3,52 +3,38 @@ package ch.zuegi.ordermgmt.feature.ticket.domain;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreated;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketEventBuilder;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketLifecycleUpdated;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;
 import ch.zuegi.ordermgmt.shared.DomainEventPublisher;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRoot;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationException;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationMsg;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 
+@Getter
 public class Ticket extends AggregateRoot<Ticket, TicketId> {
 
     private LocalDateTime localDateTime;
     private TicketLifeCycleState ticketLifeCycleState;
     private Set<TicketPosition> ticketPositionSet;
 
-    /*public Ticket(TicketNumber aggregateId) {
-        super(aggregateId);
-
-   *//*     LocalDateTime now = LocalDateTime.now();
-        ticketEntity = new TicketEntity();
-        ticketEntity.setTicketNumber(aggregateId);
-        ticketEntity.setLocalDateTime(now);
-        ticketEntity.setLifeCycleState(TicketLifeCycleState.TICKET_CREATED);
-
-        TicketCreated ticketCreated = TicketCreated.eventOf(aggregateId, now, TicketLifeCycleState.TICKET_CREATED);
-        this.validate();
-        DomainEventPublisher
-                .instance()
-                .publish(ticketCreated);*//*
-
-    }*/
-
     private Ticket(TicketId ticketId) {
         super(ticketId);
     }
 
-    public static Ticket createTicket(TicketId ticketId, CreateTicketCommand command) {
-        Ticket ticket = new Ticket(ticketId);
-
+    public static Ticket create(TicketId ticketId, CreateTicketCommand command) {
         if (command == null) {
             throw new AggregateRootValidationException(AggregateRootValidationMsg.AGGREGATE_COMMAND_MUST_NOT_BE_NULL);
         }
 
+        Ticket ticket = new Ticket(ticketId);
         ticket.localDateTime = command.getLocalDateTime();
         ticket.ticketLifeCycleState = command.getTicketLifeCycleState();
 
@@ -59,14 +45,7 @@ public class Ticket extends AggregateRoot<Ticket, TicketId> {
 
         ticket.validate();
 
-
-        TicketCreated ticketCreated = TicketCreated.builder()
-                .ticketNumber(ticket.id())
-                .lifeCycleState(ticket.ticketLifeCycleState)
-                .localDateTime(ticket.localDateTime)
-                .ticketPositionNumberSet(ticket.ticketPositionSet.stream().map(TicketPosition::id).collect(Collectors.toSet()))
-                .build();
-
+        TicketCreated ticketCreated = TicketEventBuilder.build(ticket, TicketCreated.builder());
 
         DomainEventPublisher
                 .instance()
@@ -82,8 +61,6 @@ public class Ticket extends AggregateRoot<Ticket, TicketId> {
 
     }
 
-
-
     @Override
     public TicketId id() {
         return this.aggregateId;
@@ -92,6 +69,10 @@ public class Ticket extends AggregateRoot<Ticket, TicketId> {
     public void updateState(TicketLifeCycleState ticketLifeCycleState) {
         this.validateLifecycleState(ticketLifeCycleState);
         this.ticketLifeCycleState = ticketLifeCycleState;
+
+        TicketLifecycleUpdated lifecycleUpdated = TicketEventBuilder.build(this, TicketLifecycleUpdated.builder());
+        DomainEventPublisher.instance().
+                publish(lifecycleUpdated);
     }
 
     private void validateLifecycleState(TicketLifeCycleState toBeProvenTicketLifecycleState) {

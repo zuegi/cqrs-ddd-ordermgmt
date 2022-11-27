@@ -12,6 +12,7 @@ public abstract class AggregateRoot<E, ID extends Serializable> extends Entity<I
 
     public AggregateRoot(ID aggregateID) {
         super(aggregateID);
+        validate();
     }
     protected abstract void validate();
 

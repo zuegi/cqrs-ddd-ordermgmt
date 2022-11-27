@@ -5,6 +5,7 @@ import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketPositionCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreated;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketLifecycleUpdated;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TradeItemId;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationException;
@@ -24,7 +25,7 @@ class TicketTest extends DomainTest {
         // given
         TicketId ticketId = new TicketId();
         // when
-        Ticket.createTicket(ticketId, createCommandForTest());
+        Ticket.create(ticketId, createCommandForTest());
         // then
         expectedEvents(TicketCreated.class, 1);
 
@@ -35,7 +36,7 @@ class TicketTest extends DomainTest {
         TicketId ticketId = null;
         // when
         Assertions.assertThatExceptionOfType(AggregateRootValidationException.class)
-                .isThrownBy(() -> Ticket.createTicket(ticketId,  CreateTicketCommand.builder().build()))
+                .isThrownBy(() -> Ticket.create(ticketId,  CreateTicketCommand.builder().build()))
                 .withMessage(AggregateRootValidationMsg.AGGREGATE_ID_MUST_NOT_BE_NULL);
     }
 
@@ -44,7 +45,7 @@ class TicketTest extends DomainTest {
         TicketId ticketId = new TicketId();
         // when
         Assertions.assertThatExceptionOfType(AggregateRootValidationException.class)
-                .isThrownBy(() -> Ticket.createTicket(ticketId,  null))
+                .isThrownBy(() -> Ticket.create(ticketId,  null))
                 .withMessage(AggregateRootValidationMsg.AGGREGATE_COMMAND_MUST_NOT_BE_NULL);
     }
 
@@ -52,7 +53,7 @@ class TicketTest extends DomainTest {
     void processTicketState() {
         // given
         TicketId ticketId = new TicketId();
-        Ticket ticket = Ticket.createTicket(ticketId, createCommandForTest());
+        Ticket ticket = Ticket.create(ticketId, createCommandForTest());
 
         // when
         ticket.updateState(TicketLifeCycleState.TICKET_IN_PROCESSING);
@@ -65,8 +66,12 @@ class TicketTest extends DomainTest {
         Assertions.assertThatExceptionOfType(AggregateRootValidationException.class)
                 .isThrownBy(() -> ticket.updateState(TicketLifeCycleState.TICKET_CREATED))
                 .withMessage(AggregateRootValidationMsg.CURRENT_AGGREGATE_LIFECYCLE_STATE_IS_FINAL);
-        ;
 
+        // then
+        expectedEvents(TicketCreated.class, 1);
+        expectedEvents(TicketLifecycleUpdated.class, 3);
+
+        Assertions.assertThat(ticket.getTicketLifeCycleState()).isEqualTo(TicketLifeCycleState.TICKET_PROCESSED);
 
     }
 
