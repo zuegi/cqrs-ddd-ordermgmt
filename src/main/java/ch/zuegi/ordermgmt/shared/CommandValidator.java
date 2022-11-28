@@ -1,6 +1,8 @@
 package ch.zuegi.ordermgmt.shared;
 
-public interface CommandValidator<C extends Command> {
+import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRoot;
 
-    void validate(C command);
+public interface CommandValidator<A extends AggregateRoot<A, ? extends RandomUUID>, C extends Command> {
+
+    void validate(A aggregate, C command);
 }

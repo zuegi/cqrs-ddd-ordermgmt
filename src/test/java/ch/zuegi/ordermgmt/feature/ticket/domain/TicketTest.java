@@ -3,6 +3,7 @@ package ch.zuegi.ordermgmt.feature.ticket.domain;
 
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketPositionCommand;
+import ch.zuegi.ordermgmt.feature.ticket.domain.command.UpdateTicketLifecycleCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreated;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketLifecycleUpdated;
@@ -79,15 +80,20 @@ class TicketTest extends DomainTest {
         Ticket ticket = Ticket.create(ticketId, createCommandForTest());
 
         // when
-        ticket.updateState(TicketLifeCycleState.TICKET_IN_PROCESSING);
+        UpdateTicketLifecycleCommand ticketInProcessingCommand = UpdateTicketLifecycleCommand.builder().ticketLifeCycleState(TicketLifeCycleState.TICKET_IN_PROCESSING).localDateTime(LocalDateTime.now()).build();
+        ticket.updateState(ticketInProcessingCommand);
         // when
-        ticket.updateState(TicketLifeCycleState.TICKET_IS_PREPARED);
+        UpdateTicketLifecycleCommand ticketIsPreparedCommand = UpdateTicketLifecycleCommand.builder().ticketLifeCycleState(TicketLifeCycleState.TICKET_IS_PREPARED).localDateTime(LocalDateTime.now()).build();
+        ticket.updateState(ticketIsPreparedCommand);
         // when
-        ticket.updateState(TicketLifeCycleState.TICKET_PROCESSED);
+        UpdateTicketLifecycleCommand ticketProcessed = UpdateTicketLifecycleCommand.builder().ticketLifeCycleState(TicketLifeCycleState.TICKET_PROCESSED).localDateTime(LocalDateTime.now()).build();
+        ticket.updateState(ticketProcessed);
 
         // when
+
+        UpdateTicketLifecycleCommand ticketCreated = UpdateTicketLifecycleCommand.builder().ticketLifeCycleState(TicketLifeCycleState.TICKET_CREATED).localDateTime(LocalDateTime.now()).build();
         Assertions.assertThatExceptionOfType(AggregateRootValidationException.class)
-                .isThrownBy(() -> ticket.updateState(TicketLifeCycleState.TICKET_CREATED))
+                .isThrownBy(() -> ticket.updateState(ticketCreated))
                 .withMessage(AggregateRootValidationMsg.CURRENT_AGGREGATE_LIFECYCLE_STATE_IS_FINAL);
 
         // then

@@ -1,11 +1,13 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain;
 
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;
+import ch.zuegi.ordermgmt.feature.ticket.domain.command.UpdateTicketLifecycleCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreated;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketEventBuilder;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketLifecycleUpdated;
 import ch.zuegi.ordermgmt.feature.ticket.domain.validator.CreateTicketCommandValidator;
+import ch.zuegi.ordermgmt.feature.ticket.domain.validator.UpdateTicketLifefycleValidator;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;
 import ch.zuegi.ordermgmt.shared.DomainEventPublisher;
@@ -35,7 +37,11 @@ public class Ticket extends AggregateRoot<Ticket, TicketId> {
     protected AggregateRootValidators initialValidators() {
         return AggregateRootValidators.builder()
                 .validators(
-                        Map.of(CreateTicketCommand.class, new CreateTicketCommandValidator())
+                        Map.of(
+                                CreateTicketCommand.class, new CreateTicketCommandValidator(),
+                                UpdateTicketLifecycleCommand.class, new UpdateTicketLifefycleValidator()
+
+                        )
                 )
                 .build();
     }
@@ -43,7 +49,7 @@ public class Ticket extends AggregateRoot<Ticket, TicketId> {
 
     public static Ticket create(TicketId ticketId, CreateTicketCommand command) {
         Ticket ticket = new Ticket(ticketId);
-        ticket.validate(command);
+        ticket.validate(ticket, command);
         ticket.localDateTime = command.getLocalDateTime();
         ticket.ticketLifeCycleState = command.getTicketLifeCycleState();
 
@@ -76,21 +82,15 @@ public class Ticket extends AggregateRoot<Ticket, TicketId> {
         return this.aggregateId;
     }
 
-    public void updateState(TicketLifeCycleState ticketLifeCycleState) {
-        this.validateLifecycleState(ticketLifeCycleState);
-        this.ticketLifeCycleState = ticketLifeCycleState;
+    public void updateState(UpdateTicketLifecycleCommand updateTicketLifecycleCommand) {
+        this.validate(this, updateTicketLifecycleCommand);
+        this.ticketLifeCycleState = updateTicketLifecycleCommand.getTicketLifeCycleState();
+        this.localDateTime = updateTicketLifecycleCommand.getLocalDateTime();
 
         TicketLifecycleUpdated lifecycleUpdated = TicketEventBuilder.build(this, TicketLifecycleUpdated.builder());
         DomainEventPublisher.instance().
                 publish(lifecycleUpdated);
     }
 
-    private void validateLifecycleState(TicketLifeCycleState toBeProvenTicketLifecycleState) {
-        this.ticketLifeCycleState.next().orElseThrow(() -> new AggregateRootValidationException(AggregateRootValidationMsg.CURRENT_AGGREGATE_LIFECYCLE_STATE_IS_FINAL));
-
-        if (!this.ticketLifeCycleState.equals(TicketLifeCycleState.TICKET_CREATED) && !this.ticketLifeCycleState.next().get().equals(toBeProvenTicketLifecycleState)) {
-            throw new AggregateRootValidationException(AggregateRootValidationMsg.AGGREGATE_LIFECYCLE_STATE_NOT_ALLOWED);
-        }
-    }
 
 }

@@ -37,7 +37,7 @@ public class TicketPosition extends AggregateRoot<TicketPosition, TicketPosition
 
     public static TicketPosition create(TicketPositionId ticketPositionId, TicketId ticketId, CreateTicketPositionCommand command) {
         TicketPosition ticketPosition = new TicketPosition(ticketPositionId);
-        ticketPosition.validate(command);
+        ticketPosition.validate(ticketPosition, command);
         ticketPosition.ticketId = ticketId;
         ticketPosition.tradeItemId = command.getTradeItemId();
         ticketPosition.menge = command.getMenge();
