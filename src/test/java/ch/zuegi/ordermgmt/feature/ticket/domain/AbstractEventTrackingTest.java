@@ -1,14 +1,13 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain;
 
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreatedLogger;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionCreatedLogger;
 import ch.zuegi.ordermgmt.shared.DomainEvent;
 import ch.zuegi.ordermgmt.shared.DomainEventPublisher;
 import ch.zuegi.ordermgmt.shared.DomainEventSubscriber;
 import org.junit.jupiter.api.BeforeEach;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AbstractEventTrackingTest {
 
@@ -26,26 +25,28 @@ public class AbstractEventTrackingTest {
         this.handeledEventsMap = new HashMap<>();
 
         // subscribe zu einem neuen Event, sdoass gezählt werden kann wieviele Events und welche EventKlassen ausgelöst wurden
-        DomainEventPublisher.instance().subscribe(new DomainEventSubscriber<DomainEvent>() {
-                @Override
-                public void handleEvent(DomainEvent aDomainEvent) {
-                    handledEvents.add(aDomainEvent.getClass());
 
-                    List<DomainEvent> domainEvents = handeledEventsMap.get(aDomainEvent.getClass());
-                    if (domainEvents == null) {
-                        domainEvents = new ArrayList<>();
-                        domainEvents.add(aDomainEvent);
-                        handeledEventsMap.put(aDomainEvent.getClass(), domainEvents);
-                    } else {
-                        domainEvents.add(aDomainEvent);
-                    }
-                }
+        DomainEventPublisher.instance().subscribe(new DomainEventSubscriber() {
+            @Override
+            public void handle(DomainEvent<?> domainEvent) {
+                handledEvents.add(domainEvent.getClass());
 
-                @Override
-                public Class<DomainEvent> subscribedToEventType() {
-                    return DomainEvent.class;
+                List<DomainEvent> domainEvents = handeledEventsMap.get(domainEvent.getClass());
+                if (domainEvents == null) {
+                    domainEvents = new ArrayList<>();
+                    domainEvents.add(domainEvent);
+                    handeledEventsMap.put(domainEvent.getClass(), domainEvents);
+                } else {
+                    domainEvents.add(domainEvent);
                 }
-            });
+            }
+
+            @Override
+            public Class<DomainEvent> supports() {
+                return DomainEvent.class;
+            }
+        });
+
     }
 
     protected void expectedEvents(int anEventCount) {
@@ -70,7 +71,7 @@ public class AbstractEventTrackingTest {
         List<? extends DomainEvent> domainEvents = this.handeledEventsMap.get(aDomainEventType);
 
         // Könnte auch ohne die Exception passieren, in dem wir einfach eine leer liste zurückgeben und dem Test überlassen was damit zu tun ist.
-        if (domainEvents != null && domainEvents.size() != aTotal) {
+        if (domainEvents.size() != aTotal) {
             throw new IllegalStateException("Expected " + aTotal + " " + aDomainEventType.getSimpleName() + " events, but handled "
                     + this.handledEvents.size() + " events: " + this.handledEvents);
         }

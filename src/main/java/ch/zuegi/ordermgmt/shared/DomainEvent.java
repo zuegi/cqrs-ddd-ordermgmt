@@ -4,8 +4,10 @@ import java.time.LocalDateTime;
 
 public interface DomainEvent<E> {
 
-    public int eventVersion();
+    E getEvent();
 
-    public LocalDateTime occurredOn();
+    int eventVersion();
+
+    LocalDateTime occurredOn();
 
 }

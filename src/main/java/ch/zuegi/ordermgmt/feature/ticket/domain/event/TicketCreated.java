@@ -12,11 +12,16 @@ import java.util.Set;
 
 @Builder
 @Getter
-public class TicketCreated implements DomainEvent {
-    TicketId ticketNumber;
+public class TicketCreated implements DomainEvent<TicketCreated> {
+    TicketId ticketId;
     LocalDateTime localDateTime;
     TicketLifeCycleState lifeCycleState;
     Set<TicketPositionId> ticketPositionNumberSet;
+
+    @Override
+    public TicketCreated getEvent() {
+        return this;
+    }
 
     @Override
     public int eventVersion() {

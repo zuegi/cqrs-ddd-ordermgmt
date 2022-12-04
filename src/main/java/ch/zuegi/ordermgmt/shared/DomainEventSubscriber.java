@@ -1,8 +1,10 @@
 package ch.zuegi.ordermgmt.shared;
 
-public interface DomainEventSubscriber<T> {
+import java.util.Set;
 
-    public void handleEvent(final T aDomainEvent);
+public interface DomainEventSubscriber {
 
-    public Class<T> subscribedToEventType();
+     void handle(DomainEvent<?> domainEvent);
+
+    Class<?> supports();
 }

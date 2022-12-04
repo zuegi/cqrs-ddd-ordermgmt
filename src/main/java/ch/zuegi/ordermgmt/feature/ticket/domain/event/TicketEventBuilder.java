@@ -12,7 +12,7 @@ public class TicketEventBuilder {
     public static TicketCreated build(Ticket ticket, TicketCreated.TicketCreatedBuilder createdBuilder) {
 
         return createdBuilder
-                .ticketNumber(ticket.id())
+                .ticketId(ticket.id())
                 .lifeCycleState(ticket.getTicketLifeCycleState())
                 .localDateTime(ticket.getLocalDateTime())
                 .ticketPositionNumberSet(ticket.getTicketPositionSet().stream().map(TicketPosition::id).collect(Collectors.toSet()))

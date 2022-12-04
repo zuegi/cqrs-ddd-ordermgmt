@@ -65,7 +65,7 @@ class TicketTest extends DomainTest {
         // given
         TicketId ticketId = new TicketId();
         // when
-        Ticket.create(ticketId, createCommandForTest());
+        Ticket.create(ticketId, TicketTestHelper.createCommandForTest());
         // then
         expectedEvents(2);
         expectedEvents(TicketCreated.class, 1);
@@ -77,7 +77,7 @@ class TicketTest extends DomainTest {
     void processTicketState() {
         // given
         TicketId ticketId = new TicketId();
-        Ticket ticket = Ticket.create(ticketId, createCommandForTest());
+        Ticket ticket = Ticket.create(ticketId, TicketTestHelper.createCommandForTest());
 
         // when
         UpdateTicketLifecycleCommand ticketInProcessingCommand = UpdateTicketLifecycleCommand.builder().ticketLifeCycleState(TicketLifeCycleState.TICKET_IN_PROCESSING).localDateTime(LocalDateTime.now()).build();
@@ -104,16 +104,5 @@ class TicketTest extends DomainTest {
 
     }
 
-    private CreateTicketCommand createCommandForTest() {
-        return CreateTicketCommand.builder()
-                .localDateTime(LocalDateTime.now())
-                .ticketLifeCycleState(TicketLifeCycleState.TICKET_CREATED)
-                .createTicketPositionCommands(
-                        Set.of(CreateTicketPositionCommand.builder()
-                                .tradeItemId(new TradeItemId())
-                                .menge(BigDecimal.TEN)
-                                .build()
-                        )
-                ).build();
-    }
+
 }

@@ -1,12 +1,16 @@
 package ch.zuegi.ordermgmt.shared;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class DomainEventPublisher {
+@Slf4j
+public class DomainEventPublisher implements DomainEventBus {
 
     private static DomainEventPublisher instance;
-    private final List<DomainEventSubscriber> domainEventSubscriberList = new ArrayList<>();
+
+    private final  List<DomainEventSubscriber> domainEventSubscriberList = new ArrayList<>();
 
 
     // static block, damit im Fehlerfall eine Exception geworfen werden kann
@@ -22,20 +26,30 @@ public class DomainEventPublisher {
         return instance;
     }
 
-    public <T> void publish(T domainEvent) {
-        this.domainEventSubscriberList
-                .forEach(domainEventSubscriber -> domainEventSubscriber.handleEvent(domainEvent));
-    }
-    public <T> void subscribe(DomainEventSubscriber<T> domainEventSubscriber) {
-        this.domainEventSubscriberList.add(domainEventSubscriber);
-    }
-
-    public <T> void unsubscribe(DomainEventSubscriber<T> domainEventSubscriber) {
-        this.domainEventSubscriberList.remove(domainEventSubscriber);
-    }
-
 
     public void reset() {
             this.domainEventSubscriberList.clear();
+    }
+
+    @Override
+    public void subscribe(DomainEventSubscriber domainEventSubscriber) {
+        this.domainEventSubscriberList.add(domainEventSubscriber);
+    }
+
+    @Override
+    public void unsubscribe(DomainEventSubscriber domainEventSubscriber) {
+        this.domainEventSubscriberList.remove(domainEventSubscriber);
+    }
+
+    @Override
+    public void publish(DomainEvent<?> event) {
+        domainEventSubscriberList.stream()
+                .filter(subscriber -> !subscriber.supports().equals(event.getClass()))
+                .forEach(subscriber -> subscriber.handle(event));
+    }
+
+    @Override
+    public List<DomainEventSubscriber> getDomainEventSubscribers() {
+        return domainEventSubscriberList;
     }
 }

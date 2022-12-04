@@ -12,12 +12,17 @@ import java.time.LocalDateTime;
 
 @Builder
 @Getter
-public class TicketPositionCreated implements DomainEvent {
+public class TicketPositionCreated implements DomainEvent<TicketPositionCreated> {
 
     TicketPositionId ticketPositionId;
     TicketId ticketId;
     TradeItemId tradeItemId;
     BigDecimal menge;
+
+    @Override
+    public TicketPositionCreated getEvent() {
+        return this;
+    }
 
     @Override
     public int eventVersion() {
