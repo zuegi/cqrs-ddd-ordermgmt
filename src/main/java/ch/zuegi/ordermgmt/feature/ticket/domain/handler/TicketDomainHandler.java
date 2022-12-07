@@ -1,8 +1,6 @@
-package ch.zuegi.ordermgmt.feature.ticket.domain;
+package ch.zuegi.ordermgmt.feature.ticket.domain.handler;
 
-import ch.zuegi.ordermgmt.feature.ticket.TestKlasse;
-import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;
-import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketPositionCommand;
+import ch.zuegi.ordermgmt.feature.ticket.domain.Ticket;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.shared.Command;
 import ch.zuegi.ordermgmt.shared.DomainHandler;

@@ -17,7 +17,7 @@ import java.util.HashSet;
 
 import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 
-class TicketTest /*extends DomainTest*/ {
+class TicketTest  {
 
     // Zuerst immer die Fehlversuche erstellen
     // dann die validen Tests
@@ -93,7 +93,6 @@ class TicketTest /*extends DomainTest*/ {
         LocalDateTime now = LocalDateTime.now();
 
         CreateTicketCommand commandForTest = TicketTestHelper.createCommandForTest(now);
-        CreateTicketPositionCommand createTicketPositionCommand = commandForTest.getCreateTicketPositionCommands().stream().toList().get(0);
         ticket.handle(commandForTest);
 
         // when
