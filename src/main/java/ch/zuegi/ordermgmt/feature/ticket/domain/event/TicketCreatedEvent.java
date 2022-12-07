@@ -1,26 +1,25 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain.event;
 
+import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;
-import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TradeItemId;
 import ch.zuegi.ordermgmt.shared.DomainEvent;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Builder
 @Getter
-public class TicketPositionCreated implements DomainEvent<TicketPositionCreated> {
-
-    TicketPositionId ticketPositionId;
+public class TicketCreatedEvent implements DomainEvent<TicketCreatedEvent> {
     TicketId ticketId;
-    TradeItemId tradeItemId;
-    BigDecimal menge;
+    LocalDateTime localDateTime;
+    TicketLifeCycleState lifeCycleState;
+    Set<TicketPositionId> ticketPositionNumberSet;
 
     @Override
-    public TicketPositionCreated getEvent() {
+    public TicketCreatedEvent getEvent() {
         return this;
     }
 
@@ -31,6 +30,6 @@ public class TicketPositionCreated implements DomainEvent<TicketPositionCreated>
 
     @Override
     public LocalDateTime occurredOn() {
-        return LocalDateTime.now();
+        return localDateTime;
     }
 }

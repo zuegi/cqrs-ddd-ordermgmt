@@ -12,14 +12,14 @@ import java.time.LocalDateTime;
 
 @Builder
 @Getter
-public class TicketLifecycleUpdated implements DomainEvent<TicketLifecycleUpdated> {
+public class TicketLifecycleUpdatedEvent implements DomainEvent<TicketLifecycleUpdatedEvent> {
     TicketId ticketNumber;
     LocalDateTime localDateTime;
     TicketLifeCycleState currentLifeCycleState;
     TicketLifeCycleState previousLifeCycleState;
 
     @Override
-    public TicketLifecycleUpdated getEvent() {
+    public TicketLifecycleUpdatedEvent getEvent() {
         return this;
     }
 

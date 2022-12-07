@@ -6,5 +6,5 @@ public interface DomainEventSubscriber {
 
      void handle(DomainEvent<?> domainEvent);
 
-    Class<?> supports();
+    Set<Class<?>> supports();
 }

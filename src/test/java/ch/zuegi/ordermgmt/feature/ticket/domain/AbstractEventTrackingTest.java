@@ -1,9 +1,9 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain;
 
-import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreatedLogger;
-import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionCreatedLogger;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.logger.TicketCreatedLogger;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.logger.TicketPositionCreatedLogger;
 import ch.zuegi.ordermgmt.shared.DomainEvent;
-import ch.zuegi.ordermgmt.shared.DomainEventPublisher;
+import ch.zuegi.ordermgmt.shared.OldDomainEventPublisher;
 import ch.zuegi.ordermgmt.shared.DomainEventSubscriber;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -12,40 +12,22 @@ import java.util.*;
 public class AbstractEventTrackingTest {
 
 
-    DomainEventPublisher domainEventPublisher;
+    OldDomainEventPublisher domainEventPublisher;
     private List<Class<? extends DomainEvent>> handledEvents;
     private Map<Class<? extends DomainEvent>, List<DomainEvent>> handeledEventsMap;
 
     @BeforeEach
     void setup() {
         // create instance of
-        DomainEventPublisher.instance().reset();
+        OldDomainEventPublisher.instance().reset();
 
         this.handledEvents = new ArrayList<>();
         this.handeledEventsMap = new HashMap<>();
 
         // subscribe zu einem neuen Event, sdoass gezählt werden kann wieviele Events und welche EventKlassen ausgelöst wurden
 
-        DomainEventPublisher.instance().subscribe(new DomainEventSubscriber() {
-            @Override
-            public void handle(DomainEvent<?> domainEvent) {
-                handledEvents.add(domainEvent.getClass());
-
-                List<DomainEvent> domainEvents = handeledEventsMap.get(domainEvent.getClass());
-                if (domainEvents == null) {
-                    domainEvents = new ArrayList<>();
-                    domainEvents.add(domainEvent);
-                    handeledEventsMap.put(domainEvent.getClass(), domainEvents);
-                } else {
-                    domainEvents.add(domainEvent);
-                }
-            }
-
-            @Override
-            public Class<DomainEvent> supports() {
-                return DomainEvent.class;
-            }
-        });
+        DomainEventSubscriber genericSubscriber = domainEvent();
+        OldDomainEventPublisher.instance().subscribe(genericSubscriber);
 
     }
 
@@ -98,4 +80,32 @@ public class AbstractEventTrackingTest {
         }
     }
 
+    protected void withLogger() {
+        OldDomainEventPublisher.instance().subscribe(new TicketCreatedLogger());
+        OldDomainEventPublisher.instance().subscribe(new TicketPositionCreatedLogger());
+    }
+
+
+    private DomainEventSubscriber domainEvent() {
+        return new DomainEventSubscriber() {
+            @Override
+            public void handle(DomainEvent<?> domainEvent) {
+                handledEvents.add(domainEvent.getClass());
+
+                List<DomainEvent> domainEvents = handeledEventsMap.get(domainEvent.getClass());
+                if (domainEvents == null) {
+                    domainEvents = new ArrayList<>();
+                    domainEvents.add(domainEvent);
+                    handeledEventsMap.put(domainEvent.getClass(), domainEvents);
+                } else {
+                    domainEvents.add(domainEvent);
+                }
+            }
+
+            @Override
+            public Set<Class<?>> supports() {
+                return Set.of(DomainEvent.class);
+            }
+        };
+    }
 }

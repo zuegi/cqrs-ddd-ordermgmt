@@ -12,18 +12,11 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 public class TicketTestHelper {
-    public static final String TICKET_ID = "12345";
-
-    public static Ticket ticketForTest() {
 
 
-        TicketId ticketId = new TicketId();
-        return Ticket.create(ticketId, createCommandForTest());
-    }
-
-    public static CreateTicketCommand createCommandForTest() {
+    public static CreateTicketCommand createCommandForTest(LocalDateTime now) {
         return CreateTicketCommand.builder()
-                .localDateTime(LocalDateTime.now())
+                .localDateTime(now)
                 .ticketLifeCycleState(TicketLifeCycleState.TICKET_CREATED)
                 .createTicketPositionCommands(
                         Set.of(CreateTicketPositionCommand.builder()

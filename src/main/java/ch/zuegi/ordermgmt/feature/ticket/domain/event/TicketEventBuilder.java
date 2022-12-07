@@ -9,7 +9,7 @@ public class TicketEventBuilder {
 
 
 
-    public static TicketCreated build(Ticket ticket, TicketCreated.TicketCreatedBuilder createdBuilder) {
+    public static TicketCreatedEvent build(Ticket ticket, TicketCreatedEvent.TicketCreatedEventBuilder createdBuilder) {
 
         return createdBuilder
                 .ticketId(ticket.id())
@@ -20,7 +20,7 @@ public class TicketEventBuilder {
 
     }
 
-    public static TicketLifecycleUpdated build(Ticket ticket, TicketLifecycleUpdated.TicketLifecycleUpdatedBuilder lifecycleUpdatedBuilder) {
+    public static TicketLifecycleUpdatedEvent build(Ticket ticket, TicketLifecycleUpdatedEvent.TicketLifecycleUpdatedEventBuilder lifecycleUpdatedBuilder) {
        return  lifecycleUpdatedBuilder
                .ticketNumber(ticket.id())
                .localDateTime(ticket.getLocalDateTime())
@@ -31,7 +31,7 @@ public class TicketEventBuilder {
 
     }
 
-    public static TicketPositionCreated build(TicketPosition ticketPosition, TicketPositionCreated.TicketPositionCreatedBuilder builder) {
+    public static TicketPositionCreatedEvent build(TicketPosition ticketPosition, TicketPositionCreatedEvent.TicketPositionCreatedEventBuilder builder) {
         return builder
                 .ticketPositionId(ticketPosition.id())
                 .ticketId(ticketPosition.getTicketId())
