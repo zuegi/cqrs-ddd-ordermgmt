@@ -3,17 +3,14 @@ package ch.zuegi.ordermgmt.feature.ticket.domain;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.UpdateTicketLifecycleCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
-import ch.zuegi.ordermgmt.feature.ticket.domain.validator.TicketDomainValidator;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;
 import ch.zuegi.ordermgmt.shared.DomainHandler;
-import ch.zuegi.ordermgmt.shared.DomainValidator;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRoot;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationException;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationMsg;
 import lombok.Getter;
 
-import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -26,11 +23,9 @@ public class Ticket extends AggregateRoot<Ticket, TicketId>  {
     private TicketLifeCycleState ticketLifeCycleState;
     private Set<TicketPosition> ticketPositionSet;
 
-    private final TicketDomainValidator ticketValidator;
 
     public Ticket(TicketId ticketId) {
         super(ticketId);
-        ticketValidator = new TicketDomainValidator(this);
     }
 
 
@@ -40,16 +35,16 @@ public class Ticket extends AggregateRoot<Ticket, TicketId>  {
     }
 
     @DomainHandler
-    public void handle(UpdateTicketLifecycleCommand updateTicketLifecycleCommand) throws InvocationTargetException, IllegalAccessException {
-        ticketValidator.validate(updateTicketLifecycleCommand);
+    public void handle(UpdateTicketLifecycleCommand updateTicketLifecycleCommand) {
+        this.validate(updateTicketLifecycleCommand);
         this.ticketLifeCycleState = updateTicketLifecycleCommand.getTicketLifeCycleState();
         this.localDateTime = updateTicketLifecycleCommand.getLocalDateTime();
 
     }
 
     @DomainHandler
-    public void handle(CreateTicketCommand createTicketCommand) throws InvocationTargetException, IllegalAccessException {
-        ticketValidator.validate(createTicketCommand);
+    public void handle(CreateTicketCommand createTicketCommand) {
+        this.validate(createTicketCommand);
         this.localDateTime = createTicketCommand.getLocalDateTime();
         this.ticketLifeCycleState = createTicketCommand.getTicketLifeCycleState();
 
@@ -60,7 +55,7 @@ public class Ticket extends AggregateRoot<Ticket, TicketId>  {
 
     }
 
-    @DomainValidator
+
     public void validate(CreateTicketCommand command) {
 
         if (command == null) {
@@ -72,7 +67,6 @@ public class Ticket extends AggregateRoot<Ticket, TicketId>  {
         }
     }
 
-    @DomainValidator
     public void validate(UpdateTicketLifecycleCommand command) {
         if (command == null) {
             throw new AggregateRootValidationException(AggregateRootValidationMsg.TICKET_COMMAND_MUST_NOT_BE_EMPTY);

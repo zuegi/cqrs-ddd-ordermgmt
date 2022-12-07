@@ -11,7 +11,6 @@ import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationMsg;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 
@@ -38,9 +37,8 @@ class TicketTest  {
         Ticket ticket = new Ticket(ticketId);
         CreateTicketCommand command = null;
         // when
-        Assertions.assertThatExceptionOfType(InvocationTargetException.class)
+        Assertions.assertThatExceptionOfType(AggregateRootValidationException.class)
                 .isThrownBy(() -> ticket.handle(command))
-                .havingCause()
                 .withMessage(AggregateRootValidationMsg.TICKET_COMMAND_MUST_NOT_BE_EMPTY);
     }
 
@@ -55,15 +53,14 @@ class TicketTest  {
 
         TicketId ticketId = new TicketId();
         Ticket ticket = new Ticket(ticketId);
-        Assertions.assertThatExceptionOfType(InvocationTargetException.class)
+        Assertions.assertThatExceptionOfType(AggregateRootValidationException.class)
                 .isThrownBy(() -> ticket.handle(ticketCommand))
-                .havingCause()
                 .withMessage(AggregateRootValidationMsg.TICKET_COMMAND_TICKET_POSITION_SET_MUST_NOT_BE_EMPTY);
 
     }
 
     @Test
-    void createTicketValid() throws InvocationTargetException, IllegalAccessException {
+    void createTicketValid() {
         // given
         TicketId ticketId = new TicketId();
         Ticket ticket = new Ticket(ticketId);
@@ -86,7 +83,7 @@ class TicketTest  {
     }
 
     @Test
-    void processTicketState() throws InvocationTargetException, IllegalAccessException {
+    void processTicketState() {
         // given
         TicketId ticketId = new TicketId();
         Ticket ticket = new Ticket(ticketId);
@@ -108,9 +105,8 @@ class TicketTest  {
         // when
 
         UpdateTicketLifecycleCommand ticketCreated = UpdateTicketLifecycleCommand.builder().ticketLifeCycleState(TicketLifeCycleState.TICKET_CREATED).localDateTime(LocalDateTime.now()).build();
-        Assertions.assertThatExceptionOfType(InvocationTargetException.class)
+        Assertions.assertThatExceptionOfType(AggregateRootValidationException.class)
                 .isThrownBy(() -> ticket.handle(ticketCreated))
-                .havingCause()
                 .withMessage(AggregateRootValidationMsg.CURRENT_AGGREGATE_LIFECYCLE_STATE_IS_FINAL);
 
         // then
