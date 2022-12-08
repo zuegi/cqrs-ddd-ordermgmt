@@ -5,10 +5,11 @@ import ch.zuegi.ordermgmt.feature.ticket.domain.command.UpdateTicketLifecycleCom
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;
-import ch.zuegi.ordermgmt.shared.DomainHandler;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRoot;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationException;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationMsg;
+import ch.zuegi.ordermgmt.shared.annotation.CommandHandler;
+import ch.zuegi.ordermgmt.shared.annotation.CommandValidator;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -24,6 +25,7 @@ public class Ticket extends AggregateRoot<Ticket, TicketId>  {
     private Set<TicketPosition> ticketPositionSet;
 
 
+
     public Ticket(TicketId ticketId) {
         super(ticketId);
     }
@@ -34,7 +36,7 @@ public class Ticket extends AggregateRoot<Ticket, TicketId>  {
         return this.aggregateId;
     }
 
-    @DomainHandler
+    @CommandHandler
     public void handle(UpdateTicketLifecycleCommand updateTicketLifecycleCommand) {
         this.validate(updateTicketLifecycleCommand);
         this.ticketLifeCycleState = updateTicketLifecycleCommand.getTicketLifeCycleState();
@@ -42,7 +44,7 @@ public class Ticket extends AggregateRoot<Ticket, TicketId>  {
 
     }
 
-    @DomainHandler
+    @CommandHandler
     public void handle(CreateTicketCommand createTicketCommand) {
         this.validate(createTicketCommand);
         this.localDateTime = createTicketCommand.getLocalDateTime();
@@ -56,6 +58,8 @@ public class Ticket extends AggregateRoot<Ticket, TicketId>  {
     }
 
 
+
+    @CommandValidator
     public void validate(CreateTicketCommand command) {
 
         if (command == null) {
@@ -67,6 +71,7 @@ public class Ticket extends AggregateRoot<Ticket, TicketId>  {
         }
     }
 
+    @CommandValidator
     public void validate(UpdateTicketLifecycleCommand command) {
         if (command == null) {
             throw new AggregateRootValidationException(AggregateRootValidationMsg.TICKET_COMMAND_MUST_NOT_BE_EMPTY);

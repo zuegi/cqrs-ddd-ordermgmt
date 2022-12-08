@@ -1,16 +1,16 @@
-spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/orderdb
-    username: orderadmin
-    password: orderadmin
-  jpa:
-    hibernate:
-      dialect: org.hibernate.dialect.MySQLInnoDBDialect
-      # FIXME
-      ddl-auto: create-drop
-
-logging:
-  level:
-    org:
-      hibernate:
-        SQL: DEBUG
+#spring:
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/orderdb
+#    username: orderadmin
+#    password: orderadmin
+#  jpa:
+#    hibernate:
+#      dialect: org.hibernate.dialect.MySQLInnoDBDialect
+#      # FIXME
+#      ddl-auto: create-drop
+#
+#logging:
+#  level:
+#    org:
+#      hibernate:
+#        SQL: DEBUG
