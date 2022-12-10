@@ -11,4 +11,5 @@ public interface AggregateRootValidationMsg {
     String WRONG_COMMAND_TYPE = "Wrong Command Type";
     String TICKET_COMMAND_TICKET_POSITION_SET_MUST_NOT_BE_EMPTY = "CreateTicketPositionCommand must not be empty or null in CreateTicket command";
     String TICKET_COMMAND_MUST_NOT_BE_EMPTY = "CreateTicketCommand must not be empty or null";
+    String TICKET_MUST_NOT_BE_EMPTY = "Ticket object muss noct be empty";
 }
