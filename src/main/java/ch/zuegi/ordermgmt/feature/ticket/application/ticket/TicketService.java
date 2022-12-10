@@ -7,10 +7,12 @@ import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.handler.TicketCommandHandler;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class TicketService {
@@ -24,11 +26,11 @@ public class TicketService {
         Ticket ticket = repository.findByTicketId()
                 .orElse(new Ticket(ticketId));
 
-        // handle CreateTicketCommand
+        // TODO handle CreateTicketCommand
         try {
             commandHandler.handle(ticket, createTicketCommand);
         } catch (InvocationTargetException | IllegalAccessException e) {
-            throw new RuntimeException(e);
+            log.info("Invalid Command: {}", createTicketCommand.toString());
         }
 
         return ticket;

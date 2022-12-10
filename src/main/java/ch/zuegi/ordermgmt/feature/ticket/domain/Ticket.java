@@ -11,6 +11,7 @@ import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationMsg;
 import ch.zuegi.ordermgmt.shared.annotation.CommandHandler;
 import ch.zuegi.ordermgmt.shared.annotation.CommandValidator;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 
 
 @Getter
+@ToString
 public class Ticket extends AggregateRoot<Ticket, TicketId>  {
 
     private LocalDateTime localDateTime;
@@ -38,7 +40,7 @@ public class Ticket extends AggregateRoot<Ticket, TicketId>  {
 
     @CommandHandler
     public void handle(UpdateTicketLifecycleCommand updateTicketLifecycleCommand) {
-        this.validate(updateTicketLifecycleCommand);
+//        this.validate(updateTicketLifecycleCommand);
         this.ticketLifeCycleState = updateTicketLifecycleCommand.getTicketLifeCycleState();
         this.localDateTime = updateTicketLifecycleCommand.getLocalDateTime();
 
@@ -46,7 +48,7 @@ public class Ticket extends AggregateRoot<Ticket, TicketId>  {
 
     @CommandHandler
     public void handle(CreateTicketCommand createTicketCommand) {
-        this.validate(createTicketCommand);
+//        this.validate(createTicketCommand);
         this.localDateTime = createTicketCommand.getLocalDateTime();
         this.ticketLifeCycleState = createTicketCommand.getTicketLifeCycleState();
 

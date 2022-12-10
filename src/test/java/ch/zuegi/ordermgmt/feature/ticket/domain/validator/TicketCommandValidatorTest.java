@@ -1,49 +1,54 @@
-package ch.zuegi.ordermgmt.feature.ticket.domain;
+package ch.zuegi.ordermgmt.feature.ticket.domain.validator;
 
-
+import ch.zuegi.ordermgmt.feature.ticket.domain.Ticket;
+import ch.zuegi.ordermgmt.feature.ticket.domain.TicketTestHelper;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;
-import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketPositionCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.UpdateTicketLifecycleCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
-import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationException;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationMsg;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 
-import static org.assertj.core.api.AssertionsForClassTypes.tuple;
+class TicketCommandValidatorTest {
 
-class TicketTest  {
+    private TicketCommandValidator ticketCommandValidator;
 
-    // Zuerst immer die Fehlversuche erstellen
-    // dann die validen Tests
-    // Immer nur ein Assertion pro Test
-
-    @Test
-    void createTicketWithTicketIdIsNullInvalid() {
-        TicketId ticketId = null;
-        // when
-        Assertions.assertThatExceptionOfType(AggregateRootValidationException.class)
-                .isThrownBy(() -> new Ticket(ticketId))
-                .withMessage(AggregateRootValidationMsg.AGGREGATE_ID_MUST_NOT_BE_NULL);
+    @BeforeEach
+    void setup() {
+        ticketCommandValidator = new TicketCommandValidator();
     }
 
     @Test
-    void validateTicketWithTicketCreateCommandIsNullInvalid() {
+    void validate_create_ticket_comamnd() throws InvocationTargetException, IllegalAccessException {
+
+        TicketId ticketId = new TicketId();
+        Ticket ticket = new Ticket(ticketId);
+
+        CreateTicketCommand command = TicketTestHelper.createCommandForTest(LocalDateTime.now());
+
+        ticketCommandValidator.validate(ticket, command);
+    }
+
+    @Test
+    void validate_create_ticket_command_is_null_throws_execption() {
         TicketId ticketId = new TicketId();
         Ticket ticket = new Ticket(ticketId);
         CreateTicketCommand command = null;
         // when
-        Assertions.assertThatExceptionOfType(AggregateRootValidationException.class)
-                .isThrownBy(() -> ticket.validate(command))
+        Assertions.assertThatExceptionOfType(InvocationTargetException.class)
+                .isThrownBy(() -> ticketCommandValidator.validate(ticket, command))
+                .havingCause()
                 .withMessage(AggregateRootValidationMsg.TICKET_COMMAND_MUST_NOT_BE_EMPTY);
     }
 
     @Test
-    void validate_ticket_with_void_set_of_ticketPosition_invalid() {
+    void validate_create_ticket_command_without_ticketPosition_throws_execption() {
         // given ticketCommand with void Set of TicketPosition
         CreateTicketCommand ticketCommand = CreateTicketCommand.builder()
                 .localDateTime(LocalDateTime.now())
@@ -53,37 +58,16 @@ class TicketTest  {
 
         TicketId ticketId = new TicketId();
         Ticket ticket = new Ticket(ticketId);
-        Assertions.assertThatExceptionOfType(AggregateRootValidationException.class)
-                .isThrownBy(() -> ticket.validate(ticketCommand))
+        Assertions.assertThatExceptionOfType(InvocationTargetException.class)
+                .isThrownBy(() -> ticketCommandValidator.validate(ticket, ticketCommand))
+                .havingCause()
                 .withMessage(AggregateRootValidationMsg.TICKET_COMMAND_TICKET_POSITION_SET_MUST_NOT_BE_EMPTY);
 
     }
 
-    @Test
-    void createTicketValid() {
-        // given
-        TicketId ticketId = new TicketId();
-        Ticket ticket = new Ticket(ticketId);
-        LocalDateTime now = LocalDateTime.now();
-
-        // when
-        CreateTicketCommand commandForTest = TicketTestHelper.createCommandForTest(now);
-        CreateTicketPositionCommand createTicketPositionCommand = commandForTest.getCreateTicketPositionCommands().stream().toList().get(0);
-        ticket.handle(commandForTest);
-        // then
-        Assertions.assertThat(ticket).isNotNull()
-                .extracting(Ticket::id, Ticket::getTicketLifeCycleState)
-                .contains(ticketId, TicketLifeCycleState.TICKET_CREATED);
-        Assertions.assertThat(ticket.getTicketPositionSet())
-                .hasSize(1)
-                .extracting(TicketPosition::getTradeItemId, TicketPosition::getMenge)
-                .contains(
-                        tuple(createTicketPositionCommand.getTradeItemId(), createTicketPositionCommand.getMenge())
-                );
-    }
 
     @Test
-    void process_and_validate_ticket_state() {
+    void validate_update_lifecycle_command_with_final_state_throw_execption() {
         // given
         TicketId ticketId = new TicketId();
         Ticket ticket = new Ticket(ticketId);
@@ -103,16 +87,13 @@ class TicketTest  {
         ticket.handle(ticketProcessed);
 
         // when
-
         UpdateTicketLifecycleCommand ticketCreated = UpdateTicketLifecycleCommand.builder().ticketLifeCycleState(TicketLifeCycleState.TICKET_CREATED).localDateTime(LocalDateTime.now()).build();
-        Assertions.assertThatExceptionOfType(AggregateRootValidationException.class)
-                .isThrownBy(() -> ticket.validate(ticketCreated))
-                .withMessage(AggregateRootValidationMsg.CURRENT_AGGREGATE_LIFECYCLE_STATE_IS_FINAL);
 
         // then
+        Assertions.assertThatExceptionOfType(InvocationTargetException.class)
+                .isThrownBy(() -> ticketCommandValidator.validate(ticket, ticketCreated))
+                .havingCause()
+                .withMessage(AggregateRootValidationMsg.CURRENT_AGGREGATE_LIFECYCLE_STATE_IS_FINAL);
 
-        Assertions.assertThat(ticket.getTicketLifeCycleState()).isEqualTo(TicketLifeCycleState.TICKET_PROCESSED);
     }
-
-
 }
