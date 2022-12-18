@@ -60,6 +60,12 @@
             <version>0.10.4</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.greenrobot</groupId>
+            <artifactId>eventbus-java</artifactId>
+            <version>3.3.1</version>
+        </dependency>
+
         <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

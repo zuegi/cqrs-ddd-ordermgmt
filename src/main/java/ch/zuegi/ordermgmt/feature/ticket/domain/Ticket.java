@@ -3,6 +3,8 @@ package ch.zuegi.ordermgmt.feature.ticket.domain;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.UpdateTicketLifecycleCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreatedEvent;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketEventBuilder;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRoot;
@@ -12,6 +14,7 @@ import ch.zuegi.ordermgmt.shared.annotation.CommandHandler;
 import ch.zuegi.ordermgmt.shared.annotation.CommandValidator;
 import lombok.Getter;
 import lombok.ToString;
+import org.greenrobot.eventbus.EventBus;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -40,7 +43,6 @@ public class Ticket extends AggregateRoot<Ticket, TicketId>  {
 
     @CommandHandler
     public void handle(UpdateTicketLifecycleCommand updateTicketLifecycleCommand) {
-//        this.validate(updateTicketLifecycleCommand);
         this.ticketLifeCycleState = updateTicketLifecycleCommand.getTicketLifeCycleState();
         this.localDateTime = updateTicketLifecycleCommand.getLocalDateTime();
 
@@ -48,18 +50,18 @@ public class Ticket extends AggregateRoot<Ticket, TicketId>  {
 
     @CommandHandler
     public void handle(CreateTicketCommand createTicketCommand) {
-//        this.validate(createTicketCommand);
         this.localDateTime = createTicketCommand.getLocalDateTime();
         this.ticketLifeCycleState = createTicketCommand.getTicketLifeCycleState();
 
-        this.ticketPositionSet = createTicketCommand.getCreateTicketPositionCommands()
+       /* this.ticketPositionSet = createTicketCommand.getCreateTicketPositionCommands()
                 .stream()
                 .map(createTicketPositionCommand -> TicketPosition.create(new TicketPositionId(), this.id(), createTicketPositionCommand))
-                .collect(Collectors.toUnmodifiableSet());
+                .collect(Collectors.toUnmodifiableSet());*/
 
+
+        TicketCreatedEvent ticketCreatedEvent = TicketEventBuilder.build(this, TicketCreatedEvent.builder());
+        EventBus.getDefault().post(ticketCreatedEvent);
     }
-
-
 
     @CommandValidator
     public void validate(CreateTicketCommand command) {
@@ -68,9 +70,9 @@ public class Ticket extends AggregateRoot<Ticket, TicketId>  {
             throw new AggregateRootValidationException(AggregateRootValidationMsg.TICKET_COMMAND_MUST_NOT_BE_EMPTY);
         }
 
-        if (command.getCreateTicketPositionCommands() == null || command.getCreateTicketPositionCommands().isEmpty()) {
+      /*  if (command.getCreateTicketPositionCommands() == null || command.getCreateTicketPositionCommands().isEmpty()) {
             throw new AggregateRootValidationException(AggregateRootValidationMsg.TICKET_COMMAND_TICKET_POSITION_SET_MUST_NOT_BE_EMPTY);
-        }
+        }*/
     }
 
     @CommandValidator
