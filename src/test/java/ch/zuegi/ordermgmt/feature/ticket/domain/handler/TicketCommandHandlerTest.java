@@ -5,6 +5,7 @@ import ch.zuegi.ordermgmt.feature.ticket.domain.TicketTestHelper;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.UpdateTicketLifecycleCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreatedEvent;
 import ch.zuegi.ordermgmt.feature.ticket.domain.validator.TicketCommandValidator;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationException;
@@ -13,35 +14,45 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 
 class TicketCommandHandlerTest {
 
     private TicketCommandHandler ticketCommandHandler;
+    @Mock
+    private ApplicationEventPublisher applicationEventPublisher = Mockito.mock(ApplicationEventPublisher.class);
 
     @BeforeEach
     void setup() {
+        Mockito.reset(applicationEventPublisher);
         TicketCommandValidator ticketCommandValidator = new TicketCommandValidator();
-        ticketCommandHandler = new TicketCommandHandler(ticketCommandValidator);
+        ticketCommandHandler = new TicketCommandHandler(ticketCommandValidator, applicationEventPublisher);
     }
 
     @Test
     void validate_create_ticket_comamnd() throws InvocationTargetException, IllegalAccessException {
 
+        // given
         TicketId ticketId = new TicketId();
         Ticket ticket = new Ticket(ticketId);
 
         CreateTicketCommand command = TicketTestHelper.createCommandForTest(LocalDateTime.now());
 
+        // when
         ticketCommandHandler.handle(ticket, command);
+
+        Mockito.verify(applicationEventPublisher, Mockito.times(1)).publishEvent(Mockito.any(TicketCreatedEvent.class));
+
     }
 
 
     @Test
-    void handle_wrong_command_invalid() throws InvocationTargetException, IllegalAccessException {
+    void handle_wrong_command_invalid()  {
 
         TicketId ticketId = new TicketId();
         Ticket ticket = new Ticket(ticketId);

@@ -2,12 +2,21 @@ package ch.zuegi.ordermgmt.feature.ticket.domain.event;
 
 import ch.zuegi.ordermgmt.feature.ticket.domain.Ticket;
 import ch.zuegi.ordermgmt.feature.ticket.domain.TicketPosition;
-
-import java.util.stream.Collectors;
+import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;
+import ch.zuegi.ordermgmt.shared.Command;
+import ch.zuegi.ordermgmt.shared.DomainEvent;
 
 public class TicketEventBuilder {
 
 
+    @SuppressWarnings("unchecked")
+    public static <T> DomainEvent<T> build(Ticket ticket, Command command) {
+        if (command instanceof CreateTicketCommand) {
+            return (DomainEvent<T>) build(ticket, TicketCreatedEvent.builder());
+        }
+        // and so on
+        return null;
+    }
 
     public static TicketCreatedEvent build(Ticket ticket, TicketCreatedEvent.TicketCreatedEventBuilder createdBuilder) {
 
@@ -39,4 +48,6 @@ public class TicketEventBuilder {
                 .menge(ticketPosition.getMenge())
                 .build();
     }
+
+
 }
