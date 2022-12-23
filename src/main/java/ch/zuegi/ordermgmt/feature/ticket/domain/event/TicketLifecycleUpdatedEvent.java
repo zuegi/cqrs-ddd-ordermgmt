@@ -5,6 +5,7 @@ import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.shared.DomainEvent;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 
 @Builder
 @Getter
+@ToString
 public class TicketLifecycleUpdatedEvent implements DomainEvent<TicketLifecycleUpdatedEvent> {
     TicketId ticketNumber;
     LocalDateTime localDateTime;

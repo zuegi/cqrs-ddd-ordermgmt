@@ -25,7 +25,7 @@ class TicketServiceTest extends AbstractIntegrationTest {
     void createValidTicketWithCommandHandler() {
         // given
         CreateTicketCommand commandForTest = TicketTestHelper.createCommandForTest(LocalDateTime.now());
-        CreateTicketPositionCommand createTicketPositionCommand = commandForTest.getCreateTicketPositionCommands().stream().toList().get(0);
+        /*CreateTicketPositionCommand createTicketPositionCommand = commandForTest.getCreateTicketPositionCommands().stream().toList().get(0);*/
 
         TicketId ticketId = new TicketId();
 
@@ -36,11 +36,11 @@ class TicketServiceTest extends AbstractIntegrationTest {
         Assertions.assertThat(ticket).isNotNull()
                 .extracting(Ticket::id, Ticket::getTicketLifeCycleState)
                 .contains(ticketId, TicketLifeCycleState.TICKET_CREATED);
-        Assertions.assertThat(ticket.getTicketPositionSet())
+       /* Assertions.assertThat(ticket.getTicketPositionSet())
                 .hasSize(1)
                 .extracting(TicketPosition::getTradeItemId, TicketPosition::getMenge)
                 .contains(
-                        tuple(createTicketPositionCommand.getTradeItemId(), createTicketPositionCommand.getMenge()));
+                        tuple(createTicketPositionCommand.getTradeItemId(), createTicketPositionCommand.getMenge()));*/
     }
 
 }

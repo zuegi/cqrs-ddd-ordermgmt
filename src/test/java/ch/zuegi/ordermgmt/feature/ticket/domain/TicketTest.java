@@ -2,25 +2,36 @@ package ch.zuegi.ordermgmt.feature.ticket.domain;
 
 
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;
-import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketPositionCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.UpdateTicketLifecycleCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreatedEvent;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationException;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationMsg;
 import org.assertj.core.api.Assertions;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-
-import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 
 class TicketTest  {
 
     // Zuerst immer die Fehlversuche erstellen
     // dann die validen Tests
     // Immer nur ein Assertion pro Test
+    EventBus eventBus;
+    private int countObjectEvent;
+
+    @BeforeEach
+    public void setup() {
+        EventBus.clearCaches();
+        eventBus = EventBus.getDefault();
+        countObjectEvent = 0;
+    }
+
 
     @Test
     void createTicketWithTicketIdIsNullInvalid() {
@@ -42,13 +53,14 @@ class TicketTest  {
                 .withMessage(AggregateRootValidationMsg.TICKET_COMMAND_MUST_NOT_BE_EMPTY);
     }
 
+    @Disabled
     @Test
     void validate_ticket_with_void_set_of_ticketPosition_invalid() {
         // given ticketCommand with void Set of TicketPosition
         CreateTicketCommand ticketCommand = CreateTicketCommand.builder()
                 .localDateTime(LocalDateTime.now())
                 .ticketLifeCycleState(TicketLifeCycleState.TICKET_CREATED)
-                .createTicketPositionCommands(new HashSet<>())
+//                .createTicketPositionCommands(new HashSet<>())
                 .build();
 
         TicketId ticketId = new TicketId();
@@ -68,18 +80,13 @@ class TicketTest  {
 
         // when
         CreateTicketCommand commandForTest = TicketTestHelper.createCommandForTest(now);
-        CreateTicketPositionCommand createTicketPositionCommand = commandForTest.getCreateTicketPositionCommands().stream().toList().get(0);
+
         ticket.handle(commandForTest);
         // then
         Assertions.assertThat(ticket).isNotNull()
                 .extracting(Ticket::id, Ticket::getTicketLifeCycleState)
                 .contains(ticketId, TicketLifeCycleState.TICKET_CREATED);
-        Assertions.assertThat(ticket.getTicketPositionSet())
-                .hasSize(1)
-                .extracting(TicketPosition::getTradeItemId, TicketPosition::getMenge)
-                .contains(
-                        tuple(createTicketPositionCommand.getTradeItemId(), createTicketPositionCommand.getMenge())
-                );
+
     }
 
     @Test
@@ -113,6 +120,5 @@ class TicketTest  {
 
         Assertions.assertThat(ticket.getTicketLifeCycleState()).isEqualTo(TicketLifeCycleState.TICKET_PROCESSED);
     }
-
 
 }

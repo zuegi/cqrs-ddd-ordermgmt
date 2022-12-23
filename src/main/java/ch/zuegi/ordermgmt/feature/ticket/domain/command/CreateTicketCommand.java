@@ -16,6 +16,6 @@ public class CreateTicketCommand implements Command {
 
     LocalDateTime localDateTime;
     TicketLifeCycleState ticketLifeCycleState;
-    Set<CreateTicketPositionCommand> createTicketPositionCommands;
+    /*Set<CreateTicketPositionCommand> createTicketPositionCommands;*/
 
 }

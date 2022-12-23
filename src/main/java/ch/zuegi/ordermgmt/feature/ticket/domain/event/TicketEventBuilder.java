@@ -15,7 +15,7 @@ public class TicketEventBuilder {
                 .ticketId(ticket.id())
                 .lifeCycleState(ticket.getTicketLifeCycleState())
                 .localDateTime(ticket.getLocalDateTime())
-                .ticketPositionNumberSet(ticket.getTicketPositionSet().stream().map(TicketPosition::id).collect(Collectors.toSet()))
+//                .ticketPositionNumberSet(ticket.getTicketPositionSet().stream().map(TicketPosition::id).collect(Collectors.toSet()))
                 .build();
 
     }

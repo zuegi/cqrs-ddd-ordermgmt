@@ -53,14 +53,8 @@ public class Ticket extends AggregateRoot<Ticket, TicketId>  {
         this.localDateTime = createTicketCommand.getLocalDateTime();
         this.ticketLifeCycleState = createTicketCommand.getTicketLifeCycleState();
 
-       /* this.ticketPositionSet = createTicketCommand.getCreateTicketPositionCommands()
-                .stream()
-                .map(createTicketPositionCommand -> TicketPosition.create(new TicketPositionId(), this.id(), createTicketPositionCommand))
-                .collect(Collectors.toUnmodifiableSet());*/
-
-
         TicketCreatedEvent ticketCreatedEvent = TicketEventBuilder.build(this, TicketCreatedEvent.builder());
-        EventBus.getDefault().post(ticketCreatedEvent);
+
     }
 
     @CommandValidator
@@ -70,9 +64,6 @@ public class Ticket extends AggregateRoot<Ticket, TicketId>  {
             throw new AggregateRootValidationException(AggregateRootValidationMsg.TICKET_COMMAND_MUST_NOT_BE_EMPTY);
         }
 
-      /*  if (command.getCreateTicketPositionCommands() == null || command.getCreateTicketPositionCommands().isEmpty()) {
-            throw new AggregateRootValidationException(AggregateRootValidationMsg.TICKET_COMMAND_TICKET_POSITION_SET_MUST_NOT_BE_EMPTY);
-        }*/
     }
 
     @CommandValidator

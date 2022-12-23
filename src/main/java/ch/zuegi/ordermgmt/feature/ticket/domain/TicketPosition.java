@@ -6,7 +6,6 @@ import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionCreatedEvent
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TradeItemId;
-import ch.zuegi.ordermgmt.shared.OldDomainEventPublisher;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRoot;
 import lombok.Getter;
 
@@ -23,14 +22,6 @@ public class TicketPosition extends AggregateRoot<TicketPosition, TicketPosition
         super(aggregateID);
     }
 
-//    @Override
-//    protected AggregateRootValidators initialValidators() {
-//        return AggregateRootValidators.builder()
-//                .validators(
-//                        Map.of(CreateTicketPositionCommand.class, new CreateTicketCommandPositionValidator()))
-//                .build();
-//    }
-
 
     public static TicketPosition create(TicketPositionId ticketPositionId, TicketId ticketId, CreateTicketPositionCommand command) {
         TicketPosition ticketPosition = new TicketPosition(ticketPositionId);
@@ -41,9 +32,6 @@ public class TicketPosition extends AggregateRoot<TicketPosition, TicketPosition
 
         TicketPositionCreatedEvent ticketPositionCreated = TicketEventBuilder.build(ticketPosition, TicketPositionCreatedEvent.builder());
 
-        OldDomainEventPublisher
-                .instance()
-                .publish(ticketPositionCreated);
         return ticketPosition;
     }
 

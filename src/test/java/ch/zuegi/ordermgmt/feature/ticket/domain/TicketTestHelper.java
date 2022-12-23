@@ -18,12 +18,12 @@ public class TicketTestHelper {
         return CreateTicketCommand.builder()
                 .localDateTime(now)
                 .ticketLifeCycleState(TicketLifeCycleState.TICKET_CREATED)
-                .createTicketPositionCommands(
+              /*  .createTicketPositionCommands(
                         Set.of(CreateTicketPositionCommand.builder()
                                 .tradeItemId(new TradeItemId())
                                 .menge(BigDecimal.TEN)
                                 .build()
-                        )
-                ).build();
+                        ))*/
+                .build();
     }
 }

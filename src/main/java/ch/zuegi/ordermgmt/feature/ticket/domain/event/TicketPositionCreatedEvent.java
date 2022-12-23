@@ -6,12 +6,14 @@ import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TradeItemId;
 import ch.zuegi.ordermgmt.shared.DomainEvent;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Builder
 @Getter
+@ToString
 public class TicketPositionCreatedEvent implements DomainEvent<TicketPositionCreatedEvent> {
 
     TicketPositionId ticketPositionId;
