@@ -4,14 +4,10 @@ package ch.zuegi.ordermgmt.feature.ticket.domain;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.UpdateTicketLifecycleCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
-import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreatedEvent;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationException;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationMsg;
 import org.assertj.core.api.Assertions;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -22,16 +18,6 @@ class TicketTest  {
     // Zuerst immer die Fehlversuche erstellen
     // dann die validen Tests
     // Immer nur ein Assertion pro Test
-    EventBus eventBus;
-    private int countObjectEvent;
-
-    @BeforeEach
-    public void setup() {
-        EventBus.clearCaches();
-        eventBus = EventBus.getDefault();
-        countObjectEvent = 0;
-    }
-
 
     @Test
     void createTicketWithTicketIdIsNullInvalid() {
