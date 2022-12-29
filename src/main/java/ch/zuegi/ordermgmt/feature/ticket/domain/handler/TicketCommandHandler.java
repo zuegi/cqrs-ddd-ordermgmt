@@ -27,22 +27,17 @@ public class TicketCommandHandler {
 
     public void handle(Ticket ticket, Command command) throws InvocationTargetException, IllegalAccessException {
 
-        assertNotNull(ticket);
-
-        log.debug("Ticket: {}", ticket);
-
         // validate first
+        assertNotNull(ticket);
         ticketCommandValidator.validate(ticket, command);
 
         // filter all methods annotated with CommandHandler.class and with parameter equals command
         Method method = findMethodForCommand(ticket, command);
-
         // call ticket.handle(command) via invoke.... -> reflection
         method.invoke(ticket, command);
 
         // create DomainEvent
         DomainEvent<Object> domainEvent = TicketEventBuilder.build(ticket, command);
-
         // finally publish event
         applicationEventPublisher.publishEvent(domainEvent);
     }

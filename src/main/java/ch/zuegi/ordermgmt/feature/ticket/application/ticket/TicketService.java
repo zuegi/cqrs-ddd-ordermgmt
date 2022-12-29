@@ -17,16 +17,13 @@ import java.lang.reflect.InvocationTargetException;
 @AllArgsConstructor
 public class TicketService {
 
-    TicketCommandHandler commandHandler;
-    TicketRepository repository;
+    private TicketCommandHandler commandHandler;
+    private TicketRepository repository;
 
 
     public Ticket createTicket(TicketId ticketId, CreateTicketCommand createTicketCommand) {
        // TODO find ticket in repository or create Ticket
-        Ticket ticket = repository.findByTicketId()
-                .orElse(new Ticket(ticketId));
-
-        // TODO handle CreateTicketCommand
+        Ticket ticket = repository.findByTicketId(ticketId).orElse(new Ticket(ticketId));
         try {
             commandHandler.handle(ticket, createTicketCommand);
         } catch (InvocationTargetException | IllegalAccessException e) {

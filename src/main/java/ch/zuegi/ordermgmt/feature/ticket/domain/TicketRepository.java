@@ -1,14 +1,12 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain;
 
-import org.springframework.stereotype.Component;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreatedEvent;
+import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 
 import java.util.Optional;
 
-@Component
-public class TicketRepository {
+public interface TicketRepository {
+    Optional<Ticket> findByTicketId(TicketId ticketId);
 
-    // TODO findByTicketId ausprogrammieren - falls nötig
-    public Optional<Ticket> findByTicketId() {
-        return Optional.empty();
-    }
+    void save(TicketCreatedEvent ticketCreatedEvent);
 }

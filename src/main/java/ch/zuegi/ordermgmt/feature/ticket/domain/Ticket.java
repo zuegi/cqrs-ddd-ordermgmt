@@ -3,6 +3,8 @@ package ch.zuegi.ordermgmt.feature.ticket.domain;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.UpdateTicketLifecycleCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreatedEvent;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionCreatedEvent;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRoot;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationException;
@@ -13,6 +15,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Getter
@@ -69,5 +72,16 @@ public class Ticket extends AggregateRoot<Ticket, TicketId>  {
         if (!this.getTicketLifeCycleState().equals(TicketLifeCycleState.TICKET_CREATED) && !this.getTicketLifeCycleState().next().get().equals(command.getTicketLifeCycleState())) {
             throw new AggregateRootValidationException(AggregateRootValidationMsg.AGGREGATE_LIFECYCLE_STATE_NOT_ALLOWED);
         }
+    }
+
+
+    public void aggregateEvent(TicketCreatedEvent ticketCreatedEvent) {
+        // allenfalls den event validieren
+        this.localDateTime = ticketCreatedEvent.getLocalDateTime();
+        this.ticketLifeCycleState = ticketCreatedEvent.getLifeCycleState();
+    }
+
+    public void aggregateTicketPositionEvents(List<TicketPositionCreatedEvent> eventList) {
+        // to be implemented
     }
 }
