@@ -1,8 +1,10 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain.handler;
 
 import ch.zuegi.ordermgmt.feature.ticket.domain.Ticket;
+import ch.zuegi.ordermgmt.feature.ticket.domain.TicketRepository;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketEventBuilder;
 import ch.zuegi.ordermgmt.feature.ticket.domain.validator.TicketCommandValidator;
+import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.shared.Command;
 import ch.zuegi.ordermgmt.shared.DomainEvent;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationException;
@@ -24,8 +26,11 @@ public class TicketCommandHandler {
 
     private TicketCommandValidator ticketCommandValidator;
     private ApplicationEventPublisher applicationEventPublisher;
+    private TicketRepository repository;
 
-    public void handle(Ticket ticket, Command command) throws InvocationTargetException, IllegalAccessException {
+    public void handle(TicketId ticketId, Command command) throws InvocationTargetException, IllegalAccessException {
+
+        Ticket ticket = repository.findByTicketId(ticketId).orElse(new Ticket(ticketId));
 
         // validate first
         assertNotNull(ticket);

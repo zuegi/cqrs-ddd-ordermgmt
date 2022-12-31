@@ -17,6 +17,7 @@ public class TicketDomainHandler {
     @EventListener
     public void handleTicketCreatedEvent(TicketCreatedEvent event) {
         log.info("Received event: {}", event);
+        // muss der event hier nochmals validiert werden?
         repository.save(event);
     }
 

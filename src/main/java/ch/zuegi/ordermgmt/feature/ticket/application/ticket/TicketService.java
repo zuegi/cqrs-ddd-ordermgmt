@@ -1,8 +1,6 @@
 package ch.zuegi.ordermgmt.feature.ticket.application.ticket;
 
 
-import ch.zuegi.ordermgmt.feature.ticket.domain.Ticket;
-import ch.zuegi.ordermgmt.feature.ticket.domain.TicketRepository;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.handler.TicketCommandHandler;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
@@ -18,18 +16,16 @@ import java.lang.reflect.InvocationTargetException;
 public class TicketService {
 
     private TicketCommandHandler commandHandler;
-    private TicketRepository repository;
 
 
-    public Ticket createTicket(TicketId ticketId, CreateTicketCommand createTicketCommand) {
-       // TODO find ticket in repository or create Ticket
-        Ticket ticket = repository.findByTicketId(ticketId).orElse(new Ticket(ticketId));
+    public void createTicket(TicketId ticketId, CreateTicketCommand createTicketCommand) {
         try {
-            commandHandler.handle(ticket, createTicketCommand);
+            commandHandler.handle(ticketId, createTicketCommand);
         } catch (InvocationTargetException | IllegalAccessException e) {
             log.info("Invalid Command: {}", createTicketCommand.toString());
         }
-
-        return ticket;
     }
+
+
+
 }
