@@ -4,10 +4,11 @@ import ch.zuegi.ordermgmt.feature.ticket.domain.InMemoryTicketRepositoryImpl;
 import ch.zuegi.ordermgmt.feature.ticket.domain.TicketRepository;
 import ch.zuegi.ordermgmt.feature.ticket.domain.TicketTestHelper;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;
-import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketPositionCommand;
+import ch.zuegi.ordermgmt.feature.ticket.domain.command.AddTicketPositionCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.UpdateTicketLifecycleCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreatedEvent;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionCreatedEvent;
 import ch.zuegi.ordermgmt.feature.ticket.domain.validator.TicketCommandValidator;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TradeItemId;
@@ -17,7 +18,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.context.ApplicationEventPublisher;
 
@@ -28,15 +28,13 @@ import java.time.LocalDateTime;
 class TicketCommandHandlerTest {
 
     private TicketCommandHandler ticketCommandHandler;
-    @Mock
-    private ApplicationEventPublisher applicationEventPublisher = Mockito.mock(ApplicationEventPublisher.class);
 
-    private TicketRepository ticketRepository;
+    private final ApplicationEventPublisher applicationEventPublisher = Mockito.mock(ApplicationEventPublisher.class);
 
     @BeforeEach
     void setup() {
         Mockito.reset(applicationEventPublisher);
-        ticketRepository = new InMemoryTicketRepositoryImpl();
+        TicketRepository ticketRepository = new InMemoryTicketRepositoryImpl();
         TicketCommandValidator ticketCommandValidator = new TicketCommandValidator();
         ticketCommandHandler = new TicketCommandHandler(ticketCommandValidator, applicationEventPublisher, ticketRepository);
     }
@@ -57,7 +55,7 @@ class TicketCommandHandlerTest {
 
 
     @Test
-    void handle_wrong_command_invalid()  {
+    void handle_wrong_command_invalid() {
 
         TicketId ticketId = new TicketId();
         TestCommand testCommand = TestCommand.builder().build();
@@ -130,9 +128,8 @@ class TicketCommandHandlerTest {
 
     }
 
-    @Disabled("Test muss fertig implementiert werden")
     @Test
-    void add_ticket_position_ticket_invalid() throws InvocationTargetException, IllegalAccessException {
+    void add_ticket_position_ticket_valid() throws InvocationTargetException, IllegalAccessException {
         // given
         TicketId ticketId = new TicketId();
         CreateTicketCommand command = TicketTestHelper.createCommandForTest(LocalDateTime.now());
@@ -140,14 +137,16 @@ class TicketCommandHandlerTest {
 
         //
         TicketId unkownTicketId = new TicketId();
-        CreateTicketPositionCommand addTicketPosition = CreateTicketPositionCommand.builder()
-                .ticketId(unkownTicketId)
+        AddTicketPositionCommand addTicketPosition = AddTicketPositionCommand.builder()
+                .ticketId(ticketId)
                 .tradeItemId(new TradeItemId())
                 .menge(BigDecimal.TEN)
                 .build();
 
-       // when
-       ticketCommandHandler.handle(unkownTicketId, addTicketPosition);
+        // when
+        ticketCommandHandler.handle(unkownTicketId, addTicketPosition);
 
+        // then
+        Mockito.verify(applicationEventPublisher, Mockito.times(1)).publishEvent(Mockito.any(TicketPositionCreatedEvent.class));
     }
 }

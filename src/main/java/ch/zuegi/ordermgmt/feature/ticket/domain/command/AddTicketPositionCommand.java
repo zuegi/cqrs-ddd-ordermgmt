@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Data
 @Builder
 @ToString
-public class CreateTicketPositionCommand implements Command {
+public class AddTicketPositionCommand implements Command {
     TicketId ticketId;
     TradeItemId tradeItemId;
     BigDecimal menge;

@@ -2,7 +2,6 @@ package ch.zuegi.ordermgmt.feature.ticket.domain.handler;
 
 import ch.zuegi.ordermgmt.feature.ticket.domain.Ticket;
 import ch.zuegi.ordermgmt.feature.ticket.domain.TicketRepository;
-import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketEventBuilder;
 import ch.zuegi.ordermgmt.feature.ticket.domain.validator.TicketCommandValidator;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.shared.Command;
@@ -28,6 +27,7 @@ public class TicketCommandHandler {
     private ApplicationEventPublisher applicationEventPublisher;
     private TicketRepository repository;
 
+    @SuppressWarnings("unchecked")
     public void handle(TicketId ticketId, Command command) throws InvocationTargetException, IllegalAccessException {
 
         Ticket ticket = repository.findByTicketId(ticketId).orElse(new Ticket(ticketId));
@@ -39,10 +39,9 @@ public class TicketCommandHandler {
         // filter all methods annotated with CommandHandler.class and with parameter equals command
         Method method = findMethodForCommand(ticket, command);
         // call ticket.handle(command) via invoke.... -> reflection
-        method.invoke(ticket, command);
+        // and get the corresponding domainEvent
+        DomainEvent<Object> domainEvent = (DomainEvent<Object>) method.invoke(ticket, command);
 
-        // create DomainEvent
-        DomainEvent<Object> domainEvent = TicketEventBuilder.build(ticket, command);
         // finally publish event
         applicationEventPublisher.publishEvent(domainEvent);
     }
