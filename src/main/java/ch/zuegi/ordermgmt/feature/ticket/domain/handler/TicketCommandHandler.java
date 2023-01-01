@@ -52,7 +52,7 @@ public class TicketCommandHandler {
                 .filter(m -> m.isAnnotationPresent(CommandHandler.class))
                  // filter for params in method signature
                 .filter(m -> Arrays.stream(m.getParameterTypes()).anyMatch(parameterType -> parameterType.isInstance(command)) || command == null)
-                .findFirst()
+                .findAny()
                 .orElseThrow(() -> new AggregateRootValidationException(AggregateRootValidationMsg.TICKET_HANDLE_COMMAND_INVALID));
 
     }

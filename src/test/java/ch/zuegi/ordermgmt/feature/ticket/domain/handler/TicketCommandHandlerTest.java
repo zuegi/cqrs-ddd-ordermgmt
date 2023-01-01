@@ -77,24 +77,6 @@ class TicketCommandHandlerTest {
                 .withMessage(AggregateRootValidationMsg.TICKET_COMMAND_MUST_NOT_BE_EMPTY);
     }
 
-    @Disabled
-    @Test
-    void validate_create_ticket_command_without_ticketPosition_throws_execption() {
-        // given ticketCommand with void Set of TicketPosition
-        CreateTicketCommand ticketCommand = CreateTicketCommand.builder()
-                .localDateTime(LocalDateTime.now())
-                .ticketLifeCycleState(TicketLifeCycleState.TICKET_CREATED)
-//                .createTicketPositionCommands(new HashSet<>())
-                .build();
-
-        TicketId ticketId = new TicketId();
-        Assertions.assertThatExceptionOfType(InvocationTargetException.class)
-                .isThrownBy(() -> ticketCommandHandler.handle(ticketId, ticketCommand))
-                .havingCause()
-                .withMessage(AggregateRootValidationMsg.TICKET_COMMAND_TICKET_POSITION_SET_MUST_NOT_BE_EMPTY);
-
-    }
-
 
     @Disabled("Muss fertig implementiert werden")
     @Test

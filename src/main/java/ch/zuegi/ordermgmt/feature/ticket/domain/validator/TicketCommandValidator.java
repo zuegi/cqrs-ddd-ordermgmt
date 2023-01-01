@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.List;
 
 @Slf4j
 @Component
@@ -22,16 +21,19 @@ public class TicketCommandValidator {
         assertNotNull(ticket);
 
         log.debug("Ticket: {}", ticket);
-        // filter all methods annotated with CommandValidator.class and with parameter equals command
-        List<Method> methods = Arrays.stream(ticket.getClass().getDeclaredMethods())
-                .filter(method -> method.isAnnotationPresent(CommandValidator.class))
-                .filter(method -> Arrays.stream(method.getParameterTypes()).anyMatch(parameterType -> parameterType.isInstance(command)) || command == null)
-                .toList();
 
-        // it is not possible to call a method that throws a checked exception from a lambda directly.
-        for (Method method : methods) {
-            method.invoke(ticket, command);
-        }
+        Method method = findMethodForCommand(ticket, command);
+        method.invoke(ticket, command);
+    }
+
+    private Method findMethodForCommand(Ticket ticket, Command command) {
+        return Arrays.stream(ticket.getClass().getDeclaredMethods())
+                .filter(m -> m.isAnnotationPresent(CommandValidator.class))
+                // filter for params in method signature
+                .filter(m -> Arrays.stream(m.getParameterTypes()).anyMatch(parameterType -> parameterType.isInstance(command)) || command == null)
+                .findAny()
+                .orElseThrow(() -> new AggregateRootValidationException(AggregateRootValidationMsg.TICKET_HANDLE_COMMAND_INVALID));
+
     }
 
     private void assertNotNull(Ticket ticket) {
