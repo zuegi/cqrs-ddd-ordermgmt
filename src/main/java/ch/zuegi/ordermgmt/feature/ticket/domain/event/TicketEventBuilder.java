@@ -40,7 +40,7 @@ public class TicketEventBuilder {
 
     }
 
-    public static TicketPositionCreatedEvent build(TicketPosition ticketPosition, TicketPositionCreatedEvent.TicketPositionCreatedEventBuilder builder) {
+    public static TicketPositionAddedEvent build(TicketPosition ticketPosition, TicketPositionAddedEvent.TicketPositionAddedEventBuilder builder) {
         return builder
                 .ticketPositionId(ticketPosition.id())
                 .ticketId(ticketPosition.getTicketId())

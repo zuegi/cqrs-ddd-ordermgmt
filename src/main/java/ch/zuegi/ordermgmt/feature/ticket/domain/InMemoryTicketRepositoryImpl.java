@@ -1,7 +1,7 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain;
 
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreatedEvent;
-import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionCreatedEvent;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionAddedEvent;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +13,7 @@ import java.util.Optional;
 public class InMemoryTicketRepositoryImpl implements TicketRepository {
 
     List<TicketCreatedEvent> ticketCreatedEventList = new ArrayList<>();
-    List<TicketPositionCreatedEvent> ticketPositionCreatedEventList = new ArrayList<>();
+    List<TicketPositionAddedEvent> ticketPositionAddedEventList = new ArrayList<>();
 
     @Override
     public Optional<Ticket> findByTicketId(TicketId ticketId) {
@@ -21,10 +21,17 @@ public class InMemoryTicketRepositoryImpl implements TicketRepository {
                 .filter(event -> event.getTicketId().equals(ticketId))
                 .findAny();
 
+
         if (ticketCreatedEvent.isPresent()) {
             Ticket ticket = new Ticket(ticketId);
             ticket.aggregateEvent(ticketCreatedEvent.get());
-            ticket.aggregateTicketPositionEvents(ticketPositionCreatedEventList);
+
+            List<TicketPositionAddedEvent> ticketPositionAddedEvents = ticketPositionAddedEventList.stream()
+                    .filter(event -> event.getTicketId().equals(ticketId))
+                    .toList();
+            if (!ticketPositionAddedEvents.isEmpty()) {
+                ticket.aggregateTicketPositionEvents(ticketPositionAddedEvents);
+            }
             return Optional.of(ticket);
         }
         return Optional.empty();
@@ -33,9 +40,11 @@ public class InMemoryTicketRepositoryImpl implements TicketRepository {
 
     @Override
     public void save(TicketCreatedEvent ticketCreatedEvent) {
-        if (ticketCreatedEventList == null) {
-            ticketCreatedEventList = new ArrayList<>();
-        }
         ticketCreatedEventList.add(ticketCreatedEvent);
+    }
+
+    @Override
+    public void save(TicketPositionAddedEvent ticketPositionAddedEvent) {
+        ticketPositionAddedEventList.add(ticketPositionAddedEvent);
     }
 }

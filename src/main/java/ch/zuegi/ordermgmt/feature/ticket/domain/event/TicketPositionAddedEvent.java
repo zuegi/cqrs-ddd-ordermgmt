@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @ToString
-public class TicketPositionCreatedEvent implements DomainEvent<TicketPositionCreatedEvent> {
+public class TicketPositionAddedEvent implements DomainEvent<TicketPositionAddedEvent> {
 
     TicketPositionId ticketPositionId;
     TicketId ticketId;
@@ -22,7 +22,7 @@ public class TicketPositionCreatedEvent implements DomainEvent<TicketPositionCre
     BigDecimal menge;
 
     @Override
-    public TicketPositionCreatedEvent getEvent() {
+    public TicketPositionAddedEvent getEvent() {
         return this;
     }
 

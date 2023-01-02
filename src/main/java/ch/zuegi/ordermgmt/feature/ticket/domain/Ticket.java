@@ -7,7 +7,7 @@ import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreatedEvent;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketEventBuilder;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketLifecycleUpdatedEvent;
-import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionCreatedEvent;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionAddedEvent;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRoot;
@@ -25,7 +25,7 @@ import java.util.List;
 
 @Getter
 @ToString
-public class Ticket extends AggregateRoot<Ticket, TicketId>  {
+public class Ticket extends AggregateRoot<Ticket, TicketId> {
 
     private LocalDateTime localDateTime;
     private TicketLifeCycleState ticketLifeCycleState;
@@ -58,14 +58,14 @@ public class Ticket extends AggregateRoot<Ticket, TicketId>  {
     }
 
     @CommandHandler
-    public TicketPositionCreatedEvent handle(AddTicketPositionCommand addTicketPosition) {
+    public TicketPositionAddedEvent handle(AddTicketPositionCommand addTicketPosition) {
         TicketPosition ticketPosition = TicketPosition.create(new TicketPositionId(), addTicketPosition);
         if (this.ticketPositionList == null) {
             this.ticketPositionList = new ArrayList<>();
         }
         this.ticketPositionList.add(ticketPosition);
 
-        return TicketEventBuilder.build(ticketPosition, TicketPositionCreatedEvent.builder());
+        return TicketEventBuilder.build(ticketPosition, TicketPositionAddedEvent.builder());
     }
 
     @CommandValidator
@@ -111,8 +111,27 @@ public class Ticket extends AggregateRoot<Ticket, TicketId>  {
         this.ticketLifeCycleState = ticketCreatedEvent.getLifeCycleState();
     }
 
-    public void aggregateTicketPositionEvents(List<TicketPositionCreatedEvent> eventList) {
+    public void aggregateTicketPositionEvents(List<TicketPositionAddedEvent> eventList) {
         // to be implemented
+        List<TicketPosition> ticketPositions = eventList.stream()
+                .filter(event -> event.getTicketId().equals(this.id()))
+                .map(this::eventToPositionMapper)
+                .toList();
+        if (this.ticketPositionList == null) {
+            this.ticketPositionList = new ArrayList<>();
+        }
+        this.ticketPositionList.addAll(ticketPositions);
+    }
+
+    private TicketPosition eventToPositionMapper(TicketPositionAddedEvent event) {
+
+        AddTicketPositionCommand command = AddTicketPositionCommand.builder()
+                .ticketId(event.getTicketId())
+                .tradeItemId(event.getTradeItemId())
+                .menge(event.getMenge())
+                .build();
+
+        return TicketPosition.create(event.getTicketPositionId(), command);
     }
 
 }

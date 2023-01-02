@@ -8,7 +8,7 @@ import ch.zuegi.ordermgmt.feature.ticket.domain.command.AddTicketPositionCommand
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.UpdateTicketLifecycleCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreatedEvent;
-import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionCreatedEvent;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionAddedEvent;
 import ch.zuegi.ordermgmt.feature.ticket.domain.validator.TicketCommandValidator;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TradeItemId;
@@ -118,7 +118,6 @@ class TicketCommandHandlerTest {
         ticketCommandHandler.handle(ticketId, command);
 
         //
-        TicketId unkownTicketId = new TicketId();
         AddTicketPositionCommand addTicketPosition = AddTicketPositionCommand.builder()
                 .ticketId(ticketId)
                 .tradeItemId(new TradeItemId())
@@ -126,9 +125,9 @@ class TicketCommandHandlerTest {
                 .build();
 
         // when
-        ticketCommandHandler.handle(unkownTicketId, addTicketPosition);
+        ticketCommandHandler.handle(ticketId, addTicketPosition);
 
         // then
-        Mockito.verify(applicationEventPublisher, Mockito.times(1)).publishEvent(Mockito.any(TicketPositionCreatedEvent.class));
+        Mockito.verify(applicationEventPublisher, Mockito.times(1)).publishEvent(Mockito.any(TicketPositionAddedEvent.class));
     }
 }
