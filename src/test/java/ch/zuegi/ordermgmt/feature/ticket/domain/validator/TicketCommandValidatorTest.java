@@ -6,6 +6,7 @@ import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.UpdateTicketLifecycleCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
+import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationException;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationMsg;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +30,7 @@ class TicketCommandValidatorTest {
         TicketId ticketId = new TicketId();
         Ticket ticket = new Ticket(ticketId);
 
-        CreateTicketCommand command = TicketTestHelper.createCommandForTest(LocalDateTime.now());
+        CreateTicketCommand command = TicketTestHelper.createCommandForTest(ticketId, LocalDateTime.now());
 
         ticketCommandValidator.validate(ticket, command);
     }
@@ -40,10 +41,10 @@ class TicketCommandValidatorTest {
         Ticket ticket = new Ticket(ticketId);
         CreateTicketCommand command = null;
         // when
-        Assertions.assertThatExceptionOfType(InvocationTargetException.class)
+        Assertions.assertThatExceptionOfType(AggregateRootValidationException.class)
                 .isThrownBy(() -> ticketCommandValidator.validate(ticket, command))
-                .havingCause()
-                .withMessage(AggregateRootValidationMsg.TICKET_COMMAND_MUST_NOT_BE_EMPTY);
+//                .havingCause()
+                .withMessage(AggregateRootValidationMsg.TICKET_HANDLE_COMMAND_INVALID);
     }
 
 
@@ -54,7 +55,7 @@ class TicketCommandValidatorTest {
         Ticket ticket = new Ticket(ticketId);
         LocalDateTime now = LocalDateTime.now();
 
-        CreateTicketCommand commandForTest = TicketTestHelper.createCommandForTest(now);
+        CreateTicketCommand commandForTest = TicketTestHelper.createCommandForTest(ticketId, now);
         ticket.handle(commandForTest);
 
         // when

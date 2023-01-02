@@ -31,10 +31,10 @@ public class TicketCommandHandler {
     public void handle(TicketId ticketId, Command command) throws InvocationTargetException, IllegalAccessException {
 
         Ticket ticket = repository.findByTicketId(ticketId).orElse(new Ticket(ticketId));
-
         // validate first
         assertNotNull(ticket);
         ticketCommandValidator.validate(ticket, command);
+
 
         // filter all methods annotated with CommandHandler.class and with parameter equals command
         Method method = findMethodForCommand(ticket, command);

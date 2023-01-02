@@ -18,28 +18,21 @@ public class TicketCommandValidator {
 
 
     public void validate(Ticket ticket, Command command) throws InvocationTargetException, IllegalAccessException {
-        assertNotNull(ticket);
 
-        log.debug("Ticket: {}", ticket);
+        log.debug("Command: {}", command);
 
-        Method method = findMethodForCommand(ticket, command);
+        Method method = findMethodForCommand(command);
         method.invoke(ticket, command);
     }
 
-    private Method findMethodForCommand(Ticket ticket, Command command) {
-        return Arrays.stream(ticket.getClass().getDeclaredMethods())
+    private Method findMethodForCommand(Command command) {
+        return Arrays.stream(Ticket.class.getDeclaredMethods())
                 .filter(m -> m.isAnnotationPresent(CommandValidator.class))
                 // filter for params in method signature
-                .filter(m -> Arrays.stream(m.getParameterTypes()).anyMatch(parameterType -> parameterType.isInstance(command)) || command == null)
+                .filter(m -> Arrays.stream(m.getParameterTypes()).anyMatch(parameterType -> parameterType.isInstance(command)))
                 .findAny()
                 .orElseThrow(() -> new AggregateRootValidationException(AggregateRootValidationMsg.TICKET_HANDLE_COMMAND_INVALID));
 
-    }
-
-    private void assertNotNull(Ticket ticket) {
-        if (ticket == null) {
-            throw new AggregateRootValidationException(AggregateRootValidationMsg.TICKET_MUST_NOT_BE_EMPTY);
-        }
     }
 
 }

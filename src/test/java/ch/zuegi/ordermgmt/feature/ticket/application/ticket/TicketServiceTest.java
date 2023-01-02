@@ -29,10 +29,10 @@ class TicketServiceTest extends AbstractIntegrationTest {
     void create_ticket_valid() {
         // given
         TicketId ticketId = new TicketId();
-        CreateTicketCommand commandForTest = TicketTestHelper.createCommandForTest(LocalDateTime.now());
+        CreateTicketCommand commandForTest = TicketTestHelper.createCommandForTest(ticketId, LocalDateTime.now());
 
         // when
-        ticketService.createTicket(ticketId, commandForTest);
+        ticketService.createTicket(commandForTest);
 
         // then
         Optional<Ticket> byTicketId = ticketRepository.findByTicketId(ticketId);
@@ -47,12 +47,12 @@ class TicketServiceTest extends AbstractIntegrationTest {
     void create_ticket_add_ticket_position_valid() {
         // given
         TicketId ticketId = new TicketId();
-        CreateTicketCommand createTicktCommand = TicketTestHelper.createCommandForTest(LocalDateTime.now());
+        CreateTicketCommand createTicktCommand = TicketTestHelper.createCommandForTest(ticketId, LocalDateTime.now());
         AddTicketPositionCommand addTicketPositionCommand = TicketTestHelper.getCreateTicketPositionCommand(ticketId);
 
         // when
-        ticketService.createTicket(ticketId, createTicktCommand);
-        ticketService.addTicketPosition(ticketId, addTicketPositionCommand);
+        ticketService.createTicket(createTicktCommand);
+        ticketService.addTicketPosition( addTicketPositionCommand);
 
         // then
         Optional<Ticket> byTicketId = ticketRepository.findByTicketId(ticketId);

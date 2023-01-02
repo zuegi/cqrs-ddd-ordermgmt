@@ -44,7 +44,7 @@ class TicketCommandHandlerTest {
 
         // given
         TicketId ticketId = new TicketId();
-        CreateTicketCommand command = TicketTestHelper.createCommandForTest(LocalDateTime.now());
+        CreateTicketCommand command = TicketTestHelper.createCommandForTest(ticketId, LocalDateTime.now());
 
         // when
         ticketCommandHandler.handle(ticketId, command);
@@ -71,10 +71,9 @@ class TicketCommandHandlerTest {
         TicketId ticketId = new TicketId();
         CreateTicketCommand command = null;
         // when
-        Assertions.assertThatExceptionOfType(InvocationTargetException.class)
+        Assertions.assertThatExceptionOfType(AggregateRootValidationException.class)
                 .isThrownBy(() -> ticketCommandHandler.handle(ticketId, command))
-                .havingCause()
-                .withMessage(AggregateRootValidationMsg.TICKET_COMMAND_MUST_NOT_BE_EMPTY);
+                .withMessage(AggregateRootValidationMsg.TICKET_HANDLE_COMMAND_INVALID);
     }
 
 
@@ -86,7 +85,7 @@ class TicketCommandHandlerTest {
 
         LocalDateTime now = LocalDateTime.now();
 
-        CreateTicketCommand commandForTest = TicketTestHelper.createCommandForTest(now);
+        CreateTicketCommand commandForTest = TicketTestHelper.createCommandForTest(ticketId, now);
         ticketCommandHandler.handle(ticketId, commandForTest);
 
         // when
@@ -114,7 +113,7 @@ class TicketCommandHandlerTest {
     void add_ticket_position_ticket_valid() throws InvocationTargetException, IllegalAccessException {
         // given
         TicketId ticketId = new TicketId();
-        CreateTicketCommand command = TicketTestHelper.createCommandForTest(LocalDateTime.now());
+        CreateTicketCommand command = TicketTestHelper.createCommandForTest(ticketId, LocalDateTime.now());
         ticketCommandHandler.handle(ticketId, command);
 
         //

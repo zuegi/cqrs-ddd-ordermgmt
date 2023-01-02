@@ -65,7 +65,7 @@ class TicketTest  {
         LocalDateTime now = LocalDateTime.now();
 
         // when
-        CreateTicketCommand commandForTest = TicketTestHelper.createCommandForTest(now);
+        CreateTicketCommand commandForTest = TicketTestHelper.createCommandForTest(ticketId, now);
 
         ticket.handle(commandForTest);
         // then
@@ -82,7 +82,7 @@ class TicketTest  {
         Ticket ticket = new Ticket(ticketId);
         LocalDateTime now = LocalDateTime.now();
 
-        CreateTicketCommand commandForTest = TicketTestHelper.createCommandForTest(now);
+        CreateTicketCommand commandForTest = TicketTestHelper.createCommandForTest(ticketId,now);
         ticket.handle(commandForTest);
 
         // when

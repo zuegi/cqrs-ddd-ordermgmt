@@ -20,7 +20,7 @@ class TicketEventBuilderTest {
         Ticket ticket = new Ticket(ticketId);
         assert ticket.id().equals(ticketId);
 
-        CreateTicketCommand command = TicketTestHelper.createCommandForTest(LocalDateTime.now());
+        CreateTicketCommand command = TicketTestHelper.createCommandForTest(ticketId, LocalDateTime.now());
         ticket.handle(command);
         // whene
         DomainEvent<TicketCreatedEvent> domainEvent = TicketEventBuilder.build(ticket, command);

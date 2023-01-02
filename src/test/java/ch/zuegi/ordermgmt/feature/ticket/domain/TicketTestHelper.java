@@ -12,8 +12,9 @@ import java.time.LocalDateTime;
 public class TicketTestHelper {
 
 
-    public static CreateTicketCommand createCommandForTest(LocalDateTime now) {
+    public static CreateTicketCommand createCommandForTest(TicketId ticketId, LocalDateTime now) {
         return CreateTicketCommand.builder()
+                .ticketId(ticketId)
                 .localDateTime(now)
                 .ticketLifeCycleState(TicketLifeCycleState.TICKET_CREATED)
                 .build();
