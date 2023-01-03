@@ -21,9 +21,9 @@ public class InMemoryTicketRepositoryImpl implements TicketRepository {
                 .filter(event -> event.getTicketId().equals(ticketId))
                 .findAny();
 
+        Ticket ticket = new Ticket(ticketId);
 
         if (ticketCreatedEvent.isPresent()) {
-            Ticket ticket = new Ticket(ticketId);
             ticket.aggregateEvent(ticketCreatedEvent.get());
 
             List<TicketPositionAddedEvent> ticketPositionAddedEvents = ticketPositionAddedEventList.stream()
@@ -32,6 +32,8 @@ public class InMemoryTicketRepositoryImpl implements TicketRepository {
             if (!ticketPositionAddedEvents.isEmpty()) {
                 ticket.aggregateTicketPositionEvents(ticketPositionAddedEvents);
             }
+
+
             return Optional.of(ticket);
         }
         return Optional.empty();

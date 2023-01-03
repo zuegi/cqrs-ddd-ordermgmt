@@ -3,14 +3,17 @@ package ch.zuegi.ordermgmt.feature.ticket.domain.handler;
 import ch.zuegi.ordermgmt.feature.ticket.domain.InMemoryTicketRepositoryImpl;
 import ch.zuegi.ordermgmt.feature.ticket.domain.TicketRepository;
 import ch.zuegi.ordermgmt.feature.ticket.domain.TicketTestHelper;
-import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.AddTicketPositionCommand;
+import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;
+import ch.zuegi.ordermgmt.feature.ticket.domain.command.RemoveTicketPositionCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.UpdateTicketLifecycleCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreatedEvent;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionAddedEvent;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionRemovedEvent;
 import ch.zuegi.ordermgmt.feature.ticket.domain.validator.TicketCommandValidator;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
+import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TradeItemId;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationException;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationMsg;
@@ -31,10 +34,12 @@ class TicketCommandHandlerTest {
 
     private final ApplicationEventPublisher applicationEventPublisher = Mockito.mock(ApplicationEventPublisher.class);
 
+    TicketRepository ticketRepository;
+
     @BeforeEach
     void setup() {
         Mockito.reset(applicationEventPublisher);
-        TicketRepository ticketRepository = new InMemoryTicketRepositoryImpl();
+        ticketRepository = new InMemoryTicketRepositoryImpl();
         TicketCommandValidator ticketCommandValidator = new TicketCommandValidator();
         ticketCommandHandler = new TicketCommandHandler(ticketCommandValidator, applicationEventPublisher, ticketRepository);
     }
@@ -128,5 +133,76 @@ class TicketCommandHandlerTest {
 
         // then
         Mockito.verify(applicationEventPublisher, Mockito.times(1)).publishEvent(Mockito.any(TicketPositionAddedEvent.class));
+    }
+
+
+    @Test
+    void remove_ticket_position_from_void_ticket_position_list_throws_exception() throws InvocationTargetException, IllegalAccessException {
+        // given
+        TicketId ticketId = new TicketId();
+        CreateTicketCommand command = TicketTestHelper.createCommandForTest(ticketId, LocalDateTime.now());
+        ticketCommandHandler.handle(ticketId, command);
+
+        RemoveTicketPositionCommand removeTicketPositionCommand = RemoveTicketPositionCommand.builder()
+                .ticketPositionId(new TicketPositionId())
+                .ticketId(ticketId)
+                .tradeItemId(new TradeItemId())
+                .menge(BigDecimal.TEN)
+                .build();
+
+        // when - then
+        Assertions.assertThatExceptionOfType(InvocationTargetException.class)
+                .isThrownBy(() -> ticketCommandHandler.handle(ticketId, removeTicketPositionCommand))
+                .havingCause()
+                .withMessage(AggregateRootValidationMsg.TICKET_POSITION_LIST_MUST_NOT_BE_NULL_WHEN_REMOVING_TICKET_POSITION);
+
+
+    }
+
+
+    @Test
+    void remove_ticket_position_valid() throws InvocationTargetException, IllegalAccessException {
+        // given
+        TicketId ticketId = new TicketId();
+
+        TicketCreatedEvent ticketCreatedEvent = TicketCreatedEvent.builder()
+                .ticketId(ticketId)
+                .lifeCycleState(TicketLifeCycleState.TICKET_CREATED)
+                .localDateTime(LocalDateTime.now())
+                .build();
+        ticketRepository.save(ticketCreatedEvent);
+
+        TradeItemId tradeItemId = new TradeItemId();
+        TicketPositionId ticketPositionId = new TicketPositionId();
+        TicketPositionAddedEvent ticketPositionAddedEvent = TicketPositionAddedEvent.builder()
+                .ticketId(ticketId)
+                .ticketPositionId(ticketPositionId)
+                .tradeItemId(tradeItemId)
+                .menge(BigDecimal.TEN)
+                .build();
+        ticketRepository.save(ticketPositionAddedEvent);
+
+        TicketPositionAddedEvent ticketPositionAddedEvent2 = TicketPositionAddedEvent.builder()
+                .ticketId(ticketId)
+                .ticketPositionId(new TicketPositionId())
+                .tradeItemId(new TradeItemId())
+                .menge(BigDecimal.ONE)
+                .build();
+
+        ticketRepository.save(ticketPositionAddedEvent2);
+
+        RemoveTicketPositionCommand removeTicketPositionCommand = RemoveTicketPositionCommand.builder()
+                .ticketPositionId(ticketPositionId)
+                .ticketId(ticketId)
+                .tradeItemId(tradeItemId)
+                .menge(BigDecimal.TEN)
+                .build();
+        // when
+        ticketCommandHandler.handle(ticketId, removeTicketPositionCommand);
+
+
+        // then
+        Mockito.verify(applicationEventPublisher, Mockito.times(1)).publishEvent(Mockito.any(TicketPositionRemovedEvent.class));
+
     }
 }

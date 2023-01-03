@@ -2,12 +2,10 @@ package ch.zuegi.ordermgmt.feature.ticket.domain;
 
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.AddTicketPositionCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;
+import ch.zuegi.ordermgmt.feature.ticket.domain.command.RemoveTicketPositionCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.UpdateTicketLifecycleCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
-import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreatedEvent;
-import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketEventBuilder;
-import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketLifecycleUpdatedEvent;
-import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionAddedEvent;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.*;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRoot;
@@ -68,6 +66,26 @@ public class Ticket extends AggregateRoot<Ticket, TicketId> {
         return TicketEventBuilder.build(ticketPosition, TicketPositionAddedEvent.builder());
     }
 
+    @CommandHandler
+    public TicketPositionRemovedEvent handle(RemoveTicketPositionCommand removeTicketPositionCommand) {
+        if (this.ticketPositionList == null) {
+            throw new AggregateRootValidationException(AggregateRootValidationMsg.TICKET_POSITION_LIST_MUST_NOT_BE_NULL_WHEN_REMOVING_TICKET_POSITION);
+        }
+        TicketPosition ticketPosition = ticketPositionList.stream()
+                .filter(tp -> tp.id().equals(removeTicketPositionCommand.getTicketPositionId()))
+                .findAny()
+                .orElseThrow(() -> new AggregateRootValidationException(AggregateRootValidationMsg.TICKET_POSITION_ID_NOT_FOUND));
+        this.ticketPositionList.remove(ticketPosition);
+
+        return TicketEventBuilder.build(ticketPosition, TicketPositionRemovedEvent.builder());
+    }
+
+    @CommandValidator
+    public void validate(RemoveTicketPositionCommand removeTicketPositionCommand) {
+        if (removeTicketPositionCommand == null) {
+            throw new AggregateRootValidationException(AggregateRootValidationMsg.TICKET_COMMAND_MUST_NOT_BE_EMPTY);
+        }
+    }
     @CommandValidator
     public void validate(CreateTicketCommand command) {
 
@@ -127,6 +145,7 @@ public class Ticket extends AggregateRoot<Ticket, TicketId> {
 
         AddTicketPositionCommand command = AddTicketPositionCommand.builder()
                 .ticketId(event.getTicketId())
+                .ticketPositionId(event.getTicketPositionId())
                 .tradeItemId(event.getTradeItemId())
                 .menge(event.getMenge())
                 .build();

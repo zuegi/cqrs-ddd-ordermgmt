@@ -14,4 +14,6 @@ public interface AggregateRootValidationMsg {
     String ADD_TICKET_POSITION_COMMAND_MUST_NOT_BE_EMTPY = "AddTicketPostionCommand must not be empty or null";
     String WRONG_TICKET_FOR_TICKET_POSITION = "Wrong Ticket for this TicketPosition";
     String TICKET_VALIDATE_COMMAND_INVALID = "TicketValidateHandler Command invalid";
+    String TICKET_POSITION_LIST_MUST_NOT_BE_NULL_WHEN_REMOVING_TICKET_POSITION = "TicketPosition List must not be null when removing TicketPostion";
+    String TICKET_POSITION_ID_NOT_FOUND = "TicketPositionId not found";
 }

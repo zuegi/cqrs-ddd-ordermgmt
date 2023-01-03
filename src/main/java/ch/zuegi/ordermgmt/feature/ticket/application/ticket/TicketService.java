@@ -35,8 +35,14 @@ public class TicketService {
         }
     }
 
-    public void confirmTicket(ConfirmTicketCommand confirmTicketCommand) {
 
+    public void confirmTicket(ConfirmTicketCommand confirmTicketCommand) {
+        try {
+            commandHandler.handle(confirmTicketCommand.getTicketId(), confirmTicketCommand);
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            // TODO korrekte Exception schmeissen
+            log.info("Invalid Command: {}", confirmTicketCommand);
+        }
     }
 
 
@@ -49,8 +55,14 @@ public class TicketService {
         }
     }
 
-    public void removeTicketPosition(RemoveTicketPositionCommand removeTicketPositionCommand) {
 
+    public void removeTicketPosition(RemoveTicketPositionCommand removeTicketPositionCommand) {
+        try {
+            commandHandler.handle(removeTicketPositionCommand.getTicketId(), removeTicketPositionCommand);
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            // TODO korrekte Exception schmeissen
+            log.info("Invalid Command: {}", removeTicketPositionCommand);
+        }
     }
 
     private void assertNotNull(Command command) {

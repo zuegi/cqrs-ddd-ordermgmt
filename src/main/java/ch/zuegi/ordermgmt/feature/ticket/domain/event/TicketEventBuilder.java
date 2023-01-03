@@ -50,4 +50,12 @@ public class TicketEventBuilder {
     }
 
 
+    public static TicketPositionRemovedEvent build(TicketPosition ticketPosition, TicketPositionRemovedEvent.TicketPositionRemovedEventBuilder builder) {
+        return builder
+                .ticketPositionId(ticketPosition.id())
+                .ticketId(ticketPosition.getTicketId())
+                .tradeItemId(ticketPosition.getTradeItemId())
+                .menge(ticketPosition.getMenge())
+                .build();
+    }
 }
