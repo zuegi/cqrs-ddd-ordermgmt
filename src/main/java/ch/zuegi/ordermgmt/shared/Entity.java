@@ -2,9 +2,11 @@ package ch.zuegi.ordermgmt.shared;
 
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationException;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationMsg;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 
+@SuperBuilder
 public abstract class Entity<ID> implements Serializable {
 
     protected final ID aggregateId;

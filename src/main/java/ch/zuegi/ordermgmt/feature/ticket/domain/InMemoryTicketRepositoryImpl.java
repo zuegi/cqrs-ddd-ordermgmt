@@ -3,6 +3,7 @@ package ch.zuegi.ordermgmt.feature.ticket.domain;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreatedEvent;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionAddedEvent;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
+import ch.zuegi.ordermgmt.shared.DomainEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -14,6 +15,8 @@ public class InMemoryTicketRepositoryImpl implements TicketRepository {
 
     List<TicketCreatedEvent> ticketCreatedEventList = new ArrayList<>();
     List<TicketPositionAddedEvent> ticketPositionAddedEventList = new ArrayList<>();
+
+    List<DomainEvent<?, TicketId>> domainEventList = new ArrayList<>();
 
     @Override
     public Optional<Ticket> findByTicketId(TicketId ticketId) {
@@ -37,16 +40,20 @@ public class InMemoryTicketRepositoryImpl implements TicketRepository {
             return Optional.of(ticket);
         }
         return Optional.empty();
+
+
     }
 
 
     @Override
     public void save(TicketCreatedEvent ticketCreatedEvent) {
         ticketCreatedEventList.add(ticketCreatedEvent);
+        domainEventList.add(ticketCreatedEvent);
     }
 
     @Override
     public void save(TicketPositionAddedEvent ticketPositionAddedEvent) {
         ticketPositionAddedEventList.add(ticketPositionAddedEvent);
+        domainEventList.add(ticketPositionAddedEvent);
     }
 }

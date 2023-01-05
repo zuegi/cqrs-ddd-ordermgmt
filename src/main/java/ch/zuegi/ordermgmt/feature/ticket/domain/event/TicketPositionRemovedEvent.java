@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @ToString
-public class TicketPositionRemovedEvent implements DomainEvent<TicketPositionRemovedEvent> {
+public class TicketPositionRemovedEvent extends DomainEvent<TicketPositionRemovedEvent, TicketId> {
 
     TicketPositionId ticketPositionId;
     TicketId ticketId;
@@ -35,5 +35,10 @@ public class TicketPositionRemovedEvent implements DomainEvent<TicketPositionRem
     @Override
     public LocalDateTime occurredOn() {
         return LocalDateTime.now();
+    }
+
+    @Override
+    public TicketId id() {
+        return ticketId;
     }
 }

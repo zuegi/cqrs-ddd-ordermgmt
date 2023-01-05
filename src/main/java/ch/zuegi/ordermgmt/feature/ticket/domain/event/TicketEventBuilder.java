@@ -3,6 +3,7 @@ package ch.zuegi.ordermgmt.feature.ticket.domain.event;
 import ch.zuegi.ordermgmt.feature.ticket.domain.Ticket;
 import ch.zuegi.ordermgmt.feature.ticket.domain.TicketPosition;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;
+import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.shared.Command;
 import ch.zuegi.ordermgmt.shared.DomainEvent;
 
@@ -10,9 +11,9 @@ public class TicketEventBuilder {
 
 
     @SuppressWarnings("unchecked")
-    public static <T> DomainEvent<T> build(Ticket ticket, Command command) {
+    public static <T> DomainEvent<T, TicketId> build(Ticket ticket, Command command) {
         if (command instanceof CreateTicketCommand) {
-            return (DomainEvent<T>) build(ticket, TicketCreatedEvent.builder());
+            return (DomainEvent<T, TicketId>) build(ticket, TicketCreatedEvent.builder());
         }
         // and so on
         return null;
@@ -31,7 +32,7 @@ public class TicketEventBuilder {
 
     public static TicketLifecycleUpdatedEvent build(Ticket ticket, TicketLifecycleUpdatedEvent.TicketLifecycleUpdatedEventBuilder lifecycleUpdatedBuilder) {
        return  lifecycleUpdatedBuilder
-               .ticketNumber(ticket.id())
+               .ticketId(ticket.id())
                .localDateTime(ticket.getLocalDateTime())
                .currentLifeCycleState(ticket.getTicketLifeCycleState())
                // TODO get?

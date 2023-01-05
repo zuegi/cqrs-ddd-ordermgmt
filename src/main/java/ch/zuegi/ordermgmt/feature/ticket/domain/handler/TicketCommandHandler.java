@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -40,7 +41,7 @@ public class TicketCommandHandler {
         Method method = findMethodForCommand(ticket, command);
         // call ticket.handle(command) via invoke.... -> reflection
         // and get the corresponding domainEvent
-        DomainEvent<Object> domainEvent = (DomainEvent<Object>) method.invoke(ticket, command);
+        DomainEvent<Object, Serializable> domainEvent = (DomainEvent<Object, Serializable>) method.invoke(ticket, command);
 
         // finally publish event
         applicationEventPublisher.publishEvent(domainEvent);

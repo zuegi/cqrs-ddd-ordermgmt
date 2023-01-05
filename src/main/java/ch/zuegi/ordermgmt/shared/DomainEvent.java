@@ -1,13 +1,15 @@
 package ch.zuegi.ordermgmt.shared;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public interface DomainEvent<E> {
+public abstract class DomainEvent<E, ID extends Serializable>  {
 
-    E getEvent();
+    public abstract E getEvent();
 
-    int eventVersion();
+    public abstract int eventVersion();
 
-    LocalDateTime occurredOn();
+    public abstract LocalDateTime occurredOn();
 
+    public abstract ID id();
 }
