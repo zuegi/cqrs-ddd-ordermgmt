@@ -3,6 +3,7 @@ package ch.zuegi.ordermgmt.feature.ticket.domain.handler;
 import ch.zuegi.ordermgmt.feature.ticket.domain.TicketRepository;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreatedEvent;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionAddedEvent;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionRemovedEvent;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -32,4 +33,9 @@ public class TicketDomainHandler {
         repository.save(ticketPositionAddedEvent);
     }
 
+    @EventListener
+    public void handleTicketRemovedPositionEvent(TicketPositionRemovedEvent ticketPositionRemovedEvent) {
+        log.info("TicketPositionRemovedEvent: {}", ticketPositionRemovedEvent);
+        repository.save(ticketPositionRemovedEvent);
+    }
 }

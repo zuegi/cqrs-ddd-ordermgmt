@@ -7,13 +7,17 @@ import ch.zuegi.ordermgmt.feature.ticket.domain.TicketRepository;
 import ch.zuegi.ordermgmt.feature.ticket.domain.TicketTestHelper;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.AddTicketPositionCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;
+import ch.zuegi.ordermgmt.feature.ticket.domain.command.RemoveTicketPositionCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
+import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;
+import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TradeItemId;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -48,7 +52,8 @@ class TicketServiceTest extends AbstractIntegrationTest {
         // given
         TicketId ticketId = new TicketId();
         CreateTicketCommand createTicktCommand = TicketTestHelper.createCommandForTest(ticketId, LocalDateTime.now());
-        AddTicketPositionCommand addTicketPositionCommand = TicketTestHelper.getCreateTicketPositionCommand(ticketId);
+        TicketPositionId ticketPositionId = new TicketPositionId();
+        AddTicketPositionCommand addTicketPositionCommand = TicketTestHelper.getCreateTicketPositionCommand(ticketId, ticketPositionId,  new TradeItemId(), BigDecimal.TEN);
 
         // when
         ticketService.createTicket(createTicktCommand);
@@ -64,4 +69,36 @@ class TicketServiceTest extends AbstractIntegrationTest {
                 );
     }
 
+
+    @Test
+    void create_ticket_remove_ticket() {
+        // given
+        TicketId ticketId = new TicketId();
+        CreateTicketCommand createTicktCommand = TicketTestHelper.createCommandForTest(ticketId, LocalDateTime.now());
+        TicketPositionId ticketPositionId = new TicketPositionId();
+        AddTicketPositionCommand addTicketPositionCommand = TicketTestHelper.getCreateTicketPositionCommand(ticketId, ticketPositionId, new TradeItemId(), BigDecimal.ONE);
+        AddTicketPositionCommand anotherAddTicketPositionCommand = TicketTestHelper.getCreateTicketPositionCommand(ticketId, new TicketPositionId(), new TradeItemId(), BigDecimal.ONE);
+
+        RemoveTicketPositionCommand removeTicketPositionCommand = RemoveTicketPositionCommand.builder()
+                .ticketId(ticketId)
+                .ticketPositionId(ticketPositionId).build();
+
+        // when
+        ticketService.createTicket(createTicktCommand);
+        ticketService.addTicketPosition( addTicketPositionCommand);
+        ticketService.addTicketPosition( anotherAddTicketPositionCommand);
+
+        Optional<Ticket> byTicketId = ticketRepository.findByTicketId(ticketId);
+        Assertions.assertThat(byTicketId.get().getTicketPositionList()).isNotNull().hasSize(2);
+
+        // then
+        ticketService.removeTicketPosition(removeTicketPositionCommand);
+        Optional<Ticket> ticketWithRemovedPos = ticketRepository.findByTicketId(ticketId);
+
+        Assertions.assertThat(ticketWithRemovedPos.get().getTicketPositionList()).isNotNull().hasSize(1)
+                .extracting(TicketPosition::getTicketId,TicketPosition::id, TicketPosition::getTradeItemId, TicketPosition::getMenge)
+                .contains(
+                        Tuple.tuple(ticketId, ticketPositionId,  addTicketPositionCommand.getTradeItemId(), addTicketPositionCommand.getMenge())
+                );
+    }
 }

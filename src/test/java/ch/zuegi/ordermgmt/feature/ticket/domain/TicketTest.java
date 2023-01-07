@@ -4,14 +4,25 @@ package ch.zuegi.ordermgmt.feature.ticket.domain;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.UpdateTicketLifecycleCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreatedEvent;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionAddedEvent;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionRemovedEvent;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
+import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;
+import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TradeItemId;
+import ch.zuegi.ordermgmt.shared.DomainEvent;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationException;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationMsg;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 
 class TicketTest  {
 
@@ -107,4 +118,95 @@ class TicketTest  {
         Assertions.assertThat(ticket.getTicketLifeCycleState()).isEqualTo(TicketLifeCycleState.TICKET_PROCESSED);
     }
 
+    @Test
+    void create_ticket_with_ticket_created_event() {
+        // given
+        List<DomainEvent<?, TicketId>> ticketDomainEvents = new ArrayList<>();
+        TicketId ticketId = new TicketId();
+        LocalDateTime now = LocalDateTime.now();
+        TicketCreatedEvent ticketCreatedEvent = TicketTestHelper.createTicketCreatedEvent(ticketId, now);
+        ticketDomainEvents.add(ticketCreatedEvent);
+
+        Ticket ticket = new Ticket(ticketId);
+        // when
+        ticket.aggregateEvents(ticketDomainEvents);
+
+        // then
+        Assertions.assertThat(ticket).isNotNull()
+                .extracting(Ticket::id, Ticket::getLocalDateTime, Ticket::getTicketLifeCycleState, Ticket::getTicketPositionList)
+                .contains(ticketId, now, TicketLifeCycleState.TICKET_CREATED, null);
+    }
+
+
+    @Test
+    void create_ticket_with_ticket_position_added_event() {
+
+        // given
+        List<DomainEvent<?, TicketId>> ticketDomainEvents = new ArrayList<>();
+        TicketId ticketId = new TicketId();
+        LocalDateTime now = LocalDateTime.now();
+        TicketCreatedEvent ticketCreatedEvent = TicketTestHelper.createTicketCreatedEvent(ticketId, now);
+        ticketDomainEvents.add(ticketCreatedEvent);
+
+        TicketPositionId firstTicketPositionId = new TicketPositionId();
+        TradeItemId firstTradeItemId = new TradeItemId();
+        BigDecimal firstMenge = BigDecimal.ONE;
+        TicketPositionAddedEvent firstTicketPositionAddedEvent = TicketTestHelper.createTicketPositionAddedEvent(ticketId, firstTicketPositionId, firstTradeItemId, firstMenge);
+        ticketDomainEvents.add(firstTicketPositionAddedEvent);
+
+        TicketPositionId seondTicketPositionId = new TicketPositionId();
+        TradeItemId secondTradeItemId = new TradeItemId();
+        BigDecimal secondMenge = BigDecimal.ONE;
+        TicketPositionAddedEvent secondTicketPositionAddedEvent = TicketTestHelper.createTicketPositionAddedEvent(ticketId, seondTicketPositionId, secondTradeItemId, secondMenge);
+        ticketDomainEvents.add(secondTicketPositionAddedEvent);
+
+        Ticket ticket = new Ticket(ticketId);
+        // when
+        ticket.aggregateEvents(ticketDomainEvents);
+
+        // then
+        Assertions.assertThat(ticket).isNotNull();
+        Assertions.assertThat(ticket.getTicketPositionList())
+                .hasSize(2)
+                .extracting(TicketPosition::getTicketId, TicketPosition::id, TicketPosition::getTradeItemId, TicketPosition::getMenge)
+                .containsExactlyInAnyOrder(
+                        tuple(ticketId, firstTicketPositionId, firstTradeItemId, firstMenge),
+                        tuple(ticketId, seondTicketPositionId, secondTradeItemId,secondMenge)
+                );
+    }
+
+    @Test
+    void create_ticket_with_ticket_position_added_event_and_remove_one_position() {
+        // given
+        List<DomainEvent<?, TicketId>> ticketDomainEvents = new ArrayList<>();
+        TicketId ticketId = new TicketId();
+        LocalDateTime now = LocalDateTime.now();
+        TicketCreatedEvent ticketCreatedEvent = TicketTestHelper.createTicketCreatedEvent(ticketId, now);
+        ticketDomainEvents.add(ticketCreatedEvent);
+
+        TicketPositionId firstTicketPositionId = new TicketPositionId();
+        TradeItemId firstTradeItemId = new TradeItemId();
+        BigDecimal firstMenge = BigDecimal.ONE;
+        TicketPositionAddedEvent firstTicketPositionAddedEvent = TicketTestHelper.createTicketPositionAddedEvent(ticketId, firstTicketPositionId, firstTradeItemId, firstMenge);
+        ticketDomainEvents.add(firstTicketPositionAddedEvent);
+
+        TicketPositionId secondTicketPositionId = new TicketPositionId();
+        TradeItemId secondTradeItemId = new TradeItemId();
+        BigDecimal secondMenge = BigDecimal.ONE;
+        TicketPositionAddedEvent secondTicketPositionAddedEvent = TicketTestHelper.createTicketPositionAddedEvent(ticketId, secondTicketPositionId, secondTradeItemId, secondMenge);
+        ticketDomainEvents.add(secondTicketPositionAddedEvent);
+
+        TicketPositionRemovedEvent ticketPostionRemovedEvent = TicketTestHelper.createTicketPostionRemovedEvent(ticketId, firstTicketPositionId);
+        ticketDomainEvents.add(ticketPostionRemovedEvent);
+        // when
+        Ticket ticket = new Ticket(ticketId);
+        ticket.aggregateEvents(ticketDomainEvents);
+
+        Assertions.assertThat(ticket.getTicketPositionList())
+                .hasSize(1)
+                .extracting(TicketPosition::getTicketId, TicketPosition::id, TicketPosition::getTradeItemId, TicketPosition::getMenge)
+                .contains(
+                        tuple(ticketId, secondTicketPositionId, secondTradeItemId, secondMenge)
+                );
+    }
 }

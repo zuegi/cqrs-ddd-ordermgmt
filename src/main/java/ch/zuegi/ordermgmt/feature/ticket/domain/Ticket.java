@@ -8,6 +8,7 @@ import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.*;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;
+import ch.zuegi.ordermgmt.shared.DomainEvent;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRoot;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationException;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationMsg;
@@ -19,6 +20,7 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Getter
@@ -86,6 +88,7 @@ public class Ticket extends AggregateRoot<Ticket, TicketId> {
             throw new AggregateRootValidationException(AggregateRootValidationMsg.TICKET_COMMAND_MUST_NOT_BE_EMPTY);
         }
     }
+
     @CommandValidator
     public void validate(CreateTicketCommand command) {
 
@@ -122,18 +125,54 @@ public class Ticket extends AggregateRoot<Ticket, TicketId> {
         }
     }
 
+    public void aggregateEvents(List<DomainEvent<?, TicketId>> ticketDomainEvents) {
+        // TODO Validation?
+        Optional<DomainEvent<?, TicketId>> ticketIdDomainEvent = extractTicketCreatedEvent(ticketDomainEvents);
 
-    public void aggregateEvent(TicketCreatedEvent ticketCreatedEvent) {
+        if (ticketIdDomainEvent.isPresent()) {
+            TicketCreatedEvent ticketCreatedEvent = (TicketCreatedEvent) ticketIdDomainEvent.get();
+            aggregateEvent(ticketCreatedEvent);
+
+            aggregateTicketPositionAddedEvent(ticketDomainEvents);
+            aggregateTicketPositionRemovedEvent(ticketDomainEvents);
+        }
+
+
+    }
+
+    private void aggregateTicketPositionRemovedEvent(List<DomainEvent<?, TicketId>> ticketDomainEvents) {
+        ticketDomainEvents.stream()
+                .filter(event -> event.id().equals(this.id()))
+                .filter(event -> event instanceof TicketPositionRemovedEvent)
+                .map(event -> (TicketPositionRemovedEvent) event)
+                .forEach(this::removeFromPositionList);
+    }
+
+    private void removeFromPositionList(TicketPositionRemovedEvent event) {
+        this.ticketPositionList.removeIf(pos -> pos.id().equals(event.getTicketPositionId()));
+    }
+
+
+    private Optional<DomainEvent<?, TicketId>> extractTicketCreatedEvent(List<DomainEvent<?, TicketId>> ticketDomainEvents) {
+        return ticketDomainEvents.stream()
+                .filter(event -> event instanceof TicketCreatedEvent)
+                .filter(event -> ((TicketCreatedEvent) event).getTicketId().equals(this.id()))
+                .findAny();
+    }
+
+    private void aggregateEvent(TicketCreatedEvent ticketCreatedEvent) {
         // allenfalls den event validieren
         this.localDateTime = ticketCreatedEvent.getLocalDateTime();
         this.ticketLifeCycleState = ticketCreatedEvent.getLifeCycleState();
     }
 
-    public void aggregateTicketPositionEvents(List<TicketPositionAddedEvent> eventList) {
+    private void aggregateTicketPositionAddedEvent(List<DomainEvent<?, TicketId>> ticketDomainEvents) {
         // to be implemented
-        List<TicketPosition> ticketPositions = eventList.stream()
-                .filter(event -> event.getTicketId().equals(this.id()))
-                .map(this::eventToPositionMapper)
+        List<TicketPosition> ticketPositions = ticketDomainEvents.stream()
+                .filter(event -> event.id().equals(this.id()))
+                .filter(event -> event instanceof TicketPositionAddedEvent)
+                .map(event -> (TicketPositionAddedEvent) event)
+                .map(this::eventToPositionAddedMapper)
                 .toList();
         if (this.ticketPositionList == null) {
             this.ticketPositionList = new ArrayList<>();
@@ -141,7 +180,7 @@ public class Ticket extends AggregateRoot<Ticket, TicketId> {
         this.ticketPositionList.addAll(ticketPositions);
     }
 
-    private TicketPosition eventToPositionMapper(TicketPositionAddedEvent event) {
+    private TicketPosition eventToPositionAddedMapper(TicketPositionAddedEvent event) {
 
         AddTicketPositionCommand command = AddTicketPositionCommand.builder()
                 .ticketId(event.getTicketId())
