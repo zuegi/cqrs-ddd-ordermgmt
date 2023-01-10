@@ -134,7 +134,7 @@ class TicketTest  {
         // then
         Assertions.assertThat(ticket).isNotNull()
                 .extracting(Ticket::id, Ticket::getLocalDateTime, Ticket::getTicketLifeCycleState, Ticket::getTicketPositionList)
-                .contains(ticketId, now, TicketLifeCycleState.TICKET_CREATED, null);
+                .contains(ticketId, now, TicketLifeCycleState.TICKET_CREATED, new ArrayList<>());
     }
 
 
@@ -186,7 +186,7 @@ class TicketTest  {
 
         TicketPositionId firstTicketPositionId = new TicketPositionId();
         TradeItemId firstTradeItemId = new TradeItemId();
-        BigDecimal firstMenge = BigDecimal.ONE;
+        BigDecimal firstMenge = BigDecimal.TEN;
         TicketPositionAddedEvent firstTicketPositionAddedEvent = TicketTestHelper.createTicketPositionAddedEvent(ticketId, firstTicketPositionId, firstTradeItemId, firstMenge);
         ticketDomainEvents.add(firstTicketPositionAddedEvent);
 

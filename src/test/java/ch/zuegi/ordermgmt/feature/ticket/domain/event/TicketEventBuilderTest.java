@@ -18,7 +18,7 @@ class TicketEventBuilderTest {
         // given
         TicketId ticketId = new TicketId();
         Ticket ticket = new Ticket(ticketId);
-        assert ticket.id().equals(ticketId);
+        assert ticket.id().sameValueAs(ticketId);
 
         CreateTicketCommand command = TicketTestHelper.createCommandForTest(ticketId, LocalDateTime.now());
         ticket.handle(command);

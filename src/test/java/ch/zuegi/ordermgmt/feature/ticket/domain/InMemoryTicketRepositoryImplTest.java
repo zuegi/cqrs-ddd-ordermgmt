@@ -8,7 +8,6 @@ import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TradeItemId;
 import org.assertj.core.api.Assertions;
-import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -62,7 +61,7 @@ class InMemoryTicketRepositoryImplTest {
 
         // then
         Ticket ticketWithRemovedPos = repository.findByTicketId(ticketId).get();
-        Assertions.assertThat(ticket.getTicketPositionList())
+        Assertions.assertThat(ticketWithRemovedPos.getTicketPositionList())
                 .isNotNull()
                 .hasSize(1)
                 .extracting(TicketPosition::getTicketId, TicketPosition::id, TicketPosition::getTradeItemId, TicketPosition::getMenge)

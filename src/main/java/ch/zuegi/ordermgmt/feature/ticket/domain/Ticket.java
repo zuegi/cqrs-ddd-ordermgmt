@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 
 @Getter
@@ -120,7 +121,7 @@ public class Ticket extends AggregateRoot<Ticket, TicketId> {
         if (addTicketPosition == null) {
             throw new AggregateRootValidationException(AggregateRootValidationMsg.ADD_TICKET_POSITION_COMMAND_MUST_NOT_BE_EMTPY);
         }
-        if (!this.id().equals(addTicketPosition.getTicketId())) {
+        if (!this.id().sameValueAs(addTicketPosition.getTicketId())) {
             throw new AggregateRootValidationException(AggregateRootValidationMsg.WRONG_TICKET_FOR_TICKET_POSITION);
         }
     }
@@ -142,21 +143,25 @@ public class Ticket extends AggregateRoot<Ticket, TicketId> {
 
     private void aggregateTicketPositionRemovedEvent(List<DomainEvent<?, TicketId>> ticketDomainEvents) {
         ticketDomainEvents.stream()
-                .filter(event -> event.id().equals(this.id()))
+                .filter(event -> event.id().sameValueAs(this.id()))
                 .filter(event -> event instanceof TicketPositionRemovedEvent)
                 .map(event -> (TicketPositionRemovedEvent) event)
                 .forEach(this::removeFromPositionList);
     }
 
     private void removeFromPositionList(TicketPositionRemovedEvent event) {
-        this.ticketPositionList.removeIf(pos -> pos.id().equals(event.getTicketPositionId()));
+        ticketPositionList.removeIf(getTicketPositionPredicate(event));
+    }
+
+    private static Predicate<TicketPosition> getTicketPositionPredicate(TicketPositionRemovedEvent event) {
+        return pos -> pos.id().sameValueAs(event.getTicketPositionId());
     }
 
 
     private Optional<DomainEvent<?, TicketId>> extractTicketCreatedEvent(List<DomainEvent<?, TicketId>> ticketDomainEvents) {
         return ticketDomainEvents.stream()
                 .filter(event -> event instanceof TicketCreatedEvent)
-                .filter(event -> ((TicketCreatedEvent) event).getTicketId().equals(this.id()))
+                .filter(event -> ((TicketCreatedEvent) event).getTicketId().sameValueAs(this.id()))
                 .findAny();
     }
 
@@ -169,7 +174,7 @@ public class Ticket extends AggregateRoot<Ticket, TicketId> {
     private void aggregateTicketPositionAddedEvent(List<DomainEvent<?, TicketId>> ticketDomainEvents) {
         // to be implemented
         List<TicketPosition> ticketPositions = ticketDomainEvents.stream()
-                .filter(event -> event.id().equals(this.id()))
+                .filter(event -> event.id().sameValueAs(this.id()))
                 .filter(event -> event instanceof TicketPositionAddedEvent)
                 .map(event -> (TicketPositionAddedEvent) event)
                 .map(this::eventToPositionAddedMapper)

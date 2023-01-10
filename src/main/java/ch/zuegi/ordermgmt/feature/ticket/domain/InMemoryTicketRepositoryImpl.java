@@ -14,39 +14,16 @@ import java.util.Optional;
 @Component
 public class InMemoryTicketRepositoryImpl implements TicketRepository {
 
-    List<TicketCreatedEvent> ticketCreatedEventList = new ArrayList<>();
-    List<TicketPositionAddedEvent> ticketPositionAddedEventList = new ArrayList<>();
-
     List<DomainEvent<?, TicketId>> domainEventList = new ArrayList<>();
 
     @Override
     public Optional<Ticket> findByTicketId(TicketId ticketId) {
-        /*Optional<TicketCreatedEvent> ticketCreatedEvent = ticketCreatedEventList.stream()
-                .filter(event -> event.getTicketId().equals(ticketId))
-                .findAny();
-
-        Ticket ticket = new Ticket(ticketId);
-
-        if (ticketCreatedEvent.isPresent()) {
-            ticket.aggregateEvent(ticketCreatedEvent.get());
-
-            List<TicketPositionAddedEvent> ticketPositionAddedEvents = ticketPositionAddedEventList.stream()
-                    .filter(event -> event.getTicketId().equals(ticketId))
-                    .toList();
-            if (!ticketPositionAddedEvents.isEmpty()) {
-                ticket.aggregateTicketPositionEvents(ticketPositionAddedEvents);
-            }
-
-
-            return Optional.of(ticket);
-        }
-        return Optional.empty();*/
 
         Optional<DomainEvent<?, TicketId>> optionalTicketCreatedEvent = extractTicketCreatedEvent(ticketId);
 
         if (optionalTicketCreatedEvent.isPresent()) {
             List<DomainEvent<?, TicketId>> ticketDomainEvents = domainEventList.stream()
-                    .filter(event -> event.id().equals(ticketId))
+                    .filter(event -> event.id().sameValueAs(ticketId))
                     .toList();
             Ticket ticket = new Ticket(ticketId);
             ticket.aggregateEvents(ticketDomainEvents);
@@ -68,13 +45,11 @@ public class InMemoryTicketRepositoryImpl implements TicketRepository {
 
     @Override
     public void save(TicketCreatedEvent ticketCreatedEvent) {
-//        ticketCreatedEventList.add(ticketCreatedEvent);
         domainEventList.add(ticketCreatedEvent);
     }
 
     @Override
     public void save(TicketPositionAddedEvent ticketPositionAddedEvent) {
-//        ticketPositionAddedEventList.add(ticketPositionAddedEvent);
         domainEventList.add(ticketPositionAddedEvent);
     }
 
