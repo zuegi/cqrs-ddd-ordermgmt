@@ -4,6 +4,7 @@ import ch.zuegi.ordermgmt.feature.ticket.domain.command.AddTicketPositionCommand
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TradeItemId;
+import ch.zuegi.ordermgmt.shared.Entity;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRoot;
 import lombok.Getter;
 import lombok.ToString;
@@ -12,7 +13,7 @@ import java.math.BigDecimal;
 
 @ToString
 @Getter
-public class TicketPosition extends AggregateRoot<TicketPosition, TicketPositionId> {
+public class TicketPosition extends Entity<TicketPositionId> {
 
     private TicketId ticketId;
     private TradeItemId tradeItemId;
