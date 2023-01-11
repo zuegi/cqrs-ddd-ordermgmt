@@ -1,4 +1,4 @@
-package ch.zuegi.ordermgmt.feature.ticket.domain;
+package ch.zuegi.ordermgmt.feature.ticket.domain.entity;
 
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.AddTicketPositionCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;

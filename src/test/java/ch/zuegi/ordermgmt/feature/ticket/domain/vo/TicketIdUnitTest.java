@@ -1,12 +1,9 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain.vo;
 
-import ch.zuegi.ordermgmt.feature.ticket.domain.Ticket;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationException;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationMsg;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class TicketIdUnitTest {
 

@@ -1,6 +1,6 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain.event;
 
-import ch.zuegi.ordermgmt.feature.ticket.domain.Ticket;
+import ch.zuegi.ordermgmt.feature.ticket.domain.entity.Ticket;
 import ch.zuegi.ordermgmt.feature.ticket.domain.TicketTestHelper;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;

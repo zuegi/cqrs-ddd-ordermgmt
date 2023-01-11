@@ -1,7 +1,6 @@
-package ch.zuegi.ordermgmt.feature.ticket.domain;
+package ch.zuegi.ordermgmt.feature.ticket.domain.entity;
 
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.*;
-import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.*;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;

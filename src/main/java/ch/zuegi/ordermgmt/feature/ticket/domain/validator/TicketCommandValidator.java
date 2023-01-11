@@ -1,6 +1,6 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain.validator;
 
-import ch.zuegi.ordermgmt.feature.ticket.domain.Ticket;
+import ch.zuegi.ordermgmt.feature.ticket.domain.entity.Ticket;
 import ch.zuegi.ordermgmt.shared.Command;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationException;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationMsg;

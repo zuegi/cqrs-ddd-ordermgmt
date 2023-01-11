@@ -1,7 +1,7 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain.handler;
 
-import ch.zuegi.ordermgmt.feature.ticket.domain.InMemoryTicketRepositoryImpl;
-import ch.zuegi.ordermgmt.feature.ticket.domain.TicketRepository;
+import ch.zuegi.ordermgmt.feature.ticket.domain.entity.InMemoryTicketRepositoryImpl;
+import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketRepository;
 import ch.zuegi.ordermgmt.feature.ticket.domain.TicketTestHelper;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.AddTicketPositionCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;

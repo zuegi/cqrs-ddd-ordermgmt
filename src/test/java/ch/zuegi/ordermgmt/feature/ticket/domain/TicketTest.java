@@ -3,7 +3,9 @@ package ch.zuegi.ordermgmt.feature.ticket.domain;
 
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.UpdateTicketLifecycleCommand;
+import ch.zuegi.ordermgmt.feature.ticket.domain.entity.Ticket;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
+import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketPosition;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketConfirmedEvent;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreatedEvent;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionAddedEvent;

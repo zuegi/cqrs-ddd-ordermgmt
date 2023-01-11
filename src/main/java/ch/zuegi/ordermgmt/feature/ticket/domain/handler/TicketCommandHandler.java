@@ -1,7 +1,7 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain.handler;
 
-import ch.zuegi.ordermgmt.feature.ticket.domain.Ticket;
-import ch.zuegi.ordermgmt.feature.ticket.domain.TicketRepository;
+import ch.zuegi.ordermgmt.feature.ticket.domain.entity.Ticket;
+import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketRepository;
 import ch.zuegi.ordermgmt.feature.ticket.domain.validator.TicketCommandValidator;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.shared.Command;

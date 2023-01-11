@@ -1,6 +1,9 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain;
 
+import ch.zuegi.ordermgmt.feature.ticket.domain.entity.InMemoryTicketRepositoryImpl;
+import ch.zuegi.ordermgmt.feature.ticket.domain.entity.Ticket;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
+import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketPosition;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreatedEvent;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionAddedEvent;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionRemovedEvent;

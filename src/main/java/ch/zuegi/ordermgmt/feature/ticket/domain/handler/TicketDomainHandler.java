@@ -1,6 +1,6 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain.handler;
 
-import ch.zuegi.ordermgmt.feature.ticket.domain.TicketRepository;
+import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketRepository;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.shared.DomainEvent;
 import lombok.AllArgsConstructor;

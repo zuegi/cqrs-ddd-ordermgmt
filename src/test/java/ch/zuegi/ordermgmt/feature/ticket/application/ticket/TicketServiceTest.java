@@ -1,9 +1,9 @@
 package ch.zuegi.ordermgmt.feature.ticket.application.ticket;
 
 import ch.zuegi.ordermgmt.feature.ticket.application.AbstractIntegrationTest;
-import ch.zuegi.ordermgmt.feature.ticket.domain.Ticket;
-import ch.zuegi.ordermgmt.feature.ticket.domain.TicketPosition;
-import ch.zuegi.ordermgmt.feature.ticket.domain.TicketRepository;
+import ch.zuegi.ordermgmt.feature.ticket.domain.entity.Ticket;
+import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketPosition;
+import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketRepository;
 import ch.zuegi.ordermgmt.feature.ticket.domain.TicketTestHelper;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.AddTicketPositionCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.ConfirmTicketCommand;
