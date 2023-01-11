@@ -59,4 +59,11 @@ public class TicketEventBuilder {
                 .menge(ticketPosition.getMenge())
                 .build();
     }
+
+    public static TicketConfirmedEvent build(Ticket ticket, TicketConfirmedEvent.TicketConfirmedEventBuilder builder) {
+        return builder
+                .ticketId(ticket.id())
+                .ticketLifeCycleState(ticket.getTicketLifeCycleState())
+                .build();
+    }
 }

@@ -16,4 +16,5 @@ public interface AggregateRootValidationMsg {
     String TICKET_VALIDATE_COMMAND_INVALID = "TicketValidateHandler Command invalid";
     String TICKET_POSITION_LIST_MUST_NOT_BE_NULL_WHEN_REMOVING_TICKET_POSITION = "TicketPosition List must not be null when removing TicketPostion";
     String TICKET_POSITION_ID_NOT_FOUND = "TicketPositionId not found";
+    String TICKET_COMMAND_TICKET_ID_NOT_THE_SAME = "TicketId in Command is not the same as TicketId from this";
 }

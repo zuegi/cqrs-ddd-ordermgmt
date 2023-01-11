@@ -8,11 +8,12 @@ import java.util.Optional;
 public enum TicketLifeCycleState {
     // Keep the order/position of the enums
     TICKET_CREATED("Ticket created"),
+    TICKET_CONFIRMED("Ticket confirmed"),
     TICKET_IN_PROCESSING("Ticket in processing"),
     TICKET_IS_PREPARED("Ticket will be prepared"),
     TICKET_PROCESSED("Ticket processed");
 
-    private String messageKey;
+    private final String messageKey;
     private TicketLifeCycleState previousTicketLifeCycleState = null;
     private TicketLifeCycleState nextTicketLifeCycleState = null;
 

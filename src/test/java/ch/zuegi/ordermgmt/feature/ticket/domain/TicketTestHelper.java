@@ -9,9 +9,12 @@ import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionRemovedEvent
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TradeItemId;
+import ch.zuegi.ordermgmt.shared.DomainEvent;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TicketTestHelper {
 
@@ -55,5 +58,25 @@ public class TicketTestHelper {
                 .ticketId(ticketId)
                 .ticketPositionId(ticketPositionId)
                 .build();
+    }
+
+
+    public static List<DomainEvent<?, TicketId>> createTicketWithTwoPositionEventss(TicketId ticketId, LocalDateTime now, TicketPositionId firstTicketPositionId, TradeItemId firstTradeItemId, BigDecimal firstMenge, TicketPositionId secondTicketPositionId, TradeItemId secondTradeItemId, BigDecimal secondMenge) {
+        List<DomainEvent<?, TicketId>> ticketDomainEvents = new ArrayList<>();
+        TicketCreatedEvent ticketCreatedEvent = TicketTestHelper.createTicketCreatedEvent(ticketId, now);
+
+        ticketDomainEvents.add(ticketCreatedEvent);
+
+        TicketPositionAddedEvent firstTicketPositionAddedEvent = TicketTestHelper.createTicketPositionAddedEvent(ticketId, firstTicketPositionId, firstTradeItemId, firstMenge);
+        ticketDomainEvents.add(firstTicketPositionAddedEvent);
+
+        TicketPositionAddedEvent secondTicketPositionAddedEvent = TicketTestHelper.createTicketPositionAddedEvent(ticketId, secondTicketPositionId, secondTradeItemId, secondMenge);
+        ticketDomainEvents.add(secondTicketPositionAddedEvent);
+
+        TicketPositionRemovedEvent ticketPostionRemovedEvent = TicketTestHelper.createTicketPostionRemovedEvent(ticketId, firstTicketPositionId);
+        ticketDomainEvents.add(ticketPostionRemovedEvent);
+
+        return ticketDomainEvents;
+
     }
 }

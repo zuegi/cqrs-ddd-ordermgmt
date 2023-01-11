@@ -6,6 +6,7 @@ import ch.zuegi.ordermgmt.feature.ticket.domain.TicketPosition;
 import ch.zuegi.ordermgmt.feature.ticket.domain.TicketRepository;
 import ch.zuegi.ordermgmt.feature.ticket.domain.TicketTestHelper;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.AddTicketPositionCommand;
+import ch.zuegi.ordermgmt.feature.ticket.domain.command.ConfirmTicketCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.RemoveTicketPositionCommand;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
@@ -71,7 +72,7 @@ class TicketServiceTest extends AbstractIntegrationTest {
 
 
     @Test
-    void create_ticket_remove_ticket() {
+    void create_ticket_remove_ticket_position() {
         // given
         TicketId ticketId = new TicketId();
         CreateTicketCommand createTicktCommand = TicketTestHelper.createCommandForTest(ticketId, LocalDateTime.now());
@@ -100,5 +101,28 @@ class TicketServiceTest extends AbstractIntegrationTest {
                 .contains(
                         Tuple.tuple(ticketId, ticketPositionId,  addTicketPositionCommand.getTradeItemId(), addTicketPositionCommand.getMenge())
                 );
+    }
+
+    @Test
+    void create_ticket_with_2_positions_and_confirm() {
+        // given
+        TicketId ticketId = new TicketId();
+        CreateTicketCommand createTicktCommand = TicketTestHelper.createCommandForTest(ticketId, LocalDateTime.now());
+        TicketPositionId ticketPositionId = new TicketPositionId();
+        AddTicketPositionCommand addTicketPositionCommand = TicketTestHelper.getCreateTicketPositionCommand(ticketId, ticketPositionId, new TradeItemId(), BigDecimal.ONE);
+        AddTicketPositionCommand anotherAddTicketPositionCommand = TicketTestHelper.getCreateTicketPositionCommand(ticketId, new TicketPositionId(), new TradeItemId(), BigDecimal.ONE);
+
+        ticketService.createTicket(createTicktCommand);
+        ticketService.addTicketPosition( addTicketPositionCommand);
+
+        // when
+        ConfirmTicketCommand confirmTicketCommand = ConfirmTicketCommand.builder().ticketId(ticketId).build();
+        ticketService.confirmTicket(confirmTicketCommand);
+
+        // then
+        Ticket ticket = ticketRepository.findByTicketId(ticketId).get();
+        Assertions.assertThat(ticket).isNotNull()
+                .extracting(Ticket::getTicketLifeCycleState)
+                .isEqualTo(TicketLifeCycleState.TICKET_CONFIRMED);
     }
 }

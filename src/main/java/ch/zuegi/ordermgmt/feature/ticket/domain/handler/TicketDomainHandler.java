@@ -1,9 +1,8 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain.handler;
 
 import ch.zuegi.ordermgmt.feature.ticket.domain.TicketRepository;
-import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreatedEvent;
-import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionAddedEvent;
-import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionRemovedEvent;
+import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
+import ch.zuegi.ordermgmt.shared.DomainEvent;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -16,7 +15,14 @@ public class TicketDomainHandler {
 
     private TicketRepository repository;
 
+
     @EventListener
+    public void handleTicketEvents(DomainEvent<?, TicketId> domainEvent) {
+        log.info(domainEvent.getClass().getSimpleName() + ": " + domainEvent);
+        repository.save(domainEvent);
+    }
+
+   /* @EventListener
     public void handleTicketCreatedEvent(TicketCreatedEvent event) {
         log.info("handleTicketCreatedEvent: {}", event);
         // muss der event hier nochmals validiert werden?
@@ -38,4 +44,10 @@ public class TicketDomainHandler {
         log.info("TicketPositionRemovedEvent: {}", ticketPositionRemovedEvent);
         repository.save(ticketPositionRemovedEvent);
     }
+
+    @EventListener
+    public void handleTicketConfirmedEvent(TicketConfirmedEvent ticketConfirmedEvent) {
+        log.info("TicketConfirmedEvent: {}", ticketConfirmedEvent);
+        repository.save(ticketConfirmedEvent);
+    }*/
 }

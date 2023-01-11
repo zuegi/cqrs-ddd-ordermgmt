@@ -1,9 +1,6 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain;
 
-import ch.zuegi.ordermgmt.feature.ticket.domain.command.AddTicketPositionCommand;
-import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;
-import ch.zuegi.ordermgmt.feature.ticket.domain.command.RemoveTicketPositionCommand;
-import ch.zuegi.ordermgmt.feature.ticket.domain.command.UpdateTicketLifecycleCommand;
+import ch.zuegi.ordermgmt.feature.ticket.domain.command.*;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.*;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
@@ -83,12 +80,31 @@ public class Ticket extends AggregateRoot<Ticket, TicketId> {
         return TicketEventBuilder.build(ticketPosition, TicketPositionRemovedEvent.builder());
     }
 
+    @CommandHandler
+    public TicketConfirmedEvent handle(ConfirmTicketCommand command) {
+        this.ticketLifeCycleState = TicketLifeCycleState.TICKET_CONFIRMED;
+        return TicketEventBuilder.build(this, TicketConfirmedEvent.builder());
+    }
+
+
+    @CommandValidator
+    public void validate(ConfirmTicketCommand command) {
+        if (command == null) {
+            throw new AggregateRootValidationException(AggregateRootValidationMsg.TICKET_COMMAND_MUST_NOT_BE_EMPTY);
+        }
+
+        if (!command.getTicketId().sameValueAs(this.id())) {
+            throw new AggregateRootValidationException(AggregateRootValidationMsg.TICKET_COMMAND_TICKET_ID_NOT_THE_SAME);
+        }
+    }
+
     @CommandValidator
     public void validate(RemoveTicketPositionCommand removeTicketPositionCommand) {
         if (removeTicketPositionCommand == null) {
             throw new AggregateRootValidationException(AggregateRootValidationMsg.TICKET_COMMAND_MUST_NOT_BE_EMPTY);
         }
     }
+
 
     @CommandValidator
     public void validate(CreateTicketCommand command) {
@@ -136,8 +152,19 @@ public class Ticket extends AggregateRoot<Ticket, TicketId> {
 
             aggregateTicketPositionAddedEvent(ticketDomainEvents);
             aggregateTicketPositionRemovedEvent(ticketDomainEvents);
+            aggreateTicketConfirmedEvents(ticketDomainEvents);
         }
 
+
+    }
+
+    private void aggreateTicketConfirmedEvents(List<DomainEvent<?, TicketId>> ticketDomainEvents) {
+        ticketDomainEvents.stream()
+                .filter(event -> event.id().sameValueAs(this.id()))
+                .filter(event -> event instanceof TicketConfirmedEvent)
+                .map(event -> (TicketConfirmedEvent) event)
+                .findAny()
+                .ifPresent(ticketConfirmedEvent -> this.ticketLifeCycleState = ticketConfirmedEvent.getTicketLifeCycleState());
 
     }
 

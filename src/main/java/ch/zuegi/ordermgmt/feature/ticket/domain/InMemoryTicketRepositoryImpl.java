@@ -1,8 +1,6 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain;
 
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreatedEvent;
-import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionAddedEvent;
-import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionRemovedEvent;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.shared.DomainEvent;
 import org.springframework.stereotype.Component;
@@ -33,6 +31,11 @@ public class InMemoryTicketRepositoryImpl implements TicketRepository {
         return Optional.empty();
     }
 
+    @Override
+    public void save(DomainEvent<?, TicketId> domainEvent) {
+        domainEventList.add(domainEvent);
+    }
+
     private Optional<DomainEvent<?, TicketId>> extractTicketCreatedEvent(TicketId ticketId) {
         return domainEventList.stream()
                 .filter(event -> event instanceof TicketCreatedEvent)
@@ -40,21 +43,4 @@ public class InMemoryTicketRepositoryImpl implements TicketRepository {
                 .findAny();
     }
 
-    // TODO only one save method must remain
-    // save(DomainEvent<>)
-
-    @Override
-    public void save(TicketCreatedEvent ticketCreatedEvent) {
-        domainEventList.add(ticketCreatedEvent);
-    }
-
-    @Override
-    public void save(TicketPositionAddedEvent ticketPositionAddedEvent) {
-        domainEventList.add(ticketPositionAddedEvent);
-    }
-
-    @Override
-    public void save(TicketPositionRemovedEvent ticketPositionRemovedEvent) {
-        domainEventList.add(ticketPositionRemovedEvent);
-    }
 }
