@@ -5,7 +5,6 @@ import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TradeItemId;
 import ch.zuegi.ordermgmt.shared.Entity;
-import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRoot;
 import lombok.Getter;
 import lombok.ToString;
 
