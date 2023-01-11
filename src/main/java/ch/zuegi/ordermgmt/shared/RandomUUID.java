@@ -3,11 +3,14 @@ package ch.zuegi.ordermgmt.shared;
 
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationException;
 import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationMsg;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.UUID;
 
+@Slf4j
 public abstract class RandomUUID implements ValueObject<RandomUUID> {
     public static final String FORMATTER = "-%s";
     @NotNull
@@ -35,5 +38,20 @@ public abstract class RandomUUID implements ValueObject<RandomUUID> {
     }
 
     protected abstract String getPrefix();
+
+
+    @Override
+    public String toString() {
+        String str = "";
+        //Converts object to json string using Jaxson
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            str = mapper.writeValueAsString(this);
+        } catch (Exception exception) {
+            log.error(String.valueOf(exception));
+        }
+        return str;
+    }
 
 }

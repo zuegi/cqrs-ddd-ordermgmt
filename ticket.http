@@ -1,0 +1,47 @@
+POST http://localhost:8080/api/ticket
+Content-Type: application/json; charset=utf-8
+Accept: application/json
+Cache-Control: no-cache
+
+{
+  "ticketId": {
+    "id": "OTP-044619bc-146e-4065-a4b8-34ed49d8b76a"
+  },
+  "localDateTime": "2023-01-11T14:39:39.063635",
+  "ticketLifeCycleState": "TICKET_CREATED"
+}
+
+#######
+
+POST http://localhost:8080/api/ticket/addTicketPosition
+Content-Type: application/json; charset=utf-8
+Accept: application/json
+Cache-Control: no-cache
+
+{
+  "ticketId": {
+    "id": "OTP-044619bc-146e-4065-a4b8-34ed49d8b76a"
+  },
+  "ticketPositionId": {
+    "id": "OPP-8434fb65-758b-44b0-84cc-5ff656657224"
+  },
+  "tradeItemId": {
+    "id": "TIP-8434acb56-758b-44b0-85bc-5ff656658335"
+  },
+  "menge": 10.00
+}
+
+#######
+POST http://localhost:8080/api/ticket/confirm
+Content-Type: application/json; charset=utf-8
+Accept: application/json
+Cache-Control: no-cache
+
+{
+  "ticketId": {
+    "id": "OTP-044619bc-146e-4065-a4b8-34ed49d8b76a"
+  }
+}
+
+#######
+

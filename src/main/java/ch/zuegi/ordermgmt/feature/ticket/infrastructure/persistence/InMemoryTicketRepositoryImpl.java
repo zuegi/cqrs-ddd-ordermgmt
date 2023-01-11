@@ -1,5 +1,7 @@
-package ch.zuegi.ordermgmt.feature.ticket.domain.entity;
+package ch.zuegi.ordermgmt.feature.ticket.infrastructure.persistence;
 
+import ch.zuegi.ordermgmt.feature.ticket.domain.entity.Ticket;
+import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketRepository;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreatedEvent;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.shared.DomainEvent;
