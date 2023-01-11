@@ -4,6 +4,7 @@ import ch.zuegi.ordermgmt.feature.ticket.application.AbstractIntegrationTest;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TradeItemId;
+import ch.zuegi.ordermgmt.feature.ticket.infrastructure.persistence.TicketViewRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

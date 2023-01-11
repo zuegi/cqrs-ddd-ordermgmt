@@ -27,6 +27,7 @@ public class TicketView {
 
     private LocalDateTime localDateTime;
 
+    @Enumerated(EnumType.STRING)
     private TicketLifeCycleState lifeCycleState;
 
     @OneToMany(mappedBy = "ticketView", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
