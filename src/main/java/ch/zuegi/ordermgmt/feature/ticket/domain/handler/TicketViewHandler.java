@@ -5,6 +5,7 @@ import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketView;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketConfirmedEvent;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreatedEvent;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionAddedEvent;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionRemovedEvent;
 import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
 import ch.zuegi.ordermgmt.feature.ticket.infrastructure.persistence.TicketViewRepository;
 import ch.zuegi.ordermgmt.shared.DomainEvent;
@@ -62,6 +63,12 @@ public class TicketViewHandler {
         TicketView ticketView = ticketViewRepository.findByTicketId(ticketConfirmedEvent.getTicketId());
         ticketView.setLifeCycleState(ticketConfirmedEvent.getTicketLifeCycleState());
         ticketViewRepository.save(ticketView);
+    }
+
+
+    @EventHandler
+    private void handle(TicketPositionRemovedEvent ticketPositionRemovedEvent) {
+        // TODO to be implemented
     }
 
     private Method findMethodForEvent(DomainEvent<?, TicketId> domainEvent) {
