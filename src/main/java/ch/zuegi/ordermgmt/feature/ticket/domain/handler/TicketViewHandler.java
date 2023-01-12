@@ -36,7 +36,7 @@ public class TicketViewHandler {
     }
 
     @EventHandler
-    public void handle(TicketCreatedEvent ticketCreatedEvent) {
+    private void handle(TicketCreatedEvent ticketCreatedEvent) {
         TicketView ticketView = new TicketView();
         ticketView.setTicketId(ticketCreatedEvent.getTicketId());
         ticketView.setLocalDateTime(ticketCreatedEvent.getLocalDateTime());
@@ -45,7 +45,7 @@ public class TicketViewHandler {
     }
 
     @EventHandler
-    public void handle(TicketPositionAddedEvent ticketPositionAddedEvent) {
+    private void  handle(TicketPositionAddedEvent ticketPositionAddedEvent) {
         TicketView ticketView = ticketViewRepository.findByTicketId(ticketPositionAddedEvent.getTicketId());
         TicketPositionView ticketPositionView = new TicketPositionView();
         ticketPositionView.setTicketPositionId(ticketPositionAddedEvent.getTicketPositionId());
@@ -58,7 +58,7 @@ public class TicketViewHandler {
 
 
     @EventHandler
-    public void handle(TicketConfirmedEvent ticketConfirmedEvent) {
+    private void handle(TicketConfirmedEvent ticketConfirmedEvent) {
         TicketView ticketView = ticketViewRepository.findByTicketId(ticketConfirmedEvent.getTicketId());
         ticketView.setLifeCycleState(ticketConfirmedEvent.getTicketLifeCycleState());
         ticketViewRepository.save(ticketView);
