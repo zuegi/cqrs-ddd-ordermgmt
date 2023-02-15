@@ -1,0 +1,34 @@
+= Event Sourcing, CQRS und Domain Driven Design kennenlernen
+
+====
+Achtung!
+
+Wer sensibel auf schlechten Code und nicht verstandene Konzepte reagiert, sollte hier nicht weiterlesen!
+====
+
+== Business Context
+Der Kontext dieser Studie bezieht sich auf den Bereich einer Auftragserfassung im Handelsgeschäft.
+Das einfache Ziel ist die Erfassung, Aufbereitung und Speicherung von Aufträgen.
+
+== Implementierung
+
+=== Domain Driven Design
+Domain Driven Design (DDD) ist ein Ansatz zur Bewältigung von komplexer Software in Zusammenhang mit Domänenmodellen.
+An dieser Stelle möchte ich mich vor allem auf die technische Umsetzung des taktischen Designs konzentrieren. Dabei geht es darum die Domäne in Code zu modellieren und dabei die Geschätslogik unabhängig von möglicherweise darunterliegenden Infrastrukturen wie Datenbank, Messaging oder sonstiger Technologien zu implementieren.
+
+
+=== Event Sourcing
+
+
+=== CQRS (Command Query Responsibility Segregation)
+
+
+
+
+== TBD
+* Ablösung der InMemoryticketRepositoryImpl
+*
+
+== Quellen
+
+https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/[asciidoctor]
