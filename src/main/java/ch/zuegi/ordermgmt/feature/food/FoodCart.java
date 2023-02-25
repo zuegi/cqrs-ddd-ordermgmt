@@ -25,6 +25,11 @@ public class FoodCart {
 
     }
 
+    @CommandHandler
+    public void handle(SelectProductCommand command) {
+        System.out.println("Ich bin ein " + command.getClass().getSimpleName());
+//        AggregateLifecycle.apply(new ProductSelectedEvent(foodCartId, command.productId(), command.quantity()));
+    }
 
 
 //    @EventSourceHandler // ist die Ersetzung des TicketDomainHandler

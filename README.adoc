@@ -32,3 +32,5 @@ An dieser Stelle möchte ich mich vor allem auf die technische Umsetzung des tak
 == Quellen
 
 https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/[asciidoctor]
+
+https://github.com/classgraph/classgraph[ClassGraph]
