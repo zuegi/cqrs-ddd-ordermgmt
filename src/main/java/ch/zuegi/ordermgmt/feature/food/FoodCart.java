@@ -1,9 +1,12 @@
 package ch.zuegi.ordermgmt.feature.food;
 
 import ch.zuegi.ordermgmt.shared.annotation.CommandHandler;
+import ch.zuegi.ordermgmt.shared.annotation.EventHandler;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.UUID;
 
+@Slf4j
 @Aggregate
 public class FoodCart {
 
@@ -18,23 +21,26 @@ public class FoodCart {
 
     @CommandHandler
     public void handle(CreateFoodCartCommand command) {
-        System.out.println("Ich bin ein " +command.getClass().getSimpleName());
-        // handle command and create an event
-        UUID aggregateId = UUID.randomUUID();
-//        AggregateLifeCycle.apply(new FoodCartCreatedEvent(aggregateId));
+        log.info("Ich bin ein {}",  command.getClass().getSimpleName());
+        // handle command
+         UUID aggregateId = UUID.randomUUID();
+
+         // create an event
+        AggregateLifeCycle.apply(new FoodCartCreatedEvent(aggregateId));
 
     }
 
     @CommandHandler
     public void handle(SelectProductCommand command) {
-        System.out.println("Ich bin ein " + command.getClass().getSimpleName());
+        log.info("Ich bin ein {}",  command.getClass().getSimpleName());
 //        AggregateLifecycle.apply(new ProductSelectedEvent(foodCartId, command.productId(), command.quantity()));
     }
 
 
-//    @EventSourceHandler // ist die Ersetzung des TicketDomainHandler
+    @EventHandler
     public void on(FoodCartCreatedEvent event) {
-        //
+
+        log.info("Ich bin ein FoodCartCreatedEvent: {}", event.toString());
         foodCartId = event.foodCartId();
     }
 

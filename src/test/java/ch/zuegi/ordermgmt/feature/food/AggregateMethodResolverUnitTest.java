@@ -9,6 +9,9 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
+
+import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 
 class AggregateMethodResolverUnitTest {
 
@@ -26,11 +29,13 @@ class AggregateMethodResolverUnitTest {
         CreateFoodCartCommand command = new CreateFoodCartCommand();
         AggregateMethodResolver aggregateMethodResolver = new AggregateMethodResolver(scanResult, CommandHandler.class);
         // when
-        Method method = aggregateMethodResolver.resolve(command);
+        List<Method> methods = aggregateMethodResolver.resolve(command);
         // then
-        Assertions.assertThat(method).isNotNull()
+        Assertions.assertThat(methods).isNotNull().hasSize(1)
                 .extracting(Method::getName, Method::getDeclaringClass)
-                .containsExactly("handle", FoodCart.class);
+                .containsExactly(
+                        tuple("handle", FoodCart.class));
+
 
     }
 
