@@ -14,9 +14,9 @@ public class AggregateMethodResolver {
     private Class<?> methodAnnotationClass;
     private ScanResult scanResult;
 
-    public AggregateMethodResolver( Class<?> methodAnnotationClass) {
+    public AggregateMethodResolver(ScanResult scanResult, Class<?> methodAnnotationClass) {
         this.methodAnnotationClass = methodAnnotationClass;
-        this.scanResult = scanForPackage();
+        this.scanResult = scanResult;
     }
 
     public Method resolve(Object command) throws InvocationTargetException, InstantiationException, IllegalAccessException {
@@ -27,34 +27,18 @@ public class AggregateMethodResolver {
         assert classesWithAggregateAnnotation.size() > 0;
 
 
-        Method method = classesWithAggregateAnnotation.stream()
+        return classesWithAggregateAnnotation.stream()
                 .map(ClassInfo::getMethodInfo)
                 .flatMap(Collection::stream)
                 .filter(methodInfo -> methodInfo.hasAnnotation((Class<? extends Annotation>) methodAnnotationClass))
                 .map(MethodInfo::loadClassAndGetMethod)
-                // erstelle einen MethodFilter anstelle des Arrays.stream(...)
+                // FIXME erstelle einen MethodFilter anstelle des Arrays.stream(...)
                 // den kann man dann auch testen und ist vielleicht lesbarer
                 .filter(m -> Arrays.stream(m.getParameterTypes())
                         .peek(p -> System.out.println("ParameterType: " + p.getSimpleName()))
                         .anyMatch(parameterType -> parameterType.isInstance(command)))
                 .findAny()
                 .orElseThrow(() -> new NoAnnotatedMethodFoundException(CommandGatewayMessage.NO_WAY));
-
-
-//        System.out.println(method.getDeclaringClass().getSimpleName());
-//        Class<?> declaringClass = method.getDeclaringClass();
-//        Constructor<?> constructor = declaringClass.getConstructors()[0];
-//        Object aggregateObject = constructor.newInstance();
-
-        return method;
     }
 
-    private static ScanResult scanForPackage() {
-        return new ClassGraph()
-//                .acceptPackages(packageName)
-//                .verbose()
-                .disableJarScanning()
-                .enableAllInfo()
-                .scan();
-    }
 }
