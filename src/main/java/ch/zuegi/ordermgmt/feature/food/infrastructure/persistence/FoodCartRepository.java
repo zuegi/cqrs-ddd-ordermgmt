@@ -1,5 +1,6 @@
-package ch.zuegi.ordermgmt.feature.food;
+package ch.zuegi.ordermgmt.feature.food.infrastructure.persistence;
 
+import ch.zuegi.ordermgmt.feature.food.domain.event.FoodCartCreatedEvent;
 import ch.zuegi.ordermgmt.shared.annotation.EventHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,7 @@ public class FoodCartRepository {
         und kann spaeter entfernt oder umgebaut werden
      */
     @EventHandler
-    void on(FoodCartCreatedEvent foodCartCreatedEvent) {
+    public void on(FoodCartCreatedEvent foodCartCreatedEvent) {
         log.info("Hello and welcome {}", foodCartCreatedEvent.foodCartId());
     }
 }

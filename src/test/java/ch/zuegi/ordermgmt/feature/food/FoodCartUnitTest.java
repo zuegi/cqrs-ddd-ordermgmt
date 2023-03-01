@@ -1,5 +1,7 @@
 package ch.zuegi.ordermgmt.feature.food;
 
+import ch.zuegi.ordermgmt.feature.food.domain.FoodCart;
+import ch.zuegi.ordermgmt.feature.food.domain.command.CreateFoodCartCommand;
 import ch.zuegi.ordermgmt.shared.annotation.CommandHandler;
 import io.github.classgraph.*;
 import org.assertj.core.api.Assertions;

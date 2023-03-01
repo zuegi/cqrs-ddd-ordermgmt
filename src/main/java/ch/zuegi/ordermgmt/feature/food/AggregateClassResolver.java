@@ -15,7 +15,6 @@ public class AggregateClassResolver {
     }
 
     public Object resolve() throws InvocationTargetException, InstantiationException, IllegalAccessException {
-        log.info("Method name: {}", method.getDeclaringClass().getSimpleName());
         Class<?> declaringClass = method.getDeclaringClass();
         Constructor<?> constructor = declaringClass.getConstructors()[0];
         return constructor.newInstance();

@@ -1,4 +1,4 @@
-package ch.zuegi.ordermgmt.feature.food;
+package ch.zuegi.ordermgmt.feature.food.domain.event;
 
 import java.util.UUID;
 

@@ -23,18 +23,11 @@ public class AggregatedMethodResolver {
     private Object parameterObject;
 
 
+    // FIXME Reihenfolge der Methode muss fixiert werden, welche Methode kann mit welcher Method kombiniert werden?
     public AggregatedMethodResolver() {
         scanResultCollector = ScanResultCollector.getInstance();
         result = scanResultCollector.getResult();
     }
-
-    /*
-        Was muss diese Klasse alles anbieten koennen?
-     */
-
-
-    // ein Filter, welche Klassen mit deklarierter Annotation herausfiltert
-
 
     public AggregatedMethodResolver filterClassAnnotatedWith(Class<?> aggregateClass) {
         classInfoList = result.getClassesWithAnnotation((Class<? extends Annotation>) aggregateClass);
@@ -46,6 +39,9 @@ public class AggregatedMethodResolver {
     }
 
     public AggregatedMethodResolver filterMethodAnnotatedWith(Class<?> aggregatedMethodClass) {
+        if (classInfoList == null || classInfoList.isEmpty()) {
+            classInfoList = result.getAllClasses();
+        }
         // filter und gib die Klasse zurück, damit weitere Methoden aufgelistet werden können
         // muss also so eine Art Builder sein? In einem Singleton?
         // geht das überhaupt
@@ -74,10 +70,8 @@ public class AggregatedMethodResolver {
         if ( methodParamFilter) {
             return methodInfoList.stream()
                     .map(MethodInfo::loadClassAndGetMethod)
-                    // FIXME erstelle einen MethodFilter anstelle des Arrays.stream(...)
-                    // den kann man dann auch testen und ist vielleicht lesbarer
                     .filter(m -> Arrays.stream(m.getParameterTypes())
-                            .peek(p -> System.out.println("ParameterType: " + p.getSimpleName()))
+//                            .peek(p -> System.out.println("ParameterType: " + p.getSimpleName()))
                             .anyMatch(parameterType -> parameterType.isInstance(parameterObject)))
                     .toList();
         }

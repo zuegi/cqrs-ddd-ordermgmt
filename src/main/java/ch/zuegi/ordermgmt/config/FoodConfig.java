@@ -8,12 +8,4 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FoodConfig {
 
-
-    @Bean
-    ScanResult scanResult() {
-        return new ClassGraph()
-                .disableJarScanning()
-                .enableAllInfo()
-                .scan();
-    }
 }

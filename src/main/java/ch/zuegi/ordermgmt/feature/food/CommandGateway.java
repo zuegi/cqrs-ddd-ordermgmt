@@ -8,46 +8,31 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
-@Component
 public class CommandGateway {
 
-    ScanResult scanResult;
 
-    public CommandGateway(ScanResult scanResult) {
-        this.scanResult = scanResult;
-    }
+    public static void send(Object command) {
 
-    public void send(Object command) {
-
-        // wie mache ich hier aus diesem Object ein spezifisches Command
-        // und wie erkenne ich, dass dieses Command zu einem spezfischen Aggregate
-        // annotiert mit @Aggregate gehört
-        AggregateMethodResolver aggregateMethodResolver = new AggregateMethodResolver(scanResult, CommandHandler.class);
+        List<Method> methodList = new AggregatedMethodResolver()
+                .filterMethodAnnotatedWith(CommandHandler.class)
+                .filterMethodParameter(command)
+                .resolve();
 
         try {
             // FIXME auslagern in eine Klasse/Methode
-            List<Method> methods = aggregateMethodResolver.resolve(command);
-            if (methods.size() == 0) {
+            if (methodList.size() == 0) {
                 throw new NoAnnotatedMethodFoundException(CommandGatewayMessage.NO_WAY);
             }
-            if (methods.size() > 1) {
+            if (methodList.size() > 1) {
                 throw new ToManyAnnotatedMethodException(CommandGatewayMessage.TO_MANY);
             }
 
-            Method method = methods.get(0);
-
-            // Finde heraus ob das object eine Annotation @AggregateRootId besitzt
-            // falls ja
-            // repository.findBy(AggregateRoodId) <-- wie auch immer das geht an dieser Stelle`
-
-            // falls nein
+            Method method = methodList.get(0);
 
             AggregateClassResolver aggregateClassResolver = new AggregateClassResolver(method);
             Object aggregateObject = aggregateClassResolver.resolve();
 
             method.invoke(aggregateObject, command);
-
-
 
         } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
             // FIXME Exception definieren

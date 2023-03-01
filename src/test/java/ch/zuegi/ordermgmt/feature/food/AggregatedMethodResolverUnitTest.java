@@ -1,5 +1,7 @@
 package ch.zuegi.ordermgmt.feature.food;
 
+import ch.zuegi.ordermgmt.feature.food.domain.command.CreateFoodCartCommand;
+import ch.zuegi.ordermgmt.feature.food.domain.event.FoodCartCreatedEvent;
 import ch.zuegi.ordermgmt.shared.annotation.CommandHandler;
 import ch.zuegi.ordermgmt.shared.annotation.EventHandler;
 import org.assertj.core.api.Assertions;
@@ -48,6 +50,24 @@ class AggregatedMethodResolverUnitTest {
         Assertions.assertThat(methodList).hasSize(1);
     }
 
+    @Test
+    void filter_all_annotated_method_but_no_class_annotation() {
+        List<Method> methodList = new AggregatedMethodResolver()
+                .filterMethodAnnotatedWith(MethodPillepalle.class)
+                .resolve();
+
+        Assertions.assertThat(methodList).hasSize(2);
+    }
+
+    @Test
+    void filter_when_no_method_annotation_found() {
+        List<Method> methodList = new AggregatedMethodResolver()
+                .filterMethodAnnotatedWith(DoesNotExist.class)
+                .resolve();
+
+        Assertions.assertThat(methodList)
+                .hasSize(0);
+    }
 
     /*
         Inner TestClass
@@ -58,6 +78,12 @@ class AggregatedMethodResolverUnitTest {
         public static void method1() {
         }
 
+        @MethodPillepalle
+        public static void method2() {
+        }
+        @MethodPillepalle
+        public static void method3() {
+        }
         @CommandHandler
         public static void createFoodCartCommand(CreateFoodCartCommand commmand) {
         }
@@ -76,7 +102,14 @@ class AggregatedMethodResolverUnitTest {
     public static @interface Pillepalle {
     }
 
-    private static record AddSelectedProduct() {
+    public static @interface MethodPillepalle {
     }
-}
+
+    public static @interface DoesNotExist {
+
+    }
+        private static record AddSelectedProduct() {
+        }
+
+    }
 

@@ -1,5 +1,11 @@
-package ch.zuegi.ordermgmt.feature.food;
+package ch.zuegi.ordermgmt.feature.food.domain;
 
+import ch.zuegi.ordermgmt.feature.food.Aggregate;
+import ch.zuegi.ordermgmt.feature.food.AggregateLifeCycle;
+import ch.zuegi.ordermgmt.feature.food.domain.command.CreateFoodCartCommand;
+import ch.zuegi.ordermgmt.feature.food.domain.command.ProductSelectedEvent;
+import ch.zuegi.ordermgmt.feature.food.domain.command.SelectProductCommand;
+import ch.zuegi.ordermgmt.feature.food.domain.event.FoodCartCreatedEvent;
 import ch.zuegi.ordermgmt.shared.annotation.CommandHandler;
 import ch.zuegi.ordermgmt.shared.annotation.EventHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +39,7 @@ public class FoodCart {
     @CommandHandler
     public void handle(SelectProductCommand command) {
         log.info("Ich bin ein {}",  command.getClass().getSimpleName());
-//        AggregateLifecycle.apply(new ProductSelectedEvent(foodCartId, command.productId(), command.quantity()));
+//        AggregateLifeCycle.apply(new ProductSelectedEvent(foodCartId, command.productId(), command.quantity()));
     }
 
 

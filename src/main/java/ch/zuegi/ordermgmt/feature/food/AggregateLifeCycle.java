@@ -11,10 +11,11 @@ import java.util.List;
 
 public class AggregateLifeCycle {
     public static void apply(Object event) {
-        AggregateMethodResolver aggregateMethodResolver = new AggregateMethodResolver(scanResult(), EventHandler.class);
 
-        try {
-            List<Method> methodList = aggregateMethodResolver.resolve(event);
+        List<Method> methodList = new AggregatedMethodResolver()
+                .filterMethodAnnotatedWith(EventHandler.class)
+                .filterMethodParameter(event)
+                .resolve();
 
             methodList.forEach(method -> {
                 try {
@@ -27,10 +28,6 @@ public class AggregateLifeCycle {
                     throw new RuntimeException(e);
                 }
             });
-        } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            // FIXME Exception definieren
-            throw new RuntimeException(e);
-        }
 
     }
 
