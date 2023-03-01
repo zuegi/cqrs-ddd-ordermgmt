@@ -2,3 +2,18 @@ POST http://localhost:8080/api/foodcart/create
 Content-Type: application/json; charset=utf-8
 Accept: application/json
 Cache-Control: no-cache
+
+####
+
+POST http://localhost:8080/api/foodcart/product/add
+Content-Type: application/json; charset=utf-8
+Accept: application/json
+Cache-Control: no-cache
+
+{
+  "foodCartId": "eine existierende foodcartId",
+  "productId": "044619bc-146e-4065-a4b8-34ed49d8b76a",
+  "quantity": 1
+}
+
+####

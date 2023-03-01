@@ -1,19 +1,22 @@
 package ch.zuegi.ordermgmt.feature.food.shared;
 
 
-import ch.zuegi.ordermgmt.shared.annotation.EventHandler;
-import io.github.classgraph.ClassGraph;
-import io.github.classgraph.ScanResult;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
 public class AggregateLifeCycle {
+
+    // ich glaube, diese Klasse ist falsch implementiert,
+    // die muss nicht das Aggregate aufrufen, sondern muss den
+    // Event irgendwie speichen
+    // d.h. sie muss eine SpringComponent finden, welche eine Annotation,
+    // sagen wir mal EventSourcing sucht und dann damit den Event speicher
+
     public static void apply(Object event) {
 
         List<Method> methodList = new AggregatedMethodResolver()
-                .filterMethodAnnotatedWith(EventHandler.class)
+                .filterMethodAnnotatedWith(EventSourcing.class)
                 .filterMethodParameter(event)
                 .resolve();
 
@@ -23,6 +26,7 @@ public class AggregateLifeCycle {
                     Object aggregateObject = aggregateClassResolver.resolve();
 
                     method.invoke(aggregateObject, event);
+
                 } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
                     // FIXME Exception definieren
                     throw new RuntimeException(e);
@@ -31,11 +35,4 @@ public class AggregateLifeCycle {
 
     }
 
-
-    private static ScanResult scanResult() {
-        return new ClassGraph()
-                .disableJarScanning()
-                .enableAllInfo()
-                .scan();
-    }
 }

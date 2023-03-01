@@ -16,6 +16,7 @@ public class AggregateClassResolver {
 
     public Object resolve() throws InvocationTargetException, InstantiationException, IllegalAccessException {
         Class<?> declaringClass = method.getDeclaringClass();
+        // ist das immer der default constructor?
         Constructor<?> constructor = declaringClass.getConstructors()[0];
         return constructor.newInstance();
     }
