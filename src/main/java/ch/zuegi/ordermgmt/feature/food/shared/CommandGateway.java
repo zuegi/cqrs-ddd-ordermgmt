@@ -1,8 +1,6 @@
-package ch.zuegi.ordermgmt.feature.food;
+package ch.zuegi.ordermgmt.feature.food.shared;
 
 import ch.zuegi.ordermgmt.shared.annotation.CommandHandler;
-import io.github.classgraph.ScanResult;
-import org.springframework.stereotype.Component;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

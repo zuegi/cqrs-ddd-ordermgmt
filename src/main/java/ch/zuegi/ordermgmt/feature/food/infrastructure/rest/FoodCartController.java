@@ -1,6 +1,6 @@
 package ch.zuegi.ordermgmt.feature.food.infrastructure.rest;
 
-import ch.zuegi.ordermgmt.feature.food.CommandGateway;
+import ch.zuegi.ordermgmt.feature.food.shared.CommandGateway;
 import ch.zuegi.ordermgmt.feature.food.domain.command.CreateFoodCartCommand;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;

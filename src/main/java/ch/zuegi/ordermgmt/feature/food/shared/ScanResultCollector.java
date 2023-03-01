@@ -1,4 +1,4 @@
-package ch.zuegi.ordermgmt.feature.food;
+package ch.zuegi.ordermgmt.feature.food.shared;
 
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ScanResult;

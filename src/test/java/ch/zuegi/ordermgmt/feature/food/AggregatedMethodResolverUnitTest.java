@@ -2,6 +2,7 @@ package ch.zuegi.ordermgmt.feature.food;
 
 import ch.zuegi.ordermgmt.feature.food.domain.command.CreateFoodCartCommand;
 import ch.zuegi.ordermgmt.feature.food.domain.event.FoodCartCreatedEvent;
+import ch.zuegi.ordermgmt.feature.food.shared.AggregatedMethodResolver;
 import ch.zuegi.ordermgmt.shared.annotation.CommandHandler;
 import ch.zuegi.ordermgmt.shared.annotation.EventHandler;
 import org.assertj.core.api.Assertions;
@@ -21,7 +22,7 @@ class AggregatedMethodResolverUnitTest {
         List<Method> methodList = aggregatedMethodResolver.filterClassAnnotatedWith(Pillepalle.class)
                 .resolve();
         // then
-        Assertions.assertThat(methodList).hasSize(4);
+        Assertions.assertThat(methodList).hasSize(6);
     }
 
     @Test

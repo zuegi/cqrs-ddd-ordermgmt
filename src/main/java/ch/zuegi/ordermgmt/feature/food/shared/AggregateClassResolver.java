@@ -1,4 +1,4 @@
-package ch.zuegi.ordermgmt.feature.food;
+package ch.zuegi.ordermgmt.feature.food.shared;
 
 import lombok.extern.slf4j.Slf4j;
 

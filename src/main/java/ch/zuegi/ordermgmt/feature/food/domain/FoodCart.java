@@ -1,9 +1,8 @@
 package ch.zuegi.ordermgmt.feature.food.domain;
 
-import ch.zuegi.ordermgmt.feature.food.Aggregate;
-import ch.zuegi.ordermgmt.feature.food.AggregateLifeCycle;
+import ch.zuegi.ordermgmt.feature.food.shared.Aggregate;
+import ch.zuegi.ordermgmt.feature.food.shared.AggregateLifeCycle;
 import ch.zuegi.ordermgmt.feature.food.domain.command.CreateFoodCartCommand;
-import ch.zuegi.ordermgmt.feature.food.domain.command.ProductSelectedEvent;
 import ch.zuegi.ordermgmt.feature.food.domain.command.SelectProductCommand;
 import ch.zuegi.ordermgmt.feature.food.domain.event.FoodCartCreatedEvent;
 import ch.zuegi.ordermgmt.shared.annotation.CommandHandler;
