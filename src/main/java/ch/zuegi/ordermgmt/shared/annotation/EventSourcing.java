@@ -1,4 +1,4 @@
-package ch.zuegi.ordermgmt.feature.food.shared;
+package ch.zuegi.ordermgmt.shared.annotation;
 
 
 import java.lang.annotation.ElementType;

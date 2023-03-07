@@ -3,7 +3,6 @@ package ch.zuegi.ordermgmt.feature.food;
 import ch.zuegi.ordermgmt.feature.food.domain.command.CreateFoodCartCommand;
 import ch.zuegi.ordermgmt.feature.food.domain.event.FoodCartCreatedEvent;
 import ch.zuegi.ordermgmt.feature.food.shared.AggregatedMethodResolver;
-import ch.zuegi.ordermgmt.shared.annotation.CommandHandler;
 import ch.zuegi.ordermgmt.shared.annotation.EventHandler;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -31,7 +30,7 @@ class AggregatedMethodResolverUnitTest {
         AggregatedMethodResolver aggregatedMethodResolver = new AggregatedMethodResolver();
         // when
         List<Method> methodList = aggregatedMethodResolver.filterClassAnnotatedWith(Pillepalle.class)
-                .filterMethodAnnotatedWith(CommandHandler.class)
+                .filterMethodAnnotatedWith(TestCommandHandler.class)
                 .resolve();
         // then
         Assertions.assertThat(methodList).hasSize(2);
@@ -44,7 +43,7 @@ class AggregatedMethodResolverUnitTest {
         AggregatedMethodResolver aggregatedMethodResolver = new AggregatedMethodResolver();
         // when
         List<Method> methodList = aggregatedMethodResolver.filterClassAnnotatedWith(Pillepalle.class)
-                .filterMethodAnnotatedWith(CommandHandler.class)
+                .filterMethodAnnotatedWith(TestCommandHandler.class)
                 .filterMethodParameter(command)
                 .resolve();
         // then
@@ -82,16 +81,19 @@ class AggregatedMethodResolverUnitTest {
         @MethodPillepalle
         public static void method2() {
         }
+
         @MethodPillepalle
         public static void method3() {
         }
-        @CommandHandler
+
+        @TestCommandHandler
         public static void createFoodCartCommand(CreateFoodCartCommand commmand) {
         }
 
-        @CommandHandler
+        @TestCommandHandler
         public static void addSelectedProduct(AddSelectedProduct commmand) {
         }
+
         @EventHandler
         public static void methodWithEvent(FoodCartCreatedEvent event) {
         }
@@ -100,17 +102,22 @@ class AggregatedMethodResolverUnitTest {
 
 
     // Inner Annotation for testing purpose
-    public static @interface Pillepalle {
+    public @interface Pillepalle {
     }
 
-    public static @interface MethodPillepalle {
+    public @interface MethodPillepalle {
     }
 
-    public static @interface DoesNotExist {
+    public @interface DoesNotExist {
 
     }
-        private static record AddSelectedProduct() {
-        }
 
+    public @interface TestCommandHandler {
     }
+
+
+    private record AddSelectedProduct() {
+    }
+
+}
 

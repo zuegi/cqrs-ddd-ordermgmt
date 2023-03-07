@@ -1,9 +1,7 @@
 package ch.zuegi.ordermgmt.feature.food.shared;
 
 import io.github.classgraph.ClassInfo;
-import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.MethodInfo;
-import io.github.classgraph.ScanResult;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -11,12 +9,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-public class AggregatedMethodResolver {
+public class AggregatedMethodResolver extends AbstractAggregatedBase {
 
-    private ScanResultCollector scanResultCollector;
-    private ScanResult result;
-    private ClassInfoList classInfoList;
-    private List<MethodInfo> methodInfoList;
     private boolean classFilter;
     private boolean methodFilter;
     private boolean methodParamFilter;

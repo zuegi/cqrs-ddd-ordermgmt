@@ -4,6 +4,5 @@ import ch.zuegi.ordermgmt.shared.annotation.AggregatedEventIdentifier;
 
 import java.util.UUID;
 
-public record FoodCartCreatedEvent(@AggregatedEventIdentifier UUID foodCartId) {
-
+public record ProductSelectedEvent(@AggregatedEventIdentifier UUID foodCartId,  UUID productId, int quantity) {
 }

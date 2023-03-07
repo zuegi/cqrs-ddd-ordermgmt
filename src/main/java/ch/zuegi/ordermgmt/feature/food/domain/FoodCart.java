@@ -1,12 +1,14 @@
 package ch.zuegi.ordermgmt.feature.food.domain;
 
-import ch.zuegi.ordermgmt.feature.food.shared.Aggregate;
+import ch.zuegi.ordermgmt.feature.food.domain.event.ProductSelectedEvent;
+import ch.zuegi.ordermgmt.shared.annotation.Aggregate;
 import ch.zuegi.ordermgmt.feature.food.shared.AggregateLifeCycle;
 import ch.zuegi.ordermgmt.feature.food.domain.command.CreateFoodCartCommand;
 import ch.zuegi.ordermgmt.feature.food.domain.command.SelectProductCommand;
 import ch.zuegi.ordermgmt.feature.food.domain.event.FoodCartCreatedEvent;
 import ch.zuegi.ordermgmt.shared.annotation.CommandHandler;
 import ch.zuegi.ordermgmt.shared.annotation.EventHandler;
+import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,6 +18,7 @@ import java.util.UUID;
 
 @Slf4j
 @ToString
+@Getter
 @Aggregate
 public class FoodCart {
 
@@ -31,14 +34,14 @@ public class FoodCart {
     public void handle(CreateFoodCartCommand command) {
         log.info("Ich bin ein {}",  command.getClass().getSimpleName());
          // create an event
-        AggregateLifeCycle.apply(new FoodCartCreatedEvent(command.aggregateId()));
+        AggregateLifeCycle.apply(new FoodCartCreatedEvent(UUID.randomUUID()));
 
     }
 
     @CommandHandler
     public void handle(SelectProductCommand command) {
         log.info("Ich bin ein {}",  command.getClass().getSimpleName());
-//        AggregateLifeCycle.apply(new ProductSelectedEvent(foodCartId, command.productId(), command.quantity()));
+        AggregateLifeCycle.apply(new ProductSelectedEvent(foodCartId, command.productId(), command.quantity()));
     }
 
 
@@ -51,6 +54,12 @@ public class FoodCart {
         foodCartId = event.foodCartId();
         selectedProducts = new HashMap<>();
         confirmed = false;
+    }
+
+    @EventHandler
+    public void on(ProductSelectedEvent event) {
+        log.info("Ich bin ein ProductSelected: {}", event.toString());
+        selectedProducts.merge(event.productId(), event.quantity(), Integer::sum);
     }
 
 
