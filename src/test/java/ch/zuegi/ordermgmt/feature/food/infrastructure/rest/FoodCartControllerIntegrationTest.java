@@ -1,5 +1,6 @@
 package ch.zuegi.ordermgmt.feature.food.infrastructure.rest;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -17,6 +18,16 @@ class FoodCartControllerIntegrationTest {
 
     @Test
     void testemich() throws Exception {
-        this.mockMvc.perform(post("/api/foodcart/create"))/*.andDo(print())*/.andExpect(status().isOk());
+        String contentAsString = this.mockMvc.perform(post("/api/foodcart/create"))
+                /*.andDo(print())*/
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        Assertions.assertThat(contentAsString).isNotEmpty();
+        // das wird noch auf mich zukommen
+//        UUID uuid = UUID.fromString(contentAsString);
+
     }
 }

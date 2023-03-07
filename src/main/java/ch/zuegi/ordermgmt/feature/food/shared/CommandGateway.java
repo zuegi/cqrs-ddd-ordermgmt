@@ -2,6 +2,7 @@ package ch.zuegi.ordermgmt.feature.food.shared;
 
 import ch.zuegi.ordermgmt.feature.food.infrastructure.persistence.EventRepository;
 import ch.zuegi.ordermgmt.shared.annotation.CommandHandler;
+import ch.zuegi.ordermgmt.shared.annotation.TargetAggregateIdentifier;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +10,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -22,32 +22,12 @@ public class CommandGateway {
         this.eventRepository = eventRepository;
     }
 
-    public void send(Object command) {
+    public UUID send(Object command) {
 
         // den Wert des @TargetAggregateIdentifer aus dem Command via Reflection auslesen
-        // den Wert in einen String umwandeln
-        UUID targetIdentifier = null;
-        try {
-            Optional<Field> optionalField = getField(command);
-            if (optionalField.isPresent()) {
-                targetIdentifier = (UUID) optionalField.get().get(command);
-            }
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-
-        // repository.findByTargeteIdentifer(targetIdentifiert).orElse(Erstelle ein neues Object mit dem TargetIdentifier)
-        // irgendwie mit serialization/de-serialization
-        // dann habe ich das erstellte @Aggregate
-
-
-        // dann koennte ich alle Aktionen auf dem Aggregate ausfuehren
-        // method.invoke(@Aggregate, command)
-        // ware vielleicht effizienter als die folgenden Zeieln
-        List<Method> methodList = new AggregatedMethodResolver()
-                .filterMethodAnnotatedWith(CommandHandler.class)
-                .filterMethodParameter(command)
-                .resolve();
+        UUID targetIdentifier = getTargetIdentifer(command);
+        // extrahiere die Methode, welche mit @CommandHandler annotiert ist und command als signature parameter hat
+        List<Method> methodList = getMethods(command);
 
         try {
             assertCorrectNumberOfMethods(methodList);
@@ -60,22 +40,46 @@ public class CommandGateway {
 
             method.invoke(aggregateObject, command);
 
+            return targetIdentifier;
+
         } catch (InvocationTargetException | IllegalAccessException e) {
             // FIXME Exception definieren
             throw new RuntimeException(e);
         }
     }
 
-    private static Optional<Field> getField(Object command) {
+    private static List<Method> getMethods(Object command) {
+        return new AggregatedMethodResolver()
+                .filterMethodAnnotatedWith(CommandHandler.class)
+                .filterMethodParameter(command)
+                .resolve();
+    }
+
+    private static UUID getTargetIdentifer(Object command) {
+        UUID targetIdentifier = null;
+        try {
+            Field field = getField(command);
+            if (field != null) {
+                field.setAccessible(true);
+                targetIdentifier = (UUID) field.get(command);
+            }
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+        return targetIdentifier;
+    }
+
+    private static Field getField(Object command) {
         List<Field> fieldList = new AggregatedFieldResolver()
                 .filterClasses(command.getClass())
+                .filterFieldAnnotationWith(TargetAggregateIdentifier.class)
                 .resolve();
         if (fieldList == null || fieldList.isEmpty()) {
-            return Optional.empty();
+            return null;
         }
         Field field = fieldList.get(0);
         assert fieldList.size() == 1;
-        return Optional.of(field);
+        return field;
     }
 
     private static Object createNewAggregateObject(Method method)  {

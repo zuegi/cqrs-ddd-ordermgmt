@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.UUID;
 
 class AggregatedMethodResolverUnitTest {
 
@@ -39,7 +40,7 @@ class AggregatedMethodResolverUnitTest {
     @Test
     void filter_for_all_annotated_method_with_param_with_class_annotation() {
         // given
-        CreateFoodCartCommand command = new CreateFoodCartCommand();
+        CreateFoodCartCommand command = new CreateFoodCartCommand(UUID.randomUUID());
         AggregatedMethodResolver aggregatedMethodResolver = new AggregatedMethodResolver();
         // when
         List<Method> methodList = aggregatedMethodResolver.filterClassAnnotatedWith(Pillepalle.class)
