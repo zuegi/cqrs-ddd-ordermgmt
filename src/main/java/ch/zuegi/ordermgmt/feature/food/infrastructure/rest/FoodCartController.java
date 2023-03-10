@@ -6,6 +6,7 @@ import ch.zuegi.ordermgmt.feature.food.shared.CommandGateway;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,13 +23,13 @@ public class FoodCartController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<UUID> handle() {
+    public ResponseEntity<String> handle() {
         return ResponseEntity.ok(commandGateway.send(new CreateFoodCartCommand(UUID.randomUUID())));
     }
 
-    @PostMapping("/product/add")
-    public void handle(SelectProductCommand command) {
-        commandGateway.send(command);
+    @PostMapping(value = "/product/add",  consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<String> handle(@RequestBody SelectProductCommand command) {
+        return ResponseEntity.ok(commandGateway.send(command));
     }
 
 }

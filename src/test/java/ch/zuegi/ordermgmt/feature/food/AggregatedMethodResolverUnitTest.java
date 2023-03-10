@@ -3,7 +3,6 @@ package ch.zuegi.ordermgmt.feature.food;
 import ch.zuegi.ordermgmt.feature.food.domain.command.CreateFoodCartCommand;
 import ch.zuegi.ordermgmt.feature.food.domain.event.FoodCartCreatedEvent;
 import ch.zuegi.ordermgmt.feature.food.shared.AggregatedMethodResolver;
-import ch.zuegi.ordermgmt.shared.annotation.EventHandler;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -95,7 +94,7 @@ class AggregatedMethodResolverUnitTest {
         public static void addSelectedProduct(AddSelectedProduct commmand) {
         }
 
-        @EventHandler
+        @TestEventHandler
         public static void methodWithEvent(FoodCartCreatedEvent event) {
         }
 
@@ -114,6 +113,9 @@ class AggregatedMethodResolverUnitTest {
     }
 
     public @interface TestCommandHandler {
+    }
+
+    public @interface TestEventHandler {
     }
 
 

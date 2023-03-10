@@ -22,17 +22,16 @@ public class CommandGateway {
         this.eventRepository = eventRepository;
     }
 
-    public UUID send(Object command) {
+    public String send(Object command) {
 
         // den Wert des @TargetAggregateIdentifer aus dem Command via Reflection auslesen
         UUID targetIdentifier = getTargetIdentifer(command);
         // extrahiere die Methode, welche mit @CommandHandler annotiert ist und command als signature parameter hat
         List<Method> methodList = getMethods(command);
+        assertCorrectNumberOfMethods(methodList);
+        Method method = methodList.get(0);
 
         try {
-            assertCorrectNumberOfMethods(methodList);
-
-            Method method = methodList.get(0);
 
             Object aggregateObject = eventRepository.findByTargetIdentifier(targetIdentifier).orElse( createNewAggregateObject(method));
 
@@ -40,7 +39,7 @@ public class CommandGateway {
 
             method.invoke(aggregateObject, command);
 
-            return targetIdentifier;
+            return targetIdentifier.toString();
 
         } catch (InvocationTargetException | IllegalAccessException e) {
             // FIXME Exception definieren

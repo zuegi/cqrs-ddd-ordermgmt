@@ -32,16 +32,16 @@ public class FoodCart {
 
     @CommandHandler
     public void handle(CreateFoodCartCommand command) {
-        log.info("Ich bin ein {}",  command.getClass().getSimpleName());
+        log.info("Ich bin ein {}: {}",  command.getClass().getSimpleName(), command);
          // create an event
-        AggregateLifeCycle.apply(new FoodCartCreatedEvent(UUID.randomUUID()));
+        AggregateLifeCycle.apply(new FoodCartCreatedEvent(command.uuid()));
 
     }
 
     @CommandHandler
     public void handle(SelectProductCommand command) {
-        log.info("Ich bin ein {}",  command.getClass().getSimpleName());
-        AggregateLifeCycle.apply(new ProductSelectedEvent(foodCartId, command.productId(), command.quantity()));
+        log.info("Ich bin ein {}: {}",  command.getClass().getSimpleName(), command);
+        AggregateLifeCycle.apply(new ProductSelectedEvent(command.foodCartId(), command.productId(), command.quantity()));
     }
 
 

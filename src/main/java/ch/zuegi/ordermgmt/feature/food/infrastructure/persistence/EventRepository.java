@@ -5,7 +5,6 @@ import ch.zuegi.ordermgmt.feature.food.shared.AggregatedMethodResolver;
 import ch.zuegi.ordermgmt.shared.annotation.Aggregate;
 import ch.zuegi.ordermgmt.shared.annotation.AggregatedEventIdentifier;
 import ch.zuegi.ordermgmt.shared.annotation.EventHandler;
-import ch.zuegi.ordermgmt.shared.annotation.EventSourcing;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -28,12 +27,11 @@ public class EventRepository {
         eventMap = new LinkedHashMap<>();
     }
 
-    @EventSourcing
     public void on(Object event) {
         // wie finde ich heraus, um welches Event es sich handelt
         // event.getClass(); aber brauche ich vielleicht gar nicht
         // da gibt es Reflection.getCallerClass....
-        log.info("hello and welcome unknwon object event: ", event.toString());
+        log.info("hello and welcome unknown object event: {}", event.toString());
         List<Field> fieldList = new AggregatedFieldResolver()
                 .filterClasses(event.getClass())
                 .filterFieldAnnotationWith(AggregatedEventIdentifier.class)
@@ -59,6 +57,7 @@ public class EventRepository {
             throw new RuntimeException(e);
         }
 
+        log.info("eventmap: {}", eventMap.toString());
     }
 
     public Optional<Object> findByTargetIdentifier(UUID targetIdentifier) {
@@ -113,7 +112,5 @@ public class EventRepository {
     }
 
 
-    public record Event(UUID aggregateId) {
-    }
 }
 

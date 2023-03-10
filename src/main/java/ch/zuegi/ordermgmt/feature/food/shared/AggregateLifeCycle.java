@@ -1,37 +1,18 @@
 package ch.zuegi.ordermgmt.feature.food.shared;
 
 
-import ch.zuegi.ordermgmt.shared.annotation.EventSourcing;
+import ch.zuegi.ordermgmt.feature.food.infrastructure.persistence.EventRepository;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.List;
-
+/**
+ * NOTE: This class should never be made a spring bean as its method are static for using in pojos
+ */
 public class AggregateLifeCycle {
 
+    // mit dieser Methode wollen wir ein existierendes Bean aufrufen, dazu hilft uns die Klasse SpringContext
     public static void apply(Object event) {
 
-        List<Method> methodList = new AggregatedMethodResolver()
-                .filterMethodAnnotatedWith(EventSourcing.class)
-                .filterMethodParameter(event)
-                .resolve();
-
-            methodList.forEach(method -> {
-                try {
-
-                    AggregateClassResolver aggregateClassResolver = new AggregateClassResolver(method);
-                    Object aggregateObject = aggregateClassResolver
-                            .resolve();
-
-
-                    method.invoke(aggregateObject, event);
-
-                } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-                    // FIXME Exception definieren
-                    throw new RuntimeException(e);
-                }
-            });
-
+        EventRepository bean = SpringContext.getBean(EventRepository.class);
+        bean.on(event);
     }
 
 }
