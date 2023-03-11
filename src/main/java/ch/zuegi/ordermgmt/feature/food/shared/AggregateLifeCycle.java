@@ -1,7 +1,7 @@
 package ch.zuegi.ordermgmt.feature.food.shared;
 
 
-import ch.zuegi.ordermgmt.feature.food.infrastructure.persistence.EventRepository;
+import ch.zuegi.ordermgmt.feature.food.shared.eventsourcing.EventRepository;
 
 /**
  * NOTE: This class should never be made a spring bean as its method are static for using in pojos

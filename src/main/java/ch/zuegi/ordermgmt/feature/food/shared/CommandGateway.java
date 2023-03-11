@@ -1,6 +1,6 @@
 package ch.zuegi.ordermgmt.feature.food.shared;
 
-import ch.zuegi.ordermgmt.feature.food.infrastructure.persistence.EventRepository;
+import ch.zuegi.ordermgmt.feature.food.shared.eventsourcing.EventRepository;
 import ch.zuegi.ordermgmt.shared.annotation.CommandHandler;
 import ch.zuegi.ordermgmt.shared.annotation.TargetAggregateIdentifier;
 import lombok.extern.slf4j.Slf4j;

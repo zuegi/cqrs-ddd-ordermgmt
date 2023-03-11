@@ -1,8 +1,9 @@
 package ch.zuegi.ordermgmt.feature.food.infrastructure.rest;
 
 import ch.zuegi.ordermgmt.feature.food.domain.FoodCart;
+import ch.zuegi.ordermgmt.feature.food.domain.command.ConfirmFoodCartCommand;
 import ch.zuegi.ordermgmt.feature.food.domain.command.SelectProductCommand;
-import ch.zuegi.ordermgmt.feature.food.infrastructure.persistence.EventRepository;
+import ch.zuegi.ordermgmt.feature.food.shared.eventsourcing.EventRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,31 @@ class FoodCartControllerIntegrationTest {
     @Autowired
     EventRepository eventRepository;
 
+    @Test
+    void create_food_cart_and_add_selected_product_and_confirm_valid() throws Exception {
+        // given
+        UUID uuid = createFoodCart();
+
+        UUID selectProductUuid = UUID.randomUUID();
+        SelectProductCommand selectProductCommand = new SelectProductCommand(uuid, selectProductUuid, 1);
+        addSelectedProductCommand(uuid, selectProductCommand);
+
+        ConfirmFoodCartCommand confirmFoodCartCommand = new ConfirmFoodCartCommand(uuid);
+
+        // when
+        this.mockMvc.perform(
+                        post("/api/foodcart/confirm")
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(asJsonString(confirmFoodCartCommand)))
+                .andExpect(status().isOk());
+
+        // then
+        Optional<Object> byTargetIdentifier = eventRepository.findByTargetIdentifier(uuid);
+        FoodCart foodCart =  (FoodCart) byTargetIdentifier.get();
+        Assertions.assertThat(foodCart).isNotNull()
+                .extracting(FoodCart::getFoodCartId, FoodCart::isConfirmed)
+                .contains(uuid, true);
+    }
 
     @Test
     void create_foodcart_and_add_selected_product_valid() throws Exception {
@@ -36,6 +62,16 @@ class FoodCartControllerIntegrationTest {
         UUID selectProductUuid = UUID.randomUUID();
         SelectProductCommand selectProductCommand = new SelectProductCommand(uuid, selectProductUuid, 1);
         // when
+        FoodCart foodCart = addSelectedProductCommand(uuid, selectProductCommand);
+        // then
+        Assertions.assertThat(foodCart).isNotNull()
+                .extracting(FoodCart::getFoodCartId, FoodCart::isConfirmed)
+                .contains(uuid, false);
+
+    }
+
+    private FoodCart addSelectedProductCommand(UUID uuid, SelectProductCommand selectProductCommand) throws Exception {
+        // when
         this.mockMvc.perform(
                 post("/api/foodcart/product/add")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -44,11 +80,7 @@ class FoodCartControllerIntegrationTest {
 
         // then
         Optional<Object> byTargetIdentifier = eventRepository.findByTargetIdentifier(uuid);
-        FoodCart foodCart = (FoodCart) byTargetIdentifier.get();
-
-        Assertions.assertThat(foodCart).isNotNull()
-                .extracting(FoodCart::getFoodCartId, FoodCart::isConfirmed)
-                .contains(uuid, false);
+        return (FoodCart) byTargetIdentifier.get();
     }
 
     @Test
@@ -66,9 +98,7 @@ class FoodCartControllerIntegrationTest {
 
         Assertions.assertThat(contentAsString).isNotEmpty();
 
-        UUID uuid = UUID.fromString(contentAsString);
-        System.out.println("CreateFoodCart.uuid: " +uuid.toString());
-        return uuid;
+        return UUID.fromString(contentAsString);
     }
 
     private static String asJsonString(final Object obj) {

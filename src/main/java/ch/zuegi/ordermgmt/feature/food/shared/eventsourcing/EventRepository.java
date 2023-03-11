@@ -1,4 +1,4 @@
-package ch.zuegi.ordermgmt.feature.food.infrastructure.persistence;
+package ch.zuegi.ordermgmt.feature.food.shared.eventsourcing;
 
 import ch.zuegi.ordermgmt.feature.food.shared.AggregatedFieldResolver;
 import ch.zuegi.ordermgmt.feature.food.shared.AggregatedMethodResolver;

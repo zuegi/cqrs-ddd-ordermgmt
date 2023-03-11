@@ -1,5 +1,6 @@
 package ch.zuegi.ordermgmt.feature.food.infrastructure.rest;
 
+import ch.zuegi.ordermgmt.feature.food.domain.command.ConfirmFoodCartCommand;
 import ch.zuegi.ordermgmt.feature.food.domain.command.CreateFoodCartCommand;
 import ch.zuegi.ordermgmt.feature.food.domain.command.SelectProductCommand;
 import ch.zuegi.ordermgmt.feature.food.shared.CommandGateway;
@@ -32,4 +33,8 @@ public class FoodCartController {
         return ResponseEntity.ok(commandGateway.send(command));
     }
 
+    @PostMapping(path = "/confirm")
+    public ResponseEntity<String> handle(@RequestBody ConfirmFoodCartCommand command) {
+        return ResponseEntity.ok(commandGateway.send(command));
+    }
 }
