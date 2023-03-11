@@ -1,14 +1,9 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain.command;
 
-import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
-import ch.zuegi.ordermgmt.shared.Command;
-import lombok.*;
-import lombok.extern.jackson.Jacksonized;
+import ch.zuegi.ordermgmt.shared.annotation.TargetAggregateIdentifier;
 
-@Getter
-@Builder
-@ToString
-@Jacksonized
-public class ConfirmTicketCommand implements Command {
-    TicketId ticketId;
+import java.util.UUID;
+
+public record ConfirmTicketCommand(@TargetAggregateIdentifier UUID ticketId) {
 }
+

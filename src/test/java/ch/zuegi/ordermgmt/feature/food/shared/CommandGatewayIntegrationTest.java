@@ -2,7 +2,8 @@ package ch.zuegi.ordermgmt.feature.food.shared;
 
 import ch.zuegi.ordermgmt.feature.food.domain.command.CreateFoodCartCommand;
 import ch.zuegi.ordermgmt.feature.food.domain.command.SelectProductCommand;
-import ch.zuegi.ordermgmt.feature.food.shared.eventsourcing.EventRepository;
+import ch.zuegi.ordermgmt.shared.eventsourcing.EventRepository;
+import ch.zuegi.ordermgmt.shared.gateway.command.CommandGateway;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

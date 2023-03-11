@@ -2,7 +2,7 @@ package ch.zuegi.ordermgmt.feature.food;
 
 import ch.zuegi.ordermgmt.feature.food.domain.command.CreateFoodCartCommand;
 import ch.zuegi.ordermgmt.feature.food.domain.event.FoodCartCreatedEvent;
-import ch.zuegi.ordermgmt.feature.food.shared.AggregatedMethodResolver;
+import ch.zuegi.ordermgmt.shared.gateway.AggregatedMethodResolver;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 

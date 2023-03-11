@@ -4,7 +4,7 @@ import ch.zuegi.ordermgmt.feature.food.domain.command.ConfirmFoodCartCommand;
 import ch.zuegi.ordermgmt.feature.food.domain.event.ConfirmedFoodCartEvent;
 import ch.zuegi.ordermgmt.feature.food.domain.event.ProductSelectedEvent;
 import ch.zuegi.ordermgmt.shared.annotation.Aggregate;
-import ch.zuegi.ordermgmt.feature.food.shared.AggregateLifeCycle;
+import ch.zuegi.ordermgmt.shared.gateway.command.AggregateLifeCycle;
 import ch.zuegi.ordermgmt.feature.food.domain.command.CreateFoodCartCommand;
 import ch.zuegi.ordermgmt.feature.food.domain.command.SelectProductCommand;
 import ch.zuegi.ordermgmt.feature.food.domain.event.FoodCartCreatedEvent;
@@ -54,8 +54,6 @@ public class FoodCart {
 
 
     // der EventHandler wird dann verwendet um den State des Aggregates zu erstellen
-    // was dann über das repository anstelle Ticket.aggregateEvents(List<DomainEvents)
-    // siehe FoodCartRepository
     @EventHandler
     public void on(FoodCartCreatedEvent event) {
         log.info("Ich bin ein {}: {}", event.getClass().getSimpleName(), event.toString());

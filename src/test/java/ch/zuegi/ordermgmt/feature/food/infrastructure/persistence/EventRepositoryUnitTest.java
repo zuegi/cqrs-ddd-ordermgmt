@@ -3,7 +3,7 @@ package ch.zuegi.ordermgmt.feature.food.infrastructure.persistence;
 import ch.zuegi.ordermgmt.feature.food.domain.FoodCart;
 import ch.zuegi.ordermgmt.feature.food.domain.event.ProductSelectedEvent;
 import ch.zuegi.ordermgmt.feature.food.domain.event.FoodCartCreatedEvent;
-import ch.zuegi.ordermgmt.feature.food.shared.eventsourcing.EventRepository;
+import ch.zuegi.ordermgmt.shared.eventsourcing.EventRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 

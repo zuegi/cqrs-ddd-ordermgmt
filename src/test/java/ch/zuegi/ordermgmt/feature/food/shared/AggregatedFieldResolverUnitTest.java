@@ -1,5 +1,6 @@
 package ch.zuegi.ordermgmt.feature.food.shared;
 
+import ch.zuegi.ordermgmt.shared.gateway.AggregatedFieldResolver;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 

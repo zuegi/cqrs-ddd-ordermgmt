@@ -3,7 +3,7 @@ package ch.zuegi.ordermgmt.feature.food.infrastructure.rest;
 import ch.zuegi.ordermgmt.feature.food.domain.command.ConfirmFoodCartCommand;
 import ch.zuegi.ordermgmt.feature.food.domain.command.CreateFoodCartCommand;
 import ch.zuegi.ordermgmt.feature.food.domain.command.SelectProductCommand;
-import ch.zuegi.ordermgmt.feature.food.shared.CommandGateway;
+import ch.zuegi.ordermgmt.shared.gateway.command.CommandGateway;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

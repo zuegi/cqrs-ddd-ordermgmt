@@ -3,9 +3,10 @@ package ch.zuegi.ordermgmt.feature.food.infrastructure.rest;
 import ch.zuegi.ordermgmt.feature.food.domain.FoodCart;
 import ch.zuegi.ordermgmt.feature.food.domain.command.ConfirmFoodCartCommand;
 import ch.zuegi.ordermgmt.feature.food.domain.command.SelectProductCommand;
-import ch.zuegi.ordermgmt.feature.food.shared.eventsourcing.EventRepository;
+import ch.zuegi.ordermgmt.shared.eventsourcing.EventRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -39,7 +40,7 @@ class FoodCartControllerIntegrationTest {
 
         ConfirmFoodCartCommand confirmFoodCartCommand = new ConfirmFoodCartCommand(uuid);
 
-        // when
+        // when foodCart is confirmed
         this.mockMvc.perform(
                         post("/api/foodcart/confirm")
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -52,6 +53,11 @@ class FoodCartControllerIntegrationTest {
         Assertions.assertThat(foodCart).isNotNull()
                 .extracting(FoodCart::getFoodCartId, FoodCart::isConfirmed)
                 .contains(uuid, true);
+
+        Assertions.assertThat(foodCart)
+                .extracting("selectedProducts")
+                .asInstanceOf(InstanceOfAssertFactories.MAP)
+                .containsEntry(selectProductUuid, 1);
     }
 
     @Test

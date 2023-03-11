@@ -1,24 +1,15 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain.command;
 
-import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
-import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;
-import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TradeItemId;
-import ch.zuegi.ordermgmt.shared.Command;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.extern.jackson.Jacksonized;
+import ch.zuegi.ordermgmt.shared.annotation.TargetAggregateIdentifier;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
-@Getter
-@Builder
-@ToString
-@Jacksonized
-public class RemoveTicketPositionCommand implements Command {
-    TicketId ticketId;
-    TicketPositionId ticketPositionId;
-    TradeItemId tradeItemId;
-    BigDecimal menge;
+public record RemoveTicketPositionCommand(
+        @TargetAggregateIdentifier
+        UUID ticketId,
+        UUID ticketPositionId,
+        UUID tradeItemId,
+        BigDecimal menge
+) {
 }

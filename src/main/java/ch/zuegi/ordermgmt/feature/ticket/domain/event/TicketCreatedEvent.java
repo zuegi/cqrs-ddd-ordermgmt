@@ -1,39 +1,15 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain.event;
 
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
-import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
-import ch.zuegi.ordermgmt.shared.DomainEvent;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import ch.zuegi.ordermgmt.shared.annotation.AggregatedEventIdentifier;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
-@Builder
-@Getter
-@ToString
-public class TicketCreatedEvent extends DomainEvent<TicketCreatedEvent, TicketId> {
-    TicketId ticketId;
-    LocalDateTime localDateTime;
-    TicketLifeCycleState lifeCycleState;
+public record TicketCreatedEvent(
+        @AggregatedEventIdentifier UUID ticketId,
+        LocalDateTime localDateTime,
+        TicketLifeCycleState lifeCycleState
+) {
 
-    @Override
-    public TicketCreatedEvent getEvent() {
-        return this;
-    }
-
-    @Override
-    public int eventVersion() {
-        return 0;
-    }
-
-    @Override
-    public LocalDateTime occurredOn() {
-        return localDateTime;
-    }
-
-    @Override
-    public TicketId id() {
-        return ticketId;
-    }
 }

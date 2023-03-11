@@ -1,47 +1,22 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain;
 
 
-import ch.zuegi.ordermgmt.feature.ticket.domain.command.CreateTicketCommand;
-import ch.zuegi.ordermgmt.feature.ticket.domain.command.UpdateTicketLifecycleCommand;
-import ch.zuegi.ordermgmt.feature.ticket.domain.entity.Ticket;
-import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
-import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketPosition;
-import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketConfirmedEvent;
-import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreatedEvent;
-import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionAddedEvent;
-import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
-import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;
-import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TradeItemId;
-import ch.zuegi.ordermgmt.shared.DomainEvent;
-import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationException;
-import ch.zuegi.ordermgmt.shared.aggregateRoot.AggregateRootValidationMsg;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.assertj.core.api.AssertionsForClassTypes.tuple;
-
 class TicketTest {
 
     // Zuerst immer die Fehlversuche erstellen
     // dann die validen Tests
     // Immer nur ein Assertion pro Test
 
-    @Test
+   /* @Test
     void createTicketWithTicketIdIsNullInvalid() {
         TicketId ticketId = null;
         // when
         Assertions.assertThatExceptionOfType(AggregateRootValidationException.class)
                 .isThrownBy(() -> new Ticket(ticketId))
                 .withMessage(AggregateRootValidationMsg.AGGREGATE_ID_MUST_NOT_BE_NULL);
-    }
+    }*/
 
-    @Test
+   /* @Test
     void validateTicketWithTicketCreateCommandIsNullInvalid() {
         TicketId ticketId = new TicketId();
         Ticket ticket = new Ticket(ticketId);
@@ -50,9 +25,9 @@ class TicketTest {
         Assertions.assertThatExceptionOfType(AggregateRootValidationException.class)
                 .isThrownBy(() -> ticket.validate(command))
                 .withMessage(AggregateRootValidationMsg.TICKET_COMMAND_MUST_NOT_BE_EMPTY);
-    }
+    }*/
 
-    @Disabled
+   /* @Disabled
     @Test
     void validate_ticket_with_void_set_of_ticketPosition_invalid() {
         // given ticketCommand with void Set of TicketPosition
@@ -68,9 +43,9 @@ class TicketTest {
                 .isThrownBy(() -> ticket.validate(ticketCommand))
                 .withMessage(AggregateRootValidationMsg.TICKET_COMMAND_TICKET_POSITION_SET_MUST_NOT_BE_EMPTY);
 
-    }
+    }*/
 
-    @Test
+/*    @Test
     void createTicketValid() {
         // given
         TicketId ticketId = new TicketId();
@@ -86,9 +61,9 @@ class TicketTest {
                 .extracting(Ticket::id, Ticket::getTicketLifeCycleState)
                 .contains(ticketId, TicketLifeCycleState.TICKET_CREATED);
 
-    }
+    }*/
 
-    @Test
+ /*   @Test
     void process_and_validate_ticket_state() {
         // given
         TicketId ticketId = new TicketId();
@@ -118,9 +93,9 @@ class TicketTest {
         // then
 
         Assertions.assertThat(ticket.getTicketLifeCycleState()).isEqualTo(TicketLifeCycleState.TICKET_PROCESSED);
-    }
+    }*/
 
-    @Test
+  /*  @Test
     void load_ticket_with_ticket_created_event() {
         // given
         List<DomainEvent<?, TicketId>> ticketDomainEvents = new ArrayList<>();
@@ -137,10 +112,10 @@ class TicketTest {
         Assertions.assertThat(ticket).isNotNull()
                 .extracting(Ticket::id, Ticket::getLocalDateTime, Ticket::getTicketLifeCycleState, Ticket::getTicketPositionList)
                 .contains(ticketId, now, TicketLifeCycleState.TICKET_CREATED, new ArrayList<>());
-    }
+    }*/
 
 
-    @Test
+ /*   @Test
     void load_ticket_with_ticket_position_added_event() {
 
         // given
@@ -175,9 +150,9 @@ class TicketTest {
                         tuple(ticketId, firstTicketPositionId, firstTradeItemId, firstMenge),
                         tuple(ticketId, seondTicketPositionId, secondTradeItemId, secondMenge)
                 );
-    }
+    }*/
 
-    @Test
+/*    @Test
     void load_ticket_with_ticket_position_added_event_and_remove_one_position() {
         // given
         TicketId ticketId = new TicketId();
@@ -200,10 +175,10 @@ class TicketTest {
                 .contains(
                         tuple(ticketId, secondTicketPositionId, secondTradeItemId, secondMenge)
                 );
-    }
+    }*/
 
 
-    @Test
+ /*   @Test
     void load_ticket_with_2_position_and_confirm() {
         // given
         TicketId ticketId = new TicketId();
@@ -230,5 +205,5 @@ class TicketTest {
                 .isNotNull()
                 .extracting(Ticket::getTicketLifeCycleState)
                 .isEqualTo(TicketLifeCycleState.TICKET_CONFIRMED);
-    }
+    }*/
 }

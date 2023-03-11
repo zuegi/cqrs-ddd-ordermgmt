@@ -1,43 +1,18 @@
 package ch.zuegi.ordermgmt.feature.ticket.domain.event;
 
-import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketId;
-import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TicketPositionId;
-import ch.zuegi.ordermgmt.feature.ticket.domain.vo.TradeItemId;
-import ch.zuegi.ordermgmt.shared.DomainEvent;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import ch.zuegi.ordermgmt.shared.annotation.AggregatedEventIdentifier;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.UUID;
 
-@Builder
-@Getter
-@ToString
-public class TicketPositionAddedEvent extends DomainEvent<TicketPositionAddedEvent, TicketId> {
+public record TicketPositionAddedEvent(
 
-    TicketPositionId ticketPositionId;
-    TicketId ticketId;
-    TradeItemId tradeItemId;
-    BigDecimal menge;
+        @AggregatedEventIdentifier
+        UUID ticketId,
+        UUID ticketPositionId,
+        UUID tradeItemId,
+        BigDecimal menge
 
-    @Override
-    public TicketPositionAddedEvent getEvent() {
-        return this;
-    }
+) {
 
-    @Override
-    public int eventVersion() {
-        return 0;
-    }
-
-    @Override
-    public LocalDateTime occurredOn() {
-        return LocalDateTime.now();
-    }
-
-    @Override
-    public TicketId id() {
-        return ticketId;
-    }
 }
