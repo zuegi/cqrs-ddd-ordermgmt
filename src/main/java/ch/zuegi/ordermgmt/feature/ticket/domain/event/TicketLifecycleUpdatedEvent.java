@@ -10,9 +10,6 @@ import java.util.UUID;
 public record TicketLifecycleUpdatedEvent(
         @AggregatedEventIdentifier
         UUID ticketId,
-        LocalDateTime localDateTime,
-        TicketLifeCycleState currentLifeCycleState,
-        TicketLifeCycleState previousLifeCycleState
-
+        TicketLifeCycleState ticketLifeCycleState
 ) {
 }

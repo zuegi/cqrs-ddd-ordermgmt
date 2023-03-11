@@ -3,10 +3,7 @@ package ch.zuegi.ordermgmt.feature.ticket.domain;
 import ch.zuegi.ordermgmt.feature.ticket.domain.command.*;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketLifeCycleState;
 import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketPosition;
-import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketConfirmedEvent;
-import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketCreatedEvent;
-import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionAddedEvent;
-import ch.zuegi.ordermgmt.feature.ticket.domain.event.TicketPositionRemovedEvent;
+import ch.zuegi.ordermgmt.feature.ticket.domain.event.*;
 import ch.zuegi.ordermgmt.shared.annotation.Aggregate;
 import ch.zuegi.ordermgmt.shared.annotation.CommandHandler;
 import ch.zuegi.ordermgmt.shared.gateway.command.AggregateLifeCycle;
@@ -15,6 +12,7 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 
 @Getter
@@ -22,14 +20,16 @@ import java.util.List;
 @Aggregate
 public class Ticket {
 
+    private UUID ticketId;
     private LocalDateTime localDateTime;
     private TicketLifeCycleState ticketLifeCycleState;
     private List<TicketPosition> ticketPositionList;
 
     @CommandHandler
-    public void handle(UpdateTicketLifecycleCommand updateTicketLifecycleCommand) {
-        this.ticketLifeCycleState = updateTicketLifecycleCommand.getTicketLifeCycleState();
-        this.localDateTime = updateTicketLifecycleCommand.getLocalDateTime();
+    public void handle(UpdateTicketLifecycleCommand command) {
+        AggregateLifeCycle.apply(
+                new TicketLifecycleUpdatedEvent(command.ticketId(), command.ticketLifeCycleState())
+        );
 
     }
 
