@@ -25,7 +25,7 @@ public class TicketCommandController {
         this.commandGateway = commandGateway;
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<String> createTicket(@RequestBody @Valid CreateTicketCommand createTicketCommand) {
         return ResponseEntity.ok(commandGateway.send(createTicketCommand));
     }

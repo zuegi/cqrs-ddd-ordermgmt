@@ -1,12 +1,14 @@
 package ch.zuegi.ordermgmt.shared.eventsourcing;
 
-import ch.zuegi.ordermgmt.shared.gateway.AggregatedFieldResolver;
-import ch.zuegi.ordermgmt.shared.gateway.AggregatedMethodResolver;
 import ch.zuegi.ordermgmt.shared.annotation.Aggregate;
 import ch.zuegi.ordermgmt.shared.annotation.AggregatedEventIdentifier;
 import ch.zuegi.ordermgmt.shared.annotation.EventHandler;
+import ch.zuegi.ordermgmt.shared.annotation.EventSourceHandler;
+import ch.zuegi.ordermgmt.shared.gateway.AggregatedFieldResolver;
+import ch.zuegi.ordermgmt.shared.gateway.AggregatedMethodResolver;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -24,9 +26,13 @@ public class EventRepository {
 
     public EventRepository() {
         objectMapper = new ObjectMapper();
+        // ist ein Hack aber funktioniert
+        // com.fasterxml.jackson.databind.exc.InvalidDefinitionException: Java 8 date/time type `java.time.Instant` not supported by default: add Module "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+        objectMapper.registerModule(new JavaTimeModule());
         eventMap = new LinkedHashMap<>();
     }
 
+    @EventHandler
     public void on(Object event) {
         // wie finde ich heraus, um welches Event es sich handelt
         // event.getClass(); aber brauche ich vielleicht gar nicht
@@ -82,7 +88,7 @@ public class EventRepository {
 
                             List<Method> methodList = new AggregatedMethodResolver()
                                     .filterClassAnnotatedWith(Aggregate.class)
-                                    .filterMethodAnnotatedWith(EventHandler.class)
+                                    .filterMethodAnnotatedWith(EventSourceHandler.class)
                                     .filterMethodParameter(event)
                                     .resolve();
                             assert methodList.size() == 1;

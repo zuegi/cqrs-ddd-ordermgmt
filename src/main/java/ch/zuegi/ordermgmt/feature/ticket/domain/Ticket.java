@@ -6,15 +6,18 @@ import ch.zuegi.ordermgmt.feature.ticket.domain.entity.TicketPosition;
 import ch.zuegi.ordermgmt.feature.ticket.domain.event.*;
 import ch.zuegi.ordermgmt.shared.annotation.Aggregate;
 import ch.zuegi.ordermgmt.shared.annotation.CommandHandler;
+import ch.zuegi.ordermgmt.shared.annotation.EventSourceHandler;
 import ch.zuegi.ordermgmt.shared.gateway.command.AggregateLifeCycle;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 
+@Slf4j
 @Getter
 @ToString
 @Aggregate
@@ -25,6 +28,9 @@ public class Ticket {
     private TicketLifeCycleState ticketLifeCycleState;
     private List<TicketPosition> ticketPositionList;
 
+    /**********************
+     * CommandHandler     *
+     *********************/
     @CommandHandler
     public void handle(UpdateTicketLifecycleCommand command) {
         AggregateLifeCycle.apply(
@@ -61,4 +67,16 @@ public class Ticket {
         );
     }
 
+    /**********************
+     * EventSourceHandler *
+     *********************/
+
+    @EventSourceHandler
+    public void on(TicketCreatedEvent event) {
+        log.info("Ich bin ein {}: {}", event.getClass().getSimpleName(), event.toString());
+
+        // FIXME Validierungen
+    }
+
+    // FIXME hier weiter fahren mit weiteren @EventSourceHandler on Methoden
 }

@@ -1,15 +1,15 @@
 package ch.zuegi.ordermgmt.feature.food.domain;
 
 import ch.zuegi.ordermgmt.feature.food.domain.command.ConfirmFoodCartCommand;
-import ch.zuegi.ordermgmt.feature.food.domain.event.ConfirmedFoodCartEvent;
-import ch.zuegi.ordermgmt.feature.food.domain.event.ProductSelectedEvent;
-import ch.zuegi.ordermgmt.shared.annotation.Aggregate;
-import ch.zuegi.ordermgmt.shared.gateway.command.AggregateLifeCycle;
 import ch.zuegi.ordermgmt.feature.food.domain.command.CreateFoodCartCommand;
 import ch.zuegi.ordermgmt.feature.food.domain.command.SelectProductCommand;
+import ch.zuegi.ordermgmt.feature.food.domain.event.ConfirmedFoodCartEvent;
 import ch.zuegi.ordermgmt.feature.food.domain.event.FoodCartCreatedEvent;
+import ch.zuegi.ordermgmt.feature.food.domain.event.ProductSelectedEvent;
+import ch.zuegi.ordermgmt.shared.annotation.Aggregate;
 import ch.zuegi.ordermgmt.shared.annotation.CommandHandler;
-import ch.zuegi.ordermgmt.shared.annotation.EventHandler;
+import ch.zuegi.ordermgmt.shared.annotation.EventSourceHandler;
+import ch.zuegi.ordermgmt.shared.gateway.command.AggregateLifeCycle;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +32,9 @@ public class FoodCart {
     private Map<UUID, Integer> selectedProducts;
     private boolean confirmed;
 
+    /**********************
+     * CommandHandler     *
+     *********************/
     @CommandHandler
     public void handle(CreateFoodCartCommand command) {
         log.info("Ich bin ein {}: {}",  command.getClass().getSimpleName(), command);
@@ -52,24 +55,27 @@ public class FoodCart {
         AggregateLifeCycle.apply(new ConfirmedFoodCartEvent(command.foodCartId()));
     }
 
+    /**********************
+     * EventSourceHandler *
+     *********************/
 
     // der EventHandler wird dann verwendet um den State des Aggregates zu erstellen
-    @EventHandler
+    @EventSourceHandler
     public void on(FoodCartCreatedEvent event) {
-        log.info("Ich bin ein {}: {}", event.getClass().getSimpleName(), event.toString());
+        log.info("Ich bin ein {}: {}", event.getClass().getSimpleName(), event);
         foodCartId = event.foodCartId();
         selectedProducts = new HashMap<>();
         confirmed = false;
     }
 
-    @EventHandler
+    @EventSourceHandler
     public void on(ProductSelectedEvent event) {
-        log.info("Ich bin ein {}: {}", event.getClass().getSimpleName(), event.toString());
+        log.info("Ich bin ein {}: {}", event.getClass().getSimpleName(), event);
         selectedProducts.merge(event.productId(), event.quantity(), Integer::sum);
     }
-    @EventHandler
+    @EventSourceHandler
     public void on(ConfirmedFoodCartEvent event) {
-        log.info("Ich bin ein {}: {}", event.getClass().getSimpleName(), event.toString());
+        log.info("Ich bin ein {}: {}", event.getClass().getSimpleName(), event);
         this.confirmed = true;
     }
 
