@@ -1,5 +1,7 @@
 package ch.zuegi.ordermgmt.feature.food.infrastructure.persistence;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -19,7 +21,8 @@ public class FoodCartView {
     }
 
     @Id
-    @Column(name = "foodCartId", nullable = false)
+    @Column(name = "foodCartId", updatable = false, nullable = false)
+    @Type(type = "uuid-char")
     private UUID foodCartId;
 
     @ElementCollection

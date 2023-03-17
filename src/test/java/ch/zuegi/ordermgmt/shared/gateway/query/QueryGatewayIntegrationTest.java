@@ -32,7 +32,7 @@ class QueryGatewayIntegrationTest {
         FoodCartView foodCartView = queryGateway.query(findFoodCartQuery, FoodCartView.class);
 
         Assertions.assertThat(foodCartView).isNotNull()
-                .extracting("id")
+                .extracting("foodCartId")
                 .isEqualTo(foodCartId);
     }
 
