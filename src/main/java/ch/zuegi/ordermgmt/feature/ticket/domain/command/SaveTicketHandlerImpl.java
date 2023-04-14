@@ -9,6 +9,7 @@ import ch.zuegi.ordermgmt.shared.DomainEventPublisher;
 import java.util.HashSet;
 
 public class SaveTicketHandlerImpl implements CommandHandler<SaveTicketCommand, TicketSaveEvent, TicketNumber> {
+
     @Override
     public TicketSaveEvent handle(TicketNumber aggregateId, SaveTicketCommand command) {
         // TODO validate
